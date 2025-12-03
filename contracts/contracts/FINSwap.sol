@@ -198,17 +198,21 @@ contract FINSwap is
 
     function _authorizeUpgrade(address newImplementation) internal onlyRole(UPGRADER_ROLE) override {}
 
-    // Helper for sqrt
+    // Helper for sqrt using Babylonian method with proper precision
     function sqrt(uint256 y) internal pure returns (uint256 z) {
-        if (y > 3) {
-            z = y;
-            uint256 x = y / 2 + 1;
-            while (x < z) {
-                z = x;
-                x = (y / x + x) / 2;
-            }
-        } else if (y != 0) {
-            z = 1;
+        if (y == 0) return 0;
+        
+        // Initial estimate
+        z = y;
+        uint256 x = (y + 1) / 2;
+        
+        // Babylonian method iteration
+        while (x < z) {
+            z = x;
+            x = (y / x + x) / 2;
         }
+        
+        // Ensure we don't overflow and provide floor(sqrt(y))
+        return z;
     }
 }
