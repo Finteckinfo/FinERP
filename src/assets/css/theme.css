@@ -1,0 +1,393 @@
+/* Unified Theme System - Single Light and Dark Mode */
+
+/* Font Configuration */
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Light Mode (Default) - using non-conflicting variable names */
+:root {
+  --theme-page-bg: #ffffff;
+  --theme-text-color: #1a202c;
+  --theme-text-primary: #1a202c;
+  --theme-text-secondary: #4a5568;
+  --theme-text-tertiary: #6b7280;
+  --theme-text-muted: #9ca3af;
+  --theme-card-bg: #ffffff;
+  --theme-border-color: #e2e8f0;
+  --theme-primary-color: #5BC85B;
+  --theme-secondary-color: #02124C;
+  --theme-accent-green: #5BC85B;
+  
+  /* ERP-specific variables for consistent theming */
+  --erp-text: #1a202c;
+  --erp-text-primary: #1a202c;
+  --erp-text-secondary: #4a5568;
+  --erp-text-tertiary: #6b7280;
+  --erp-text-muted: #9ca3af;
+  --erp-heading: #0f172a;
+  --erp-card-bg: #ffffff;
+  --erp-border: #e2e8f0;
+  --erp-accent-green: #5BC85B;
+  --erp-hover-bg: #f7fafc;
+  --erp-accent-light: rgba(91, 200, 91, 0.1);
+}
+
+/* Dark Mode - using non-conflicting variable names */
+.dark-theme {
+  --theme-page-bg: #101828;
+  --theme-text-color: #f8fafc;
+  --theme-text-primary: #f8fafc;
+  --theme-text-secondary: #cbd5e1;
+  --theme-text-tertiary: #94a3b8;
+  --theme-text-muted: #64748b;
+  --theme-card-bg: #1a2332;
+  --theme-border-color: #2d3748;
+  --theme-primary-color: #5BC85B;
+  --theme-secondary-color: #010d2e;
+  --theme-accent-green: #5BC85B;
+  
+  /* ERP-specific variables for dark mode */
+  --erp-text: #f8fafc;
+  --erp-text-primary: #f8fafc;
+  --erp-text-secondary: #cbd5e1;
+  --erp-text-tertiary: #94a3b8;
+  --erp-text-muted: #64748b;
+  --erp-heading: #ffffff;
+  --erp-card-bg: #1a2332;
+  --erp-border: #2d3748;
+  --erp-accent-green: #5BC85B;
+  --erp-hover-bg: #1e293b;
+  --erp-accent-light: rgba(91, 200, 91, 0.15);
+}
+
+/* Apply theme to body and html */
+html.dark-theme,
+body.dark-theme {
+  background-color: var(--theme-page-bg) !important;
+  color: var(--theme-text-color) !important;
+}
+
+/* Ensure blank layout follows theme rules */
+.blank-layout.dark-theme {
+  background-color: var(--theme-page-bg) !important;
+  color: var(--theme-text-color) !important;
+}
+
+.blank-layout:not(.dark-theme) {
+  background-color: var(--theme-page-bg) !important;
+  color: var(--theme-text-color) !important;
+}
+
+/* Ensure blank layout children inherit theme properly */
+.blank-layout.dark-theme * {
+  color: inherit;
+}
+
+.blank-layout:not(.dark-theme) * {
+  color: inherit;
+}
+
+/* Force immediate dark theme application - but NOT banner elements */
+.dark-theme {
+  background-color: #101828 !important;
+}
+
+.dark-theme .login-page,
+.dark-theme .login-container {
+  background-color: #101828 !important;
+}
+
+/* Ensure banner elements NEVER get dark backgrounds */
+.dark-theme .banner-content,
+.dark-theme .banner-overlay,
+.dark-theme .banner-column,
+.dark-theme .banner-box,
+.dark-theme .banner-title,
+.dark-theme .banner-subtitle,
+.dark-theme .accent-text {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* CRITICAL: Force banner image to always be visible in dark mode */
+.dark-theme .banner-box {
+  background-image: url('/images/banner3.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-color: transparent !important;
+  z-index: 1;
+  position: relative;
+}
+
+/* Ensure banner overlay provides proper shading for text readability */
+.dark-theme .banner-overlay {
+  background: rgba(0, 0, 0, 0.3) !important;
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  z-index: 2;
+  position: relative;
+}
+
+/* Ensure all text inherits the theme color - EXCEPT banner content */
+.dark-theme h1:not(.banner-title):not(.banner-subtitle),
+.dark-theme h2:not(.banner-title):not(.banner-subtitle),
+.dark-theme h3:not(.banner-title):not(.banner-subtitle),
+.dark-theme h4:not(.banner-title):not(.banner-subtitle),
+.dark-theme h5:not(.banner-title):not(.banner-subtitle),
+.dark-theme h6:not(.banner-title):not(.banner-subtitle),
+.dark-theme p:not(.banner-subtitle),
+.dark-theme span:not(.accent-text):not(.banner-title):not(.banner-subtitle),
+.dark-theme label:not(.banner-title):not(.banner-subtitle),
+.dark-theme div:not(.banner-content):not(.banner-overlay):not(.banner-column):not(.banner-box) {
+  color: var(--theme-text-color) !important;
+}
+
+/* Clerk components should have proper backgrounds */
+.clerk-container {
+  background: var(--theme-card-bg) !important;
+  background-color: var(--theme-card-bg) !important;
+}
+
+.clerk-container * {
+  background: var(--card-background) !important;
+  background-color: var(--card-background) !important;
+}
+
+/* Banner content should NEVER change - keep it exactly the same */
+.banner-title, .banner-subtitle, .accent-text, .banner-content, .banner-overlay, .banner-column, .banner-box {
+  /* These styles remain unchanged in both themes */
+}
+
+
+
+/* Force banner text to stay white and visible in both themes */
+.banner-title,
+.banner-subtitle {
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.accent-text {
+  color: var(--primary-color, #39B84C) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* CRITICAL: Banner overlay provides shading for text readability */
+.banner-overlay {
+  background: rgba(0, 0, 0, 0.3) !important;
+  background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Give Clerk components proper backgrounds based on theme */
+.dark-theme .clerk-container,
+.dark-theme .clerk-container * {
+  background: var(--card-background) !important;
+  background-color: var(--card-background) !important;
+}
+
+:not(.dark-theme) .clerk-container,
+:not(.dark-theme) .clerk-container * {
+  background: var(--card-background) !important;
+  background-color: var(--card-background) !important;
+}
+
+/* Give specific Clerk elements proper backgrounds and borders */
+.clerk-form,
+.clerk-form *,
+.clerk-card,
+.clerk-card *,
+.clerk-input,
+.clerk-button,
+.clerk-label,
+[class*="clerk"],
+[class*="clerk"] * {
+  background: var(--card-background) !important;
+  background-color: var(--card-background) !important;
+}
+
+/* Add borders to Clerk inputs and buttons */
+.clerk-input,
+.clerk-button,
+[class*="clerk-input"],
+[class*="clerk-button"] {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 4px !important;
+}
+
+/* Target any element that might have Clerk styling */
+[data-clerk],
+[data-clerk] *,
+.clerk-appearance,
+.clerk-appearance * {
+  background: var(--card-background) !important;
+  background-color: var(--card-background) !important;
+}
+
+/* Ensure Clerk containers fit their content properly */
+.clerk-container,
+.clerk-form,
+.clerk-card {
+  width: fit-content !important;
+  max-width: 100% !important;
+  padding: 1rem !important;
+  margin: 0 auto !important;
+}
+
+/* Ensure the banner image is always visible */
+.banner-box {
+  background-image: url('/images/banner3.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-color: transparent !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Force banner image visibility in all themes */
+.banner-box,
+.dark-theme .banner-box,
+.light-theme .banner-box {
+  background-image: url('/images/banner3.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-color: transparent !important;
+}
+
+/* Theme toggle button styling */
+.theme-toggle-container {
+  z-index: 1000;
+}
+
+/* Tailwind-like utilities for theme toggle */
+.flex { display: flex; }
+.items-center { align-items: center; }
+.w-full { width: 100%; }
+.cursor-pointer { cursor: pointer; }
+.mr-10 { margin-right: 2.5rem; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.rounded-md { border-radius: 0.375rem; }
+.ml-2 { margin-left: 0.5rem; }
+.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+.border-4 { border-width: 4px; }
+.border-gray-700 { border-color: #374151; }
+.border-gray-600 { border-color: #4B5563; }
+.border-gray-200 { border-color: #E5E7EB; }
+.text-gray-200 { color: #E5E7EB; }
+.text-gray-700 { color: #374151; }
+.hover\:bg-gray-700:hover { background-color: #374151; }
+.hover\:bg-gray-100:hover { background-color: #F3F4F6; }
+.dark\:border-gray-600.dark { border-color: #4B5563; }
+.dark\:text-gray-200.dark { color: #E5E7EB; }
+
+/* Global text color rules for readability */
+body,
+html {
+  color: var(--erp-text) !important;
+}
+
+/* Headings use primary text color */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--erp-heading) !important;
+}
+
+/* Paragraphs and general text */
+p {
+  color: var(--erp-text-primary) !important;
+}
+
+/* Labels and small text */
+label,
+small {
+  color: var(--erp-text-secondary) !important;
+}
+
+/* Muted text */
+.text-muted,
+.muted {
+  color: var(--erp-text-muted) !important;
+}
+
+/* Card text */
+.v-card,
+.v-card * {
+  color: var(--erp-text) !important;
+}
+
+/* List items */
+li {
+  color: var(--erp-text-primary) !important;
+}
+
+/* Input labels and placeholders */
+.v-label {
+  color: var(--erp-text-secondary) !important;
+}
+
+.v-field input::placeholder,
+.v-field textarea::placeholder {
+  color: var(--erp-text-muted) !important;
+}
+
+/* Ensure Vuetify components respect theme text colors */
+.v-list-item-title,
+.v-list-item-subtitle {
+  color: var(--erp-text-primary) !important;
+}
+
+.v-list-item-subtitle {
+  color: var(--erp-text-secondary) !important;
+}
+
+/* Tables */
+table {
+  color: var(--erp-text-primary) !important;
+}
+
+th {
+  color: var(--erp-heading) !important;
+}
+
+td {
+  color: var(--erp-text-primary) !important;
+}
+
+/* Buttons should maintain their own colors but text should be readable */
+.v-btn {
+  transition: all 0.3s ease;
+}
+
+/* Tooltips and helper text */
+.v-tooltip .v-overlay__content {
+  color: #ffffff !important;
+}
+
+/* Ensure links are visible */
+a {
+  color: var(--erp-accent-green) !important;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Navigation items */
+.v-navigation-drawer .v-list-item-title {
+  color: var(--erp-text-primary) !important;
+}
+
+/* Ensure all div text inherits properly unless specifically styled */
+div {
+  color: inherit;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dark-theme {
+    background-color: #101828 !important;
+  }
+}

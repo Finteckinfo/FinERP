@@ -1,0 +1,183 @@
+/* Text Utilities for Consistent Theming Across Light/Dark Modes */
+
+/* Text Color Utilities */
+.text-primary {
+  color: var(--erp-text-primary) !important;
+}
+
+.text-secondary {
+  color: var(--erp-text-secondary) !important;
+}
+
+.text-tertiary {
+  color: var(--erp-text-tertiary) !important;
+}
+
+.text-muted {
+  color: var(--erp-text-muted) !important;
+}
+
+.text-heading {
+  color: var(--erp-heading) !important;
+}
+
+.text-accent {
+  color: var(--erp-accent-green) !important;
+}
+
+/* Heading Mixins */
+@mixin heading-style {
+  color: var(--erp-heading);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+@mixin text-primary-style {
+  color: var(--erp-text-primary);
+  line-height: 1.5;
+}
+
+@mixin text-secondary-style {
+  color: var(--erp-text-secondary);
+  line-height: 1.5;
+}
+
+@mixin text-tertiary-style {
+  color: var(--erp-text-tertiary);
+  line-height: 1.5;
+}
+
+@mixin text-muted-style {
+  color: var(--erp-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* Card Text Utilities */
+.card-title {
+  @include heading-style;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-subtitle {
+  @include text-secondary-style;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.card-text {
+  @include text-primary-style;
+  font-size: 0.9375rem;
+}
+
+/* Label Utilities */
+.label-text {
+  @include text-secondary-style;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+/* List Item Utilities */
+.list-item-title {
+  @include text-primary-style;
+  font-weight: 500;
+}
+
+.list-item-subtitle {
+  @include text-secondary-style;
+  font-size: 0.8125rem;
+}
+
+/* Table Text Utilities */
+.table-header {
+  @include heading-style;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table-cell {
+  @include text-primary-style;
+  font-size: 0.875rem;
+}
+
+/* Status and Badge Text */
+.status-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Helper Text */
+.helper-text {
+  @include text-muted-style;
+  margin-top: 0.25rem;
+}
+
+/* Error Text */
+.error-text {
+  color: #dc2626 !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Success Text */
+.success-text {
+  color: var(--erp-accent-green) !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Warning Text */
+.warning-text {
+  color: #f59e0b !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Info Text */
+.info-text {
+  color: #3b82f6 !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Link Utilities */
+.link-text {
+  color: var(--erp-accent-green) !important;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+/* Ensure proper contrast in both themes */
+.contrast-text {
+  color: var(--erp-text) !important;
+}
+
+/* Description Text */
+.description-text {
+  @include text-secondary-style;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+/* Meta Information Text */
+.meta-text {
+  @include text-tertiary-style;
+  font-size: 0.8125rem;
+}
+
+/* Timestamp Text */
+.timestamp-text {
+  @include text-muted-style;
+  font-size: 0.75rem;
+}
