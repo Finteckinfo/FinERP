@@ -35,66 +35,69 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { NetworkId } from '@txnlab/use-wallet-vue';
+import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
 
-// Current network (stored in localStorage)
-const currentNetwork = ref<string>(
-  localStorage.getItem('algorand_network') || 'testnet'
-);
+const { chainId, switchNetwork, SUPPORTED_CHAINS } = useMetaMaskWallet();
 
-// Available networks
+// Current network based on EVM chainId
+const currentNetwork = computed(() => {
+  if (chainId.value === 1) return 'ethereum';
+  if (chainId.value === 137) return 'polygon';
+  if (chainId.value === 11155111) return 'sepolia';
+  return 'ethereum';
+});
+
+// Available EVM networks
 const networks = [
   {
-    id: 'mainnet',
-    name: 'MainNet',
-    description: 'Production network with real SIZCOIN',
+    id: 'ethereum',
+    chainId: 1,
+    name: 'Ethereum',
+    description: 'Ethereum Mainnet',
     icon: 'mdi-shield-check',
     color: 'success'
   },
   {
-    id: 'testnet',
-    name: 'TestNet',
-    description: 'Testing network with test tokens',
+    id: 'polygon',
+    chainId: 137,
+    name: 'Polygon',
+    description: 'Polygon Mainnet',
+    icon: 'mdi-shield-check',
+    color: 'success'
+  },
+  {
+    id: 'sepolia',
+    chainId: 11155111,
+    name: 'Sepolia',
+    description: 'Sepolia Testnet',
     icon: 'mdi-flask',
     color: 'warning'
-  },
-  {
-    id: 'betanet',
-    name: 'BetaNet',
-    description: 'Beta testing network',
-    icon: 'mdi-beta',
-    color: 'info'
-  },
-  {
-    id: 'localnet',
-    name: 'LocalNet',
-    description: 'Local development network',
-    icon: 'mdi-laptop',
-    color: 'secondary'
   }
 ];
 
 // Computed properties
 const networkLabel = computed(() => {
-  return networks.find(n => n.id === currentNetwork.value)?.name || 'TestNet';
+  return networks.find(n => n.id === currentNetwork.value)?.name || 'Ethereum';
 });
 
 const networkColor = computed(() => {
-  return networks.find(n => n.id === currentNetwork.value)?.color || 'warning';
+  return networks.find(n => n.id === currentNetwork.value)?.color || 'success';
 });
 
-// Select network
-function selectNetwork(networkId: string) {
-  currentNetwork.value = networkId;
-  localStorage.setItem('algorand_network', networkId);
-  
-  // Emit event for other components to react
-  window.dispatchEvent(new CustomEvent('network-changed', { 
-    detail: { network: networkId } 
-  }));
-  
-  // Show notification
-  console.log(`Switched to ${networkLabel.value}`);
+// Select network (EVM chain switching)
+async function selectNetwork(networkId: string) {
+  const network = networks.find(n => n.id === networkId);
+  if (network && network.chainId) {
+    const success = await switchNetwork(network.chainId);
+    if (success) {
+      // Emit event for other components to react
+      window.dispatchEvent(new CustomEvent('network-changed', { 
+        detail: { network: networkId, chainId: network.chainId } 
+      }));
+      
+      console.log(`Switched to ${networkLabel.value}`);
+    }
+  }
 }
 </script>
 

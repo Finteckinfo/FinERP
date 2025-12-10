@@ -1,4 +1,4 @@
-import { GelatoRelaySDK } from '@gelatonetwork/relay-sdk';
+import { GelatoRelay } from '@gelatonetwork/relay-sdk';
 import { ethers } from 'ethers';
 
 export interface GaslessTransaction {
@@ -24,7 +24,7 @@ function initializeGelato(): void {
   }
 
   if (!relaySDK) {
-    relaySDK = new GelatoRelaySDK(apiKey);
+    relaySDK = new GelatoRelay(apiKey);
   }
 }
 

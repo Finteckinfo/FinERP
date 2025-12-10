@@ -210,7 +210,7 @@
         <div v-else-if="activeTab === 'wallet'" key="wallet" class="content-panel">
           <div class="panel-header">
             <h2>Wallet Account</h2>
-            <p>Manage your Algorand wallet and SIZCOIN balance</p>
+            <p>Manage your EVM wallet and FIN token balance</p>
           </div>
 
           <div class="wallet-grid">
@@ -238,7 +238,7 @@
                   <div class="detail-row">
                     <span class="detail-label">Address:</span>
                     <div class="detail-value">
-                      <code class="wallet-address">{{ shortenAddress(connectedWallet) }}</code>
+                      <code class="wallet-address">{{ shortenAddress(walletAddress) }}</code>
                       <v-btn
                         icon
                         size="small"
@@ -256,27 +256,30 @@
                   <div class="detail-row">
                     <span class="detail-label">Full Address:</span>
                     <div class="detail-value">
-                      <code class="wallet-address-full">{{ connectedWallet }}</code>
+                      <code class="wallet-address-full">{{ walletAddress }}</code>
                     </div>
                   </div>
 
                   <div class="detail-row">
                     <span class="detail-label">Network:</span>
                     <span class="detail-value">
-                      <v-chip :color="currentNetwork === 'mainnet' ? 'success' : 'warning'" size="small">
+                      <v-chip :color="chainId === 1 || chainId === 137 ? 'success' : 'warning'" size="small">
                         <v-icon start size="16">
-                          {{ currentNetwork === 'mainnet' ? 'mdi-network' : 'mdi-test-tube' }}
+                          {{ chainId === 1 || chainId === 137 ? 'mdi-network' : 'mdi-test-tube' }}
                         </v-icon>
-                        {{ currentNetwork === 'mainnet' ? 'MainNet' : 'TestNet' }}
+                        {{ chainId === 1 ? 'Ethereum' : chainId === 137 ? 'Polygon' : chainId === 11155111 ? 'Sepolia' : `Chain ${chainId}` }}
                       </v-chip>
                     </span>
                   </div>
                   
-                  <div v-if="activeAccount" class="detail-row">
-                    <span class="detail-label">Account Name:</span>
+                  <div class="detail-row">
+                    <span class="detail-label">Wallet Type:</span>
                     <span class="detail-value">
-                      <v-chip size="small" variant="text">
-                        {{ getAccountName() }}
+                      <v-chip size="small" variant="text" :color="walletType === 'metamask' ? 'primary' : walletType === 'walletconnect' ? 'info' : 'secondary'">
+                        <v-icon start size="16">
+                          {{ walletType === 'metamask' ? 'mdi-wallet' : walletType === 'walletconnect' ? 'mdi-qrcode' : 'mdi-wallet-outline' }}
+                        </v-icon>
+                        {{ walletType === 'metamask' ? 'MetaMask' : walletType === 'walletconnect' ? 'WalletConnect' : walletType === 'coinbase' ? 'Coinbase' : 'Injected' }}
                       </v-chip>
                     </span>
                   </div>
@@ -299,7 +302,7 @@
                 </v-alert>
 
                 <p class="text-body-2 mb-4">
-                  Connect your Algorand wallet to view your SIZCOIN balance and manage transactions.
+                  Connect your EVM wallet (MetaMask, WalletConnect, Coinbase, etc.) to view your FIN token balance and manage transactions.
                 </p>
 
                 <v-btn color="primary" variant="elevated" @click="handleConnect">
@@ -309,11 +312,11 @@
               </div>
             </div>
 
-            <!-- SIZCOIN Balance (shown only when connected) -->
+            <!-- FIN Token Balance (shown only when connected) -->
             <div v-if="isWalletConnected" class="wallet-section">
               <div class="section-header">
                 <v-icon size="24" color="success">mdi-cash-multiple</v-icon>
-                <h3>SIZCOIN Balance</h3>
+                <h3>FIN Token Balance</h3>
               </div>
 
               <div class="balance-display">
@@ -331,37 +334,33 @@
                   </v-btn>
                 </div>
 
-                <div v-else-if="sizBalance" class="balance-content">
-                  <!-- SIZ Logo -->
-                  <div class="siz-logo-container mb-3">
-                    <img 
-                      src="/images/sizlogo.png" 
-                      alt="SIZ Logo" 
-                      class="siz-logo"
-                    />
+                <div v-else-if="finBalance" class="balance-content">
+                  <!-- FIN Logo -->
+                  <div class="fin-logo-container mb-3">
+                    <v-icon size="64" color="primary">mdi-coin</v-icon>
                   </div>
                   
                   <div class="balance-main">
                     <span class="balance-amount">
-                      {{ sizBalance.found ? formatAmount(parseFloat(sizBalance.formattedAmount)) : '0.00' }}
+                      {{ finBalance.found ? formatAmount(parseFloat(finBalance.formattedBalance)) : '0.00' }}
                     </span>
-                    <span class="balance-currency">SIZ</span>
+                    <span class="balance-currency">FIN</span>
                   </div>
                   
-                  <div v-if="!sizBalance.found" class="text-center mt-2">
+                  <div v-if="!finBalance.found" class="text-center mt-2">
                     <v-alert type="info" variant="tonal" size="small" class="text-left">
-                      No SIZ tokens found in this wallet. You may need to opt-in to the SIZ token.
+                      No FIN tokens found in this wallet. You may need to receive FIN tokens first.
                     </v-alert>
                   </div>
                   
-                  <div v-if="sizBalance.found" class="balance-info mt-3">
+                  <div v-if="finBalance.found" class="balance-info mt-3">
                     <div class="balance-detail">
                       <span class="detail-label">Token Name:</span>
-                      <span class="detail-value">{{ sizBalance.name }}</span>
+                      <span class="detail-value">{{ finBalance.name }}</span>
                     </div>
                     <div class="balance-detail">
-                      <span class="detail-label">Asset ID:</span>
-                      <span class="detail-value" style="font-family: 'Courier New', monospace;">{{ sizBalance.assetId }}</span>
+                      <span class="detail-label">Contract:</span>
+                      <span class="detail-value" style="font-family: 'Courier New', monospace;">{{ finBalance.contractAddress.slice(0, 8) }}...{{ finBalance.contractAddress.slice(-6) }}</span>
                     </div>
                   </div>
 
@@ -370,7 +369,7 @@
                       <v-icon start>mdi-refresh</v-icon>
                       Refresh
                     </v-btn>
-                    <v-btn size="small" variant="outlined" color="primary" :href="getExplorerAddressUrl(connectedWallet)" target="_blank">
+                    <v-btn size="small" variant="outlined" color="primary" :href="getExplorerAddressUrl(walletAddress)" target="_blank">
                       <v-icon start>mdi-open-in-new</v-icon>
                       View on Explorer
                     </v-btn>
@@ -390,11 +389,11 @@
               </div>
             </div>
 
-            <!-- Recent SIZ Transactions (shown only when connected) -->
+            <!-- Recent FIN Transactions (shown only when connected) -->
             <div v-if="isWalletConnected" class="wallet-section full-width">
               <div class="section-header">
                 <v-icon size="24" color="info">mdi-history</v-icon>
-                <h3>Recent SIZCOIN Transactions</h3>
+                <h3>Recent FIN Token Transactions</h3>
               </div>
 
               <div v-if="transactionsLoading" class="text-center py-6">
@@ -404,7 +403,8 @@
 
               <div v-else-if="transactions.length === 0" class="text-center py-6">
                 <v-icon size="48" color="grey-lighten-2">mdi-receipt-text-outline</v-icon>
-                <p class="text-body-2 mt-3">No SIZCOIN transactions found</p>
+                <p class="text-body-2 mt-3">No FIN token transactions found</p>
+                <p class="text-caption mt-2 text-medium-emphasis">Transaction history will appear here once you make FIN token transfers</p>
               </div>
 
               <div v-else class="transactions-list">
@@ -420,7 +420,7 @@
                   </div>
                   <div class="tx-amount">
                     <span :class="tx.type === 'receive' ? 'text-success' : 'text-error'">
-                      {{ tx.type === 'receive' ? '+' : '-' }}{{ tx.amount.toFixed(2) }} SIZ
+                      {{ tx.type === 'receive' ? '+' : '-' }}{{ tx.amount.toFixed(2) }} FIN
                     </span>
                   </div>
                   <div class="tx-action">
@@ -459,58 +459,26 @@ import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
 import { useTheme } from 'vuetify';
 import { useRouter } from 'vue-router';
 import { RetroGrid } from '@/components/ui/retro-grid';
-import { connectedWallet, isWalletConnected, isWalletModalOpen } from '@/stores/walletStore';
-import { removeManualWallet, activeAccount, clearWalletConnection } from '@/lib/walletManager';
+import { isWalletModalOpen } from '@/stores/walletStore';
 import { getAddressExplorerUrl, getExplorerUrl } from '@/services/paymentService';
-import { getSizTokenBalance, type SizTokenBalance } from '@/services/sizTokenService';
-import { NetworkId } from '@txnlab/use-wallet-vue';
-import { useWallet } from '@txnlab/use-wallet-vue';
-import algosdk from 'algosdk';
+import { getFINTokenBalance, getFINTokenAddress, getRPCUrl, type FINTokenBalance } from '@/services/finTokenService';
+import { useEVMWallet } from '@/composables/useEVMWallet';
 import ConnectWallet from '@/layouts/full/vertical-header/ConnectWallet.vue';
 
 const router = useRouter();
 const activeTab = ref('account');
 
-// Wallet hook
-const walletHook = useWallet();
-const { activeWallet, activeAccount: useWalletAccount } = walletHook;
-
-// Make activeAccount available globally for walletStore fallback
-if (typeof window !== 'undefined') {
-  (window as any).__useWalletActiveAccount = useWalletAccount;
-  watch(useWalletAccount, (newVal) => {
-    (window as any).__useWalletActiveAccount = newVal;
-  });
-}
-
-// Sync useWallet activeAccount with walletManager - bidirectional sync
-watch(useWalletAccount, (newAccount) => {
-  if (newAccount?.address) {
-    // Sync to walletManager for consistency
-    activeAccount.value = { address: newAccount.address };
-    console.log('[Settings/Wallet] Synced useWallet account to walletManager:', newAccount.address);
-  } else if (!useWalletAccount) {
-    // Only clear if useWallet is explicitly disconnected
-    // Don't clear if walletManager has a stored connection
-    const stored = localStorage.getItem('wallet_connection');
-    if (!stored) {
-      activeAccount.value = null;
-      console.log('[Settings/Wallet] Cleared walletManager account (no stored connection)');
-    }
-  }
-}, { immediate: true });
-
-// Also watch walletManager changes in case wallet is connected from another component
-watch(activeAccount, (newAccount) => {
-  if (newAccount?.address && (!useWalletAccount.value || useWalletAccount.value.address !== newAccount.address)) {
-    console.log('[Settings/Wallet] WalletManager account changed, refreshing balance:', newAccount.address);
-    // Refresh balance when wallet manager account changes
-    if (activeTab.value === 'wallet') {
-      loadBalance();
-      loadTransactions();
-    }
-  }
-}, { immediate: true });
+// EVM Wallet (multi-wallet support)
+const { 
+  user: walletUser, 
+  isConnected: isWalletConnected, 
+  chainId, 
+  disconnect: disconnectWallet,
+  walletType,
+  detectAvailableWallets
+} = useEVMWallet();
+const walletAddress = computed(() => walletUser.value?.address || '');
+const availableWallets = ref<string[]>([]);
 
 // Listen for wallet connection/disconnection events
 const walletEventListener = (event: Event) => {
@@ -527,8 +495,7 @@ const walletEventListener = (event: Event) => {
 
 // Wallet tab state
 const copied = ref(false);
-const currentNetwork = ref('testnet');
-const sizBalance = ref<SizTokenBalance | null>(null);
+const finBalance = ref<FINTokenBalance | null>(null);
 const balanceLoading = ref(false);
 const balanceError = ref('');
 const transactions = ref<Array<{
@@ -586,8 +553,10 @@ onMounted(() => {
     }
   }
   
-  // Listen for network changes
-  window.addEventListener('network-changed', networkChangeListener);
+  // Detect available wallets
+  detectAvailableWallets().then(wallets => {
+    availableWallets.value = wallets;
+  });
   
   // Listen for wallet connection/disconnection events
   window.addEventListener('wallet-connected', walletEventListener);
@@ -595,7 +564,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  window.removeEventListener('network-changed', networkChangeListener);
   window.removeEventListener('wallet-connected', walletEventListener);
   window.removeEventListener('wallet-disconnected', walletEventListener);
 });
@@ -638,50 +606,21 @@ const handleConnect = () => {
 const handleDisconnect = async () => {
   if (confirm('Are you sure you want to disconnect your wallet?')) {
     try {
-      // Disconnect from use-wallet hook if active
-      if (activeWallet?.value) {
-        // Try to disconnect via the active wallet
-        const walletObj = activeWallet.value as any;
-        if (walletObj?.disconnect && typeof walletObj.disconnect === 'function') {
-          await walletObj.disconnect();
-          console.log('[Settings/Wallet] Disconnected via active wallet');
-        }
-      }
-      
-      // Also remove manual wallet
-      removeManualWallet();
-      clearWalletConnection();
-      
-      // Reset state
-      sizBalance.value = null;
+      await disconnectWallet();
+      finBalance.value = null;
       transactions.value = [];
-      
       console.log('[Settings/Wallet] Wallet disconnected successfully');
     } catch (error) {
       console.error('[Settings/Wallet] Error disconnecting wallet:', error);
-      // Still try to clear manual wallet
-      removeManualWallet();
-      clearWalletConnection();
-      sizBalance.value = null;
+      finBalance.value = null;
       transactions.value = [];
     }
   }
 };
 
-// Get account name from various sources
-const getAccountName = () => {
-  if (useWalletAccount?.value?.name) {
-    return useWalletAccount.value.name;
-  }
-  if (activeWallet?.value?.metadata?.name) {
-    return activeWallet.value.metadata.name;
-  }
-  return 'Connected Wallet';
-};
-
 const copyAddress = async () => {
   try {
-    await navigator.clipboard.writeText(connectedWallet.value);
+    await navigator.clipboard.writeText(walletAddress.value);
     copied.value = true;
     setTimeout(() => {
       copied.value = false;
@@ -725,117 +664,111 @@ const navigateToPayments = () => {
   router.push('/payments');
 };
 
-// Get network ID from current network
-const getNetworkId = (): NetworkId => {
-  const network = currentNetwork.value || localStorage.getItem('algorand_network') || 'testnet';
-  switch (network.toLowerCase()) {
-    case 'mainnet':
-      return NetworkId.MAINNET;
-    case 'testnet':
-      return NetworkId.TESTNET;
-    case 'betanet':
-      return NetworkId.BETANET;
-    case 'fnet':
-      return NetworkId.FNET;
-    case 'localnet':
-    case 'local':
-      return NetworkId.LOCALNET;
-    default:
-      return NetworkId.TESTNET;
-  }
+// Get network name
+const getNetworkName = () => {
+  const chain = chainId.value;
+  if (chain === 1) return 'Ethereum Mainnet';
+  if (chain === 137) return 'Polygon Mainnet';
+  if (chain === 11155111) return 'Sepolia Testnet';
+  return `Chain ${chain}`;
 };
 
-// Load SIZ balance from Algorand using sizTokenService
+// Load FIN balance from EVM using finTokenService
 const loadBalance = async () => {
-  if (!connectedWallet.value) return;
+  if (!walletAddress.value || !chainId.value) return;
   
   try {
     balanceLoading.value = true;
     balanceError.value = '';
     
-    // Get current network
-    currentNetwork.value = localStorage.getItem('algorand_network') || 'testnet';
-    const networkId = getNetworkId();
+    const tokenAddress = getFINTokenAddress(chainId.value);
+    const rpcUrl = getRPCUrl(chainId.value);
     
-    // Use sizTokenService to get balance
-    const balance = await getSizTokenBalance(connectedWallet.value, networkId);
+    if (!tokenAddress || !rpcUrl) {
+      balanceError.value = 'FIN token not configured for this network';
+      return;
+    }
+    
+    const balance = await getFINTokenBalance(walletAddress.value, rpcUrl, tokenAddress);
     
     if (balance) {
-      sizBalance.value = balance;
-      console.log('[Settings/Wallet] SIZ Token balance loaded:', {
+      finBalance.value = balance;
+      console.log('[Settings/Wallet] FIN Token balance loaded:', {
         found: balance.found,
-        amount: balance.formattedAmount,
-        assetId: balance.assetId
+        amount: balance.formattedBalance,
+        contractAddress: balance.contractAddress
       });
     } else {
       balanceError.value = 'Failed to fetch balance';
-      sizBalance.value = null;
+      finBalance.value = null;
     }
     
   } catch (error: any) {
     console.error('[Settings/Wallet] Failed to load balance:', error);
     balanceError.value = error.message || 'Failed to load balance';
-    sizBalance.value = null;
+    finBalance.value = null;
   } finally {
     balanceLoading.value = false;
   }
 };
 
-// Load SIZ transactions from Algorand
+// Load FIN token transactions from EVM blockchain
 const loadTransactions = async () => {
-  if (!connectedWallet.value) return;
+  if (!walletAddress.value || !chainId.value) return;
   
   try {
     transactionsLoading.value = true;
     
-    // Get current network
-    currentNetwork.value = localStorage.getItem('algorand_network') || 'testnet';
-    
-    // Connect to Algorand indexer
-    const indexerServer = currentNetwork.value === 'mainnet'
-      ? 'https://mainnet-idx.algonode.cloud'
-      : 'https://testnet-idx.algonode.cloud';
-    
-    const indexerClient = new algosdk.Indexer('', indexerServer, '');
-    
-    // Get recent transactions for this address
-    const txnResponse = await indexerClient
-      .searchForTransactions()
-      .address(connectedWallet.value)
-      .limit(10)
-      .do();
-    
-    // TODO: Filter for SIZ token transactions only
-    const SIZ_ASSET_ID = 0; // Replace with real SIZCOIN asset ID
-    
-    if (txnResponse.transactions) {
-      transactions.value = txnResponse.transactions
-        .filter((tx: any) => {
-          // If SIZ_ASSET_ID is 0, show ALGO transactions for now
-          if (SIZ_ASSET_ID === 0) return tx['tx-type'] === 'pay';
-          // Otherwise filter for asset transfers
-          return tx['tx-type'] === 'axfer' && tx['asset-transfer-transaction']?.['asset-id'] === SIZ_ASSET_ID;
-        })
-        .map((tx: any) => {
-          const isSender = tx.sender === connectedWallet.value;
-          const amount = SIZ_ASSET_ID === 0 
-            ? (tx['payment-transaction']?.amount || 0) / 1000000
-            : (tx['asset-transfer-transaction']?.amount || 0) / 1000000;
-          
-          return {
-            id: tx.id,
-            type: isSender ? 'send' : 'receive',
-            amount,
-            timestamp: new Date((tx['round-time'] || 0) * 1000).toISOString(),
-            hash: tx.id
-          };
-        });
+    // Get explorer API based on chain
+    let apiUrl = '';
+    if (chainId.value === 1) {
+      apiUrl = `https://api.etherscan.io/api?module=account&action=tokentx&address=${walletAddress.value}&startblock=0&endblock=99999999&sort=desc&apikey=${import.meta.env.VITE_ETHERSCAN_API_KEY || ''}`;
+    } else if (chainId.value === 137) {
+      apiUrl = `https://api.polygonscan.com/api?module=account&action=tokentx&address=${walletAddress.value}&startblock=0&endblock=99999999&sort=desc&apikey=${import.meta.env.VITE_POLYGONSCAN_API_KEY || ''}`;
+    } else if (chainId.value === 11155111) {
+      apiUrl = `https://api-sepolia.etherscan.io/api?module=account&action=tokentx&address=${walletAddress.value}&startblock=0&endblock=99999999&sort=desc&apikey=${import.meta.env.VITE_ETHERSCAN_API_KEY || ''}`;
+    } else {
+      transactions.value = [];
+      return;
     }
     
-    console.log('[Settings/Wallet] Transactions loaded:', transactions.value.length);
+    const finTokenAddress = getFINTokenAddress(chainId.value);
+    if (!finTokenAddress) {
+      transactions.value = [];
+      return;
+    }
+    
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    
+    if (data.status === '1' && data.result) {
+      // Filter for FIN token transactions only
+      const finTransactions = data.result
+        .filter((tx: any) => tx.contractAddress.toLowerCase() === finTokenAddress.toLowerCase())
+        .slice(0, 10)
+        .map((tx: any) => {
+          const isSender = tx.from.toLowerCase() === walletAddress.value.toLowerCase();
+          // Convert from wei (18 decimals)
+          const amount = parseFloat(tx.value) / Math.pow(10, parseInt(tx.tokenDecimal || '18'));
+          
+          return {
+            id: tx.hash,
+            type: isSender ? 'send' : 'receive',
+            amount,
+            timestamp: new Date(parseInt(tx.timeStamp) * 1000).toISOString(),
+            hash: tx.hash
+          };
+        });
+      
+      transactions.value = finTransactions;
+      console.log('[Settings/Wallet] FIN token transactions loaded:', transactions.value.length);
+    } else {
+      transactions.value = [];
+    }
     
   } catch (error: any) {
     console.error('[Settings/Wallet] Failed to load transactions:', error);
+    transactions.value = [];
   } finally {
     transactionsLoading.value = false;
   }
@@ -847,7 +780,7 @@ watch(isWalletConnected, (connected) => {
     loadBalance();
     loadTransactions();
   } else if (!connected) {
-    sizBalance.value = null;
+    finBalance.value = null;
     transactions.value = [];
   }
 });
@@ -860,21 +793,13 @@ watch(activeTab, (newTab) => {
   }
 });
 
-// Watch for network changes
-watch(() => localStorage.getItem('algorand_network'), () => {
-  currentNetwork.value = localStorage.getItem('algorand_network') || 'testnet';
+// Watch for chain changes
+watch(chainId, () => {
   if (isWalletConnected.value && activeTab.value === 'wallet') {
     loadBalance();
     loadTransactions();
   }
 });
-
-// Listen for network-changed event
-const networkChangeListener = () => {
-  if (isWalletConnected.value && activeTab.value === 'wallet') {
-    loadBalance();
-  }
-};
 
 // Clerk appearance - responsive styling with mobile popup behavior
 const clerkAppearance = {
@@ -1433,17 +1358,10 @@ const clerkAppearance = {
   }
 }
 
-.siz-logo-container {
+.fin-logo-container {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.siz-logo {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .wallet-actions {

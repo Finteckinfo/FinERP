@@ -182,10 +182,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
 import { useNextAuth } from '@/composables/useNextAuth';
-import { NetworkId } from '@txnlab/use-wallet-vue';
+import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
 import { getUserEarnings, type BlockchainTransaction } from '@/services/paymentService';
-import { getSizTokenBalance, type SizTokenBalance } from '@/services/sizTokenService';
-import { connectedWallet, isWalletConnected } from '@/stores/walletStore';
+import { getFINTokenBalance, getFINTokenAddress, getRPCUrl, type FINTokenBalance } from '@/services/finTokenService';
 
 // Composables
 const { user } = useNextAuth();
@@ -198,34 +197,17 @@ const processingEarned = ref(0);
 const recentTransactions = ref<BlockchainTransaction[]>([]);
 
 // Wallet balance state
-const walletBalance = ref<SizTokenBalance | null>(null);
+const walletBalance = ref<FINTokenBalance | null>(null);
 const walletBalanceLoading = ref(false);
 const walletBalanceError = ref<string | null>(null);
 
-// Get wallet address and network
-const walletAddress = computed(() => connectedWallet.value || '');
-const networkId = computed<NetworkId>(() => {
-  const network = localStorage.getItem('algorand_network') || 'testnet';
-  switch (network.toLowerCase()) {
-    case 'mainnet':
-      return NetworkId.MAINNET;
-    case 'testnet':
-      return NetworkId.TESTNET;
-    case 'betanet':
-      return NetworkId.BETANET;
-    case 'fnet':
-      return NetworkId.FNET;
-    case 'localnet':
-    case 'local':
-      return NetworkId.LOCALNET;
-    default:
-      return NetworkId.TESTNET;
-  }
-});
+// Get wallet from MetaMask
+const { user: walletUser, isConnected, chainId } = useMetaMaskWallet();
+const walletAddress = computed(() => walletUser.value?.address || '');
 
 // Load wallet balance
 const loadWalletBalance = async () => {
-  if (!isWalletConnected.value || !walletAddress.value) {
+  if (!isConnected.value || !walletAddress.value || !chainId.value) {
     walletBalance.value = null;
     return;
   }
@@ -233,7 +215,16 @@ const loadWalletBalance = async () => {
   try {
     walletBalanceLoading.value = true;
     walletBalanceError.value = null;
-    const balance = await getSizTokenBalance(walletAddress.value, networkId.value);
+    
+    const tokenAddress = getFINTokenAddress(chainId.value);
+    const rpcUrl = getRPCUrl(chainId.value);
+    
+    if (!tokenAddress || !rpcUrl) {
+      walletBalanceError.value = 'FIN token not configured for this network';
+      return;
+    }
+    
+    const balance = await getFINTokenBalance(walletAddress.value, rpcUrl, tokenAddress);
     walletBalance.value = balance;
   } catch (error: any) {
     console.error('Failed to load wallet balance:', error);
@@ -291,10 +282,11 @@ const formatDate = (date: string | Date) => {
 };
 
 const getExplorerUrl = (txId: string) => {
-  const baseUrl = networkId.value === NetworkId.MAINNET 
-    ? 'https://explorer.algorand.org/tx/' 
-    : 'https://testnet.explorer.algorand.org/tx/';
-  return baseUrl + txId;
+  const chain = chainId.value;
+  if (chain === 1) return `https://etherscan.io/tx/${txId}`;
+  if (chain === 137) return `https://polygonscan.com/tx/${txId}`;
+  if (chain === 11155111) return `https://sepolia.etherscan.io/tx/${txId}`;
+  return `#`;
 };
 
 // Import router for navigation
@@ -302,38 +294,16 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 // Watch for wallet connection changes
-watch([isWalletConnected, walletAddress, networkId], () => {
+watch([isConnected, walletAddress, chainId], () => {
   loadWalletBalance();
 }, { immediate: true });
-
-// Watch for network changes in localStorage
-watch(() => localStorage.getItem('algorand_network'), () => {
-  if (isWalletConnected.value) {
-    loadWalletBalance();
-  }
-});
-
-// Listen for network-changed event
-const networkChangeListener = () => {
-  if (isWalletConnected.value) {
-    loadWalletBalance();
-  }
-};
 
 // Lifecycle
 onMounted(() => {
   loadEarnings();
-  if (isWalletConnected.value) {
+  if (isConnected.value) {
     loadWalletBalance();
   }
-  
-  // Listen for network changes
-  window.addEventListener('network-changed', networkChangeListener);
-});
-
-// Cleanup listener on unmount
-onUnmounted(() => {
-  window.removeEventListener('network-changed', networkChangeListener);
 });
 </script>
 

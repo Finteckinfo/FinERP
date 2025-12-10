@@ -10,6 +10,7 @@ import FINTokenBalance from './components/FINTokenBalance.vue';
 import DEXSwap from './components/DEXSwap.vue';
 import { ref, onMounted, computed, watch } from 'vue';
 import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import { useNextAuth } from '@/composables/useNextAuth';
 import { useRouter } from 'vue-router';
 
 // Import components
@@ -23,8 +24,9 @@ import ConnectWallet from '@/layouts/full/vertical-header/ConnectWallet.vue';
 // Import centralized API services
 import { projectApi, taskApi, userRoleApi, projectInviteApi, type Project, type Task, type UserRole } from '@/services/projectApi';
 
-// Get wallet user and data
-const { user, isConnected } = useMetaMaskWallet();
+// Get wallet user and NextAuth user
+const { user: walletUser, isConnected } = useMetaMaskWallet();
+const { user } = useNextAuth();
 const router = useRouter();
 
 // Reactive data with individual loading states
@@ -70,8 +72,17 @@ const invitesLoading = ref(false);
 
 // Computed properties
 const userDisplayName = computed(() => {
-  if (user.value) {
-    return `User ${user.value.address.slice(0, 6)}...${user.value.address.slice(-4)}`;
+  if (user.value?.name) {
+    return user.value.name;
+  }
+  if (user.value?.firstName || user.value?.lastName) {
+    return `${user.value.firstName || ''} ${user.value.lastName || ''}`.trim();
+  }
+  if (user.value?.email) {
+    return user.value.email;
+  }
+  if (walletUser.value?.address) {
+    return `User ${walletUser.value.address.slice(0, 6)}...${walletUser.value.address.slice(-4)}`;
   }
   return 'Guest';
 });
@@ -390,7 +401,7 @@ const fetchUserProjects = async () => {
               createdAt: '2024-01-01',
               user: {
                 id: user.value?.id || 'sample-user',
-                email: user.value?.email || 'user@example.com',
+                email: user.value?.email || walletUser.value?.address || 'user@example.com',
                 firstName: user.value?.firstName || 'Sample',
                 lastName: user.value?.lastName || 'User',
                 createdAt: '2024-01-01',
@@ -773,9 +784,9 @@ const declineInvite = async (inviteId: string) => {
 };
 
 // Watch for user availability - single consolidated watcher
-watch(() => user.value?.address, (newAddress, oldAddress) => {
+watch(() => walletUser.value?.address, (newAddress, oldAddress) => {
   if (newAddress && newAddress !== oldAddress) {
-    console.log('[Dashboard] User address changed, loading data...', newAddress);
+    console.log('[Dashboard] Wallet address changed, loading data...', newAddress);
     loadAllData();
     loadPendingInvites();
   }
@@ -790,8 +801,8 @@ watch(projects, () => {
 
 // Load data when component mounts
 onMounted(() => {
-  console.log('[Dashboard] Component mounted, user:', user.value?.address);
-  if (user.value?.address) {
+  console.log('[Dashboard] Component mounted, user:', user.value?.id, 'wallet:', walletUser.value?.address);
+  if (user.value?.id) {
     loadAllData();
     loadPendingInvites();
   }

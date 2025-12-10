@@ -1,20 +1,22 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, type Ref } from 'vue';
-import { useWallet, WalletId } from '@txnlab/use-wallet-vue';
+import { useEVMWallet } from '@/composables/useEVMWallet';
+import WalletSelector from '@/components/shared/WalletSelector.vue';
 import { addManualWallet, removeManualWallet } from '@/lib/walletManager';
 import { activeAccount as walletManagerAccount } from '@/lib/walletManager';
 import { isWalletModalOpen as storeWalletModalOpen } from '@/stores/walletStore';
 import { useNextAuth } from '@/composables/useNextAuth';
-import { generateAlgorandWallet, storeWallet } from '@/lib/algorand/walletGenerator';
 import { useRouter } from 'vue-router';
 import { useTheme } from '@/composables/useTheme';
 
 // Router
 const router = useRouter();
 
-// Wallet hook from @txnlab/use-wallet-vue
-const walletHook = useWallet();
-const { wallets, activeAccount, activeWallet, isReady } = walletHook;
+// EVM wallet hook (Multi-wallet support)
+const { user: walletUser, isConnected, disconnect: disconnectWallet, walletType } = useEVMWallet();
+const activeAccount = computed(() => walletUser.value ? { address: walletUser.value.address } : null);
+const activeWallet = computed(() => isConnected.value ? walletType.value : null);
+const isReady = computed(() => true);
 
 // Make activeAccount available globally for walletStore fallback
 if (typeof window !== 'undefined') {
@@ -250,63 +252,12 @@ async function connectWallet(walletId: WalletId) {
   }
 }
 
-// Generate new wallet
+// Generate new wallet - Removed (using MetaMask only)
 async function handleGenerateWallet() {
-  isGenerating.value = true;
-  error.value = null;
-  success.value = null;
-
-  try {
-    // Generate wallet
-    const wallet = generateAlgorandWallet();
-    console.log('✅ [Create Wallet] Wallet generated successfully:', wallet.address);
-    
-    // Store wallet locally
-    storeWallet(wallet);
-    console.log('✅ [Create Wallet] Wallet stored locally');
-
-    // Auto-connect using manual wallet method since CUSTOM provider might not be available
-    try {
-      // Use addManualWallet to connect the generated wallet
-      addManualWallet(wallet.address);
-      console.log('✅ [Create Wallet] Generated wallet connected via manual method');
-      
-      // Post wallet address to external database after successful connection
-      if (wallet.address) {
-        console.log('🔍 [Create Wallet] Generated wallet connected, posting address to external DB:', wallet.address);
-        await postWalletToExternalDB(wallet.address);
-        
-        // Dispatch event for other components
-        window.dispatchEvent(new CustomEvent('wallet-connected', { 
-          detail: { address: wallet.address } 
-        }));
-      }
-    } catch (connectError) {
-      console.error('🔍 [Create Wallet] Failed to connect generated wallet:', connectError);
-      // Don't throw error here as wallet was still generated successfully
-    }
-
-    // Notify that a wallet has been generated
-    window.dispatchEvent(new CustomEvent('walletGenerated'));
-    
-    success.value = 'Wallet generated successfully!';
-    
-    // Close modals
-    isWalletModalOpen.value = false;
-    showCreateWallet.value = false;
-    
-    // Show success message briefly before redirect
-    setTimeout(() => {
-      // Redirect to a new wallet page or just close
-      // router.push('/new-wallet');
-    }, 1500);
-    
-  } catch (err: any) {
-    console.error('Wallet generation failed:', err);
-    error.value = err?.message || 'Failed to generate wallet. Please try again.';
-  } finally {
-    isGenerating.value = false;
-  }
+  error.value = 'Wallet generation not available. Please use MetaMask to connect your wallet.';
+  showToast.value = true;
+  toastMsg.value = 'Please install MetaMask and connect your wallet.';
+  setTimeout(() => { showToast.value = false; toastMsg.value = ''; }, 3000);
 }
 
 // Connect manual wallet (by address only)
@@ -319,9 +270,9 @@ async function connectManualWallet() {
     return;
   }
   
-  // Validate address format (basic check)
-  if (manualWallet.value.address.length !== 58) {
-    toastMsg.value = 'Invalid wallet address format!';
+  // Validate Ethereum address format (42 characters, starts with 0x)
+  if (!manualWallet.value.address.startsWith('0x') || manualWallet.value.address.length !== 42) {
+    toastMsg.value = 'Invalid Ethereum address format! Must start with 0x and be 42 characters.';
     showToast.value = true;
     setTimeout(() => { showToast.value = false; toastMsg.value = ''; }, 3000);
     return;

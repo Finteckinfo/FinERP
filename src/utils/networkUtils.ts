@@ -1,21 +1,34 @@
-// Network utility functions
-import { NetworkId } from '@txnlab/use-wallet-vue';
+// EVM Network utility functions
+import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
 
-export function getCurrentNetwork(): NetworkId {
-  const network = localStorage.getItem('algorand_network') || 'testnet';
-  return network as NetworkId;
+export function getCurrentNetwork(): number {
+  const { chainId } = useMetaMaskWallet();
+  return chainId.value || 1; // Default to Ethereum mainnet
 }
 
 export function isMainNet(): boolean {
-  return getCurrentNetwork() === 'mainnet';
+  return getCurrentNetwork() === 1; // Ethereum mainnet
 }
 
-export function setNetwork(network: NetworkId): void {
-  localStorage.setItem('algorand_network', network);
-  
-  // Emit event for other components to react
-  window.dispatchEvent(new CustomEvent('network-changed', { 
-    detail: { network } 
-  }));
+export function isTestnet(): boolean {
+  const chainId = getCurrentNetwork();
+  return chainId === 11155111; // Sepolia testnet
 }
 
+export function setNetwork(chainId: number): Promise<boolean> {
+  const { switchNetwork } = useMetaMaskWallet();
+  return switchNetwork(chainId);
+}
+
+export function getNetworkName(chainId: number): string {
+  switch (chainId) {
+    case 1:
+      return 'Ethereum Mainnet';
+    case 137:
+      return 'Polygon Mainnet';
+    case 11155111:
+      return 'Sepolia Testnet';
+    default:
+      return `Chain ${chainId}`;
+  }
+}

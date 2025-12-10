@@ -52,7 +52,7 @@ export function useMetaMaskWallet() {
   // Check if MetaMask is available
   const isMetaMaskAvailable = async (): Promise<boolean> => {
     const ethereum = await detectEthereumProvider();
-    return !!ethereum && ethereum.isMetaMask;
+    return !!(ethereum && ethereum.isMetaMask);
   };
 
   // Connect to MetaMask
@@ -67,13 +67,13 @@ export function useMetaMaskWallet() {
       }
 
       // Request account access
-      const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+      const accounts = await (ethereum as any).request({ method: 'eth_requestAccounts' });
       if (!accounts || accounts.length === 0) {
         throw new Error('No accounts found. Please connect your wallet.');
       }
 
       const address = accounts[0];
-      const ethersProvider = new ethers.BrowserProvider(ethereum);
+      const ethersProvider = new ethers.BrowserProvider(ethereum as any);
       const ethersSigner = await ethersProvider.getSigner();
       const network = await ethersProvider.getNetwork();
       const balance = await ethersProvider.getBalance(address);
@@ -178,8 +178,8 @@ export function useMetaMaskWallet() {
       const ethereum = await detectEthereumProvider();
       if (ethereum) {
         try {
-          const ethersProvider = new ethers.BrowserProvider(ethereum);
-          const accounts = await ethereum.request({ method: 'eth_accounts' });
+          const ethersProvider = new ethers.BrowserProvider(ethereum as any);
+          const accounts = await (ethereum as any).request({ method: 'eth_accounts' });
 
           if (accounts && accounts.length > 0 && accounts[0].toLowerCase() === storedAddress.toLowerCase()) {
             const ethersSigner = await ethersProvider.getSigner();

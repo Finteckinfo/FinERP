@@ -86,10 +86,7 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { useNextAuth } from '@/composables/useNextAuth';
 import { useRouter } from 'vue-router';
-import { NetworkId } from '@txnlab/use-wallet-vue';
 import { getProjectBudget, type ProjectBudgetSummary } from '@/services/paymentService';
-import { getSizTokenBalance, type SizTokenBalance } from '@/services/sizTokenService';
-import { connectedWallet, isWalletConnected } from '@/stores/walletStore';
 
 // Composables
 const { user } = useNextAuth();

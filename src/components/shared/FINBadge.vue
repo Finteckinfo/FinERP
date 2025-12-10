@@ -6,39 +6,39 @@
         :color="color"
         :size="size"
         :variant="variant"
-        class="sizcoin-badge"
-        @click="openAssetExplorer"
+        class="fin-badge"
+        @click="openTokenExplorer"
       >
         <v-icon v-if="showIcon" start :size="iconSize">mdi-coin</v-icon>
-        <span class="badge-text">{{ formattedAmount }} SIZ</span>
+        <span class="badge-text">{{ formattedAmount }} FIN</span>
         <v-icon v-if="showLink" end size="12" class="ml-1">mdi-open-in-new</v-icon>
       </v-chip>
     </template>
     
     <div class="asset-tooltip">
       <div class="tooltip-header">
-        <strong>SIZCOIN (SIZ)</strong>
+        <strong>FIN Token</strong>
       </div>
       <div class="tooltip-body">
         <div class="tooltip-row">
-          <span class="label">Asset ID:</span>
-          <span class="value">{{ SIZCOIN_CONFIG.ASSET_ID }}</span>
+          <span class="label">Contract:</span>
+          <span class="value">{{ contractAddress.slice(0, 8) }}...{{ contractAddress.slice(-6) }}</span>
         </div>
         <div class="tooltip-row">
           <span class="label">Decimals:</span>
-          <span class="value">{{ SIZCOIN_CONFIG.DECIMALS }}</span>
+          <span class="value">18</span>
         </div>
         <div class="tooltip-row">
           <span class="label">Network:</span>
-          <span class="value">{{ currentNetwork === 'mainnet' ? 'MainNet' : 'TestNet' }}</span>
+          <span class="value">{{ networkName }}</span>
         </div>
         <div class="tooltip-row">
           <span class="label">Amount:</span>
-          <span class="value">{{ formattedAmount }} SIZ</span>
+          <span class="value">{{ formattedAmount }} FIN</span>
         </div>
       </div>
       <div class="tooltip-footer">
-        <small>Click to view asset on explorer</small>
+        <small>Click to view token on explorer</small>
       </div>
     </div>
   </v-tooltip>
@@ -46,10 +46,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { SIZCOIN_CONFIG, formatSIZCOIN, getExplorerUrl } from '@/services/paymentService';
+import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import { getFinTokenAddress } from '@/lib/finTokenConfig';
 
 interface Props {
-  amount: number; // Amount in SIZ (not micro units)
+  amount: string; // Amount in FIN (formatted string)
   color?: string;
   size?: 'x-small' | 'small' | 'default' | 'large' | 'x-large';
   variant?: 'flat' | 'text' | 'elevated' | 'tonal' | 'outlined' | 'plain';
@@ -65,17 +66,29 @@ const props = withDefaults(defineProps<Props>(), {
   showLink: false
 });
 
-// Get current network
-const currentNetwork = computed(() => {
-  return (localStorage.getItem('algorand_network') || 'testnet') as 'mainnet' | 'testnet';
+const { chainId } = useMetaMaskWallet();
+
+// Get current network info
+const networkName = computed(() => {
+  const chain = chainId.value;
+  if (chain === 1) return 'Ethereum';
+  if (chain === 137) return 'Polygon';
+  if (chain === 11155111) return 'Sepolia';
+  return `Chain ${chain}`;
 });
 
-// Format amount with proper decimals
+const contractAddress = computed(() => {
+  return getFinTokenAddress(chainId.value || 1) || '';
+});
+
+// Format amount
 const formattedAmount = computed(() => {
+  const num = parseFloat(props.amount);
+  if (isNaN(num)) return '0.00';
   return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: SIZCOIN_CONFIG.DECIMALS,
-    maximumFractionDigits: SIZCOIN_CONFIG.DECIMALS
-  }).format(props.amount);
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(num);
 });
 
 // Icon size based on badge size
@@ -89,23 +102,33 @@ const iconSize = computed(() => {
   }
 });
 
-// Open asset page on Algorand explorer
-const openAssetExplorer = () => {
-  const baseUrl = currentNetwork.value === 'mainnet'
-    ? 'https://explorer.perawallet.app/asset/'
-    : 'https://testnet.explorer.perawallet.app/asset/';
-  const url = baseUrl + SIZCOIN_CONFIG.ASSET_ID;
+// Open token page on EVM explorer
+const openTokenExplorer = () => {
+  const chain = chainId.value;
+  let baseUrl = '';
+  
+  if (chain === 1) {
+    baseUrl = 'https://etherscan.io/token/';
+  } else if (chain === 137) {
+    baseUrl = 'https://polygonscan.com/token/';
+  } else if (chain === 11155111) {
+    baseUrl = 'https://sepolia.etherscan.io/token/';
+  } else {
+    return; // Unknown chain
+  }
+  
+  const url = baseUrl + contractAddress.value;
   window.open(url, '_blank');
 };
 </script>
 
 <style scoped>
-.sizcoin-badge {
+.fin-badge {
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.sizcoin-badge:hover {
+.fin-badge:hover {
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }

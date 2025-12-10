@@ -3,7 +3,7 @@
     <v-card-title class="d-flex flex-column align-center justify-center pa-4 position-relative">
       <div class="d-flex align-center justify-center gap-2 w-100">
         <v-icon size="24" color="primary">mdi-coin</v-icon>
-        <span class="text-h6 text-center">SIZ Token Balance</span>
+        <span class="text-h6 text-center">FIN Token Balance</span>
         <v-btn
           icon
           size="small"
@@ -36,7 +36,7 @@
       <div v-if="!isWalletConnected" class="text-center py-8">
         <v-icon size="64" color="grey-lighten-1" class="mb-4">mdi-wallet-off</v-icon>
         <p class="text-body-1 text-medium-emphasis mb-4">
-          Connect your wallet to view SIZ token balance
+          Connect your wallet to view FIN token balance
         </p>
         <v-btn color="primary" @click="handleOpenWallet">
           Connect Wallet
@@ -135,72 +135,42 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
-import { NetworkId } from '@txnlab/use-wallet-vue';
-import { connectedWallet, isWalletConnected, openWalletModal } from '@/stores/walletStore';
-import { getSizTokenBalance, type SizTokenBalance } from '@/services/sizTokenService';
+import { ref, computed, watch, onMounted } from 'vue';
+import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import { getFINTokenBalance, type FINTokenBalance } from '@/services/finTokenService';
 
 // State
 const loading = ref(false);
 const error = ref<string | null>(null);
-const tokenBalance = ref<SizTokenBalance | null>(null);
-const currentNetwork = ref<string>('testnet');
+const tokenBalance = ref<FINTokenBalance | null>(null);
+
+// EVM Wallet
+const { user: walletUser, isConnected, chainId, provider } = useMetaMaskWallet();
 
 // Computed
-const walletAddress = computed(() => connectedWallet.value || '');
-
-// Convert string network to NetworkId
-const networkId = computed<NetworkId>(() => {
-  const network = currentNetwork.value || localStorage.getItem('algorand_network') || 'testnet';
-  switch (network.toLowerCase()) {
-    case 'mainnet':
-      return NetworkId.MAINNET;
-    case 'testnet':
-      return NetworkId.TESTNET;
-    case 'betanet':
-      return NetworkId.BETANET;
-    case 'fnet':
-      return NetworkId.FNET;
-    case 'localnet':
-    case 'local':
-      return NetworkId.LOCALNET;
-    default:
-      return NetworkId.TESTNET;
-  }
-});
+const walletAddress = computed(() => walletUser.value?.address || '');
 
 const networkLabel = computed(() => {
-  const network = currentNetwork.value || 'testnet';
-  switch (network.toLowerCase()) {
-    case 'mainnet':
-      return 'Mainnet';
-    case 'testnet':
-      return 'Testnet';
-    case 'betanet':
-      return 'Betanet';
-    case 'fnet':
-      return 'Fnet';
-    case 'localnet':
-    case 'local':
-      return 'Localnet';
-    default:
-      return 'Testnet';
-  }
+  const chain = chainId.value;
+  if (chain === 1) return 'Ethereum';
+  if (chain === 137) return 'Polygon';
+  if (chain === 11155111) return 'Sepolia';
+  return `Chain ${chain}`;
 });
 
 const networkColor = computed(() => {
-  const network = currentNetwork.value || 'testnet';
-  return network.toLowerCase() === 'mainnet' ? 'success' : 'warning';
+  const chain = chainId.value;
+  return chain === 1 || chain === 137 ? 'success' : 'warning';
 });
 
 const networkIcon = computed(() => {
-  const network = currentNetwork.value || 'testnet';
-  return network.toLowerCase() === 'mainnet' ? 'mdi-network' : 'mdi-test-tube';
+  const chain = chainId.value;
+  return chain === 1 || chain === 137 ? 'mdi-network' : 'mdi-test-tube';
 });
 
 // Functions
 const refreshBalance = async () => {
-  if (!isWalletConnected.value || !walletAddress.value) {
+  if (!isConnected.value || !walletAddress.value || !chainId.value) {
     return;
   }
 
@@ -208,27 +178,31 @@ const refreshBalance = async () => {
   error.value = null;
 
   try {
-    // Get current network from localStorage
-    currentNetwork.value = localStorage.getItem('algorand_network') || 'testnet';
+    const tokenAddress = getFINTokenAddress(chainId.value);
+    const rpcUrl = getRPCUrl(chainId.value);
     
-    const balance = await getSizTokenBalance(walletAddress.value, networkId.value);
+    if (!tokenAddress || !rpcUrl) {
+      error.value = 'FIN token not configured for this network.';
+      return;
+    }
+    
+    const balance = await getFINTokenBalance(walletAddress.value, rpcUrl, tokenAddress);
     if (balance) {
       tokenBalance.value = balance;
     } else {
       error.value = 'Failed to fetch balance. Please check your network connection.';
     }
   } catch (err: any) {
-    console.error('Error fetching SIZ token balance:', err);
-    error.value = err.message || 'Failed to load SIZ token balance. Please try again.';
+    console.error('Error fetching FIN token balance:', err);
+    error.value = err.message || 'Failed to load FIN token balance. Please try again.';
   } finally {
     loading.value = false;
   }
 };
 
 const handleOpenWallet = () => {
-  console.log('[SizTokenBalance] handleOpenWallet called - opening wallet modal');
-  openWalletModal();
-  console.log('[SizTokenBalance] openWalletModal function executed');
+  // MetaMask connection is handled globally
+  console.log('[FINTokenBalance] Wallet connection handled by MetaMask');
 };
 
 // Helper to shorten wallet address for display
@@ -237,17 +211,9 @@ const shortenAddress = (address: string) => {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 };
 
-const handleNetworkChange = () => {
-  currentNetwork.value = localStorage.getItem('algorand_network') || 'testnet';
-  if (isWalletConnected.value) {
-    refreshBalance();
-  }
-};
-
 // Watch for wallet connection changes
-watch(isWalletConnected, (connected) => {
-  if (connected) {
-    currentNetwork.value = localStorage.getItem('algorand_network') || 'testnet';
+watch(isConnected, (connected) => {
+  if (connected && walletAddress.value && chainId.value) {
     refreshBalance();
   } else {
     tokenBalance.value = null;
@@ -255,59 +221,23 @@ watch(isWalletConnected, (connected) => {
   }
 }, { immediate: true });
 
-// Listen for wallet connection/disconnection events from other components
-const walletEventListener = (event: Event) => {
-  const customEvent = event as CustomEvent;
-  console.log('[SizTokenBalance] Wallet event received:', customEvent.type);
-  if (customEvent.type === 'wallet-connected') {
-    // Refresh balance when wallet is connected from another component
-    if (isWalletConnected.value) {
-      currentNetwork.value = localStorage.getItem('algorand_network') || 'testnet';
-      refreshBalance();
-    }
-  } else if (customEvent.type === 'wallet-disconnected') {
-    // Clear balance when wallet is disconnected
-    tokenBalance.value = null;
-    error.value = null;
-  }
-};
-
-// Watch for network changes in localStorage
-watch(() => localStorage.getItem('algorand_network'), () => {
-  handleNetworkChange();
-});
-
-// Listen for network-changed event
-const networkChangeListener = () => {
-  handleNetworkChange();
-};
-
-// Refresh on mount if wallet is already connected
-onMounted(() => {
-  currentNetwork.value = localStorage.getItem('algorand_network') || 'testnet';
-  
-  // Listen for network changes
-  window.addEventListener('network-changed', networkChangeListener);
-  
-  // Listen for wallet connection/disconnection events
-  window.addEventListener('wallet-connected', walletEventListener);
-  window.addEventListener('wallet-disconnected', walletEventListener);
-  
-  if (isWalletConnected.value) {
+// Watch for chain changes
+watch(chainId, () => {
+  if (isConnected.value && walletAddress.value) {
     refreshBalance();
   }
 });
 
-// Cleanup listener on unmount
-onUnmounted(() => {
-  window.removeEventListener('network-changed', networkChangeListener);
-  window.removeEventListener('wallet-connected', walletEventListener);
-  window.removeEventListener('wallet-disconnected', walletEventListener);
+// Refresh on mount if wallet is already connected
+onMounted(() => {
+  if (isConnected.value && walletAddress.value && chainId.value) {
+    refreshBalance();
+  }
 });
 </script>
 
 <style scoped>
-.siz-token-balance-card {
+.fin-token-balance-card {
   background: var(--erp-card-bg) !important;
   color: var(--erp-text) !important;
   border: 1px solid var(--erp-border) !important;
@@ -326,7 +256,7 @@ onUnmounted(() => {
   height: 24px !important;
 }
 
-.siz-token-balance-card :deep(.v-card-title) {
+.fin-token-balance-card :deep(.v-card-title) {
   justify-content: center;
 }
 
@@ -343,13 +273,13 @@ onUnmounted(() => {
   width: 100%;
 }
 
-.siz-logo-container {
+.fin-logo-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.siz-logo {
+.fin-logo {
   width: 80px;
   height: 80px;
   object-fit: contain;

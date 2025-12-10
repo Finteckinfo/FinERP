@@ -449,7 +449,7 @@
                         color="primary"
                         variant="elevated"
                         size="small"
-                        :href="'https://www.siz.land/wallet'"
+                        :href="import.meta.env.VITE_SSO_PRIMARY_DOMAIN || '#'"
                         target="_blank"
                       >
                         <v-icon start>mdi-open-in-new</v-icon>
@@ -493,8 +493,8 @@ import { useNextAuth } from '@/composables/useNextAuth';
 import { projectApi } from '@/services/projectApi';
 import { RetroGrid } from '@/components/ui/retro-grid';
 import PaymentConfigForm from './components/PaymentConfigForm.vue';
-import { NetworkId } from '@txnlab/use-wallet-vue';
-import { getSizTokenBalance } from '@/services/sizTokenService';
+import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import { getFINTokenBalance, getFINTokenAddress, getRPCUrl } from '@/services/finTokenService';
 
 const router = useRouter();
 const { user } = useNextAuth();
@@ -622,38 +622,39 @@ const canCreateProject = computed(() => {
          projectData.priority;
 });
 
-// Wallet + SIZ balance gating (using SSO wallet)
-const sizBalance = ref(0);
-const sizBalanceFormatted = ref(0);
+// Wallet + FIN balance gating (using MetaMask wallet)
+const finBalance = ref(0);
+const finBalanceFormatted = ref(0);
 const balanceLoading = ref(false);
 const balanceError = ref('');
 
-// Use SSO wallet address from NextAuth instead of manual wallet connection
-const ssoWalletAddress = computed(() => user.value?.walletAddress || '');
-const walletConnected = computed(() => !!ssoWalletAddress.value);
+// Use MetaMask wallet
+const { user: walletUser, isConnected, chainId } = useMetaMaskWallet();
+const walletAddress = computed(() => walletUser.value?.address || '');
+const walletConnected = computed(() => isConnected.value && !!walletAddress.value);
 
-const loadWalletSIZBalance = async () => {
-  sizBalance.value = 0;
-  sizBalanceFormatted.value = 0;
+const loadWalletFINBalance = async () => {
+  finBalance.value = 0;
+  finBalanceFormatted.value = 0;
   balanceError.value = '';
-  if (!ssoWalletAddress.value) return;
+  if (!walletAddress.value || !chainId.value) return;
   try {
     balanceLoading.value = true;
-    const network = (localStorage.getItem('algorand_network') || 'testnet').toLowerCase();
-    const networkId =
-      network === 'mainnet' ? NetworkId.MAINNET :
-      network === 'betanet' ? NetworkId.BETANET :
-      network === 'fnet' ? NetworkId.FNET :
-      network === 'localnet' || network === 'local' ? NetworkId.LOCALNET :
-      NetworkId.TESTNET;
-    const balance = await getSizTokenBalance(ssoWalletAddress.value, networkId);
+    const tokenAddress = getFINTokenAddress(chainId.value);
+    const rpcUrl = getRPCUrl(chainId.value);
+    
+    if (!tokenAddress || !rpcUrl) {
+      balanceError.value = 'FIN token not configured for this network';
+      return;
+    }
+    
+    const balance = await getFINTokenBalance(walletAddress.value, rpcUrl, tokenAddress);
     if (balance) {
-      // amount is base units; formattedAmount is human-readable string
-      sizBalance.value = Number(balance.amount) / Math.pow(10, balance.decimals || 0);
-      sizBalanceFormatted.value = parseFloat(balance.formattedAmount);
+      finBalance.value = Number(balance.amount) / Math.pow(10, balance.decimals || 18);
+      finBalanceFormatted.value = parseFloat(balance.formattedBalance);
     } else {
-      sizBalance.value = 0;
-      sizBalanceFormatted.value = 0;
+      finBalance.value = 0;
+      finBalanceFormatted.value = 0;
     }
   } catch (e: any) {
     balanceError.value = e?.message || 'Failed to load wallet balance';
@@ -662,14 +663,14 @@ const loadWalletSIZBalance = async () => {
   }
 };
 
-watch(() => ssoWalletAddress.value, async (addr) => {
-  if (addr) await loadWalletSIZBalance();
-  else sizBalance.value = 0;
+watch([walletAddress, chainId], async () => {
+  if (walletAddress.value && chainId.value) await loadWalletFINBalance();
+  else finBalance.value = 0;
 }, { immediate: true });
 
 // Gate strictly on the displayed formattedAmount per product requirement
-const meetsSizRequirement = computed(() => sizBalanceFormatted.value >= 0);
-const canSubmit = computed(() => !!canCreateProject.value && walletConnected.value && meetsSizRequirement.value);
+const meetsFINRequirement = computed(() => finBalanceFormatted.value >= 0);
+const canSubmit = computed(() => !!canCreateProject.value && walletConnected.value && meetsFINRequirement.value);
 
 // Draft state removed
 
@@ -918,14 +919,14 @@ const createProject = async () => {
     return;
   }
 
-  if (!ssoWalletAddress.value) {
-    error.value = 'Wallet address is required. Please ensure you are authenticated with a wallet.';
+  if (!walletAddress.value) {
+    error.value = 'Wallet address is required. Please connect your MetaMask wallet.';
     setTimeout(() => error.value = '', 5000);
     return;
   }
   
-  if (!meetsSizRequirement.value) {
-    error.value = 'You need at least 0.00 SIZ in your connected wallet to create a project.';
+  if (!meetsFINRequirement.value) {
+    error.value = 'You need at least 0.00 FIN in your connected wallet to create a project.';
     setTimeout(() => error.value = '', 5000);
     return;
   }
@@ -949,7 +950,7 @@ const createProject = async () => {
       endDate: projectData.endDate,
       ownerId: user.value.id, // Required by backend
       userId: user.value.id, // Required by backend
-      walletAddress: ssoWalletAddress.value, // From SSO authentication
+      walletAddress: walletAddress.value, // From MetaMask wallet
       departments: projectData.departments.map((dept, index) => ({
         name: dept.name,
         type: dept.type as 'MAJOR' | 'MINOR',
