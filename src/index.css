@@ -1,0 +1,268 @@
+/* Only ERP system - no conflicting imports */
+
+/* ERP system starts here - no conflicting variables */
+
+/* Removed conflicting Tailwind system */
+
+/* ===== ERP Dashboard exact palette (no theme tokens) ===== */
+:root {
+  /* Light mode */
+  --erp-header-bg: #ffffff;
+  --erp-sidebar-bg: #ffffff;
+  --erp-page-bg: #f3f4f6;
+  --erp-surface: #f3f4f6;
+  --erp-card-bg: #ffffff;
+  --erp-accent-green: #6ec207;
+  --erp-accent-indigo: #615fff;
+  --erp-text: #101828;
+  --erp-border: #e5e7eb; /* light border for separators */
+}
+
+.dark-theme {
+  /* Dark mode */
+  --erp-header-bg: #101828; /* topnav + page area */
+  --erp-sidebar-bg: #1e2939; /* sidenav + dropdowns */
+  --erp-page-bg: #101828;
+  --erp-surface: #1e2939;
+  --erp-card-bg: #101828;
+  --erp-accent-green: #6ec207;
+  --erp-accent-indigo: #615fff;
+  --erp-text: #ffffff;
+  --erp-border: #243041; /* subtle dark border */
+}
+
+/* Utilities for header/sidebar without using primary/secondary */
+.erp-header {
+  background-color: var(--erp-header-bg) !important;
+  color: var(--erp-text) !important;
+  border-bottom: 1px solid var(--erp-border) !important;
+}
+
+.erp-sidebar {
+  background-color: var(--erp-sidebar-bg) !important;
+  color: var(--erp-text) !important;
+  border-right: 1px solid var(--erp-border) !important;
+}
+
+.erp-surface {
+  background-color: var(--erp-surface) !important;
+}
+
+.erp-icon-btn {
+  background-color: transparent !important;
+  color: var(--erp-text) !important;
+}
+
+.erp-chip-green { background-color: var(--erp-accent-green) !important; color: #ffffff !important; }
+.erp-chip-indigo { background-color: var(--erp-accent-indigo) !important; color: #ffffff !important; }
+
+.erp-hover {
+  transition: background-color .2s ease;
+}
+.erp-hover:hover {
+  background-color: var(--erp-surface) !important;
+}
+
+/* Dark mode specific hover effects for sidebar */
+.dark-theme .erp-hover {
+  background-color: transparent !important;
+}
+.dark-theme .erp-hover:hover {
+  background-color: var(--erp-surface) !important;
+}
+.dark-theme .erp-hover:hover .v-list-item__prepend {
+  background-color: var(--erp-surface) !important;
+}
+
+/* Icon background styling - transparent by default */
+.icon-wrapper {
+  background-color: transparent !important;
+}
+.iconClass {
+  background-color: transparent !important;
+}
+.dark-theme .icon-wrapper {
+  background-color: transparent !important;
+}
+.dark-theme .iconClass {
+  background-color: transparent !important;
+}
+
+/* Dark mode sidebar header styling */
+.dark-theme .sidebar-header {
+  background-color: transparent !important;
+}
+.dark-theme .smallCap {
+  background-color: transparent !important;
+}
+
+/* Preserve active state styling in dark mode */
+.dark-theme .erp-item--active {
+  background-color: var(--erp-accent-green) !important;
+  color: #ffffff !important;
+  outline: 2px solid color-mix(in srgb, var(--erp-accent-indigo) 22%, transparent) !important;
+}
+
+/* Sidebar item active/hover styling */
+.erp-item {
+  border-radius: 10px !important;
+}
+.erp-item--active {
+  background-color: var(--erp-accent-green) !important;
+  color: #ffffff !important;
+  outline: 2px solid color-mix(in srgb, var(--erp-accent-indigo) 22%, transparent) !important;
+}
+.leftSidebar .v-list-item__overlay { display: none !important; }
+.leftSidebar .v-list-item-title { font-weight: 500; }
+
+/* Force sidebar background override */
+.leftSidebar {
+  background-color: var(--erp-sidebar-bg) !important;
+}
+.leftSidebar .v-navigation-drawer__content {
+  background-color: var(--erp-sidebar-bg) !important;
+}
+/* Override Vuetify navigation drawer background */
+.v-navigation-drawer.leftSidebar {
+  background-color: var(--erp-sidebar-bg) !important;
+}
+.v-navigation-drawer.leftSidebar .v-navigation-drawer__content {
+  background-color: var(--erp-sidebar-bg) !important;
+}
+/* Most specific selectors to override _sidebar.scss */
+body .v-navigation-drawer.leftSidebar {
+  background-color: var(--erp-sidebar-bg) !important;
+}
+body .v-navigation-drawer.leftSidebar .v-navigation-drawer__content {
+  background-color: var(--erp-sidebar-bg) !important;
+}
+body .v-navigation-drawer.leftSidebar .scrollnavbar {
+  background-color: var(--erp-sidebar-bg) !important;
+}
+/* Even more specific for dark-theme */
+body.dark-theme .v-navigation-drawer.leftSidebar {
+  background-color: var(--erp-sidebar-bg) !important;
+}
+body.dark-theme .v-navigation-drawer.leftSidebar .v-navigation-drawer__content {
+  background-color: var(--erp-sidebar-bg) !important;
+}
+body.dark-theme .v-navigation-drawer.leftSidebar .scrollnavbar {
+  background-color: var(--erp-sidebar-bg) !important;
+}
+/* Maximum specificity override */
+html body.dark-theme .v-navigation-drawer.leftSidebar {
+  background-color: var(--erp-sidebar-bg) !important;
+}
+html body.dark-theme .v-navigation-drawer.leftSidebar .v-navigation-drawer__content {
+  background-color: var(--erp-sidebar-bg) !important;
+}
+html body.dark-theme .v-navigation-drawer.leftSidebar .scrollnavbar {
+  background-color: var(--erp-sidebar-bg) !important;
+}
+
+/* Force immediate theme application for all ERP elements */
+html body.dark-theme * {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Ensure ERP variables take precedence over any other CSS */
+html body.dark-theme .erp-header,
+html body.dark-theme .erp-sidebar,
+html body.dark-theme .erp-surface,
+html body.dark-theme .erp-card-bg {
+  background-color: var(--erp-header-bg) !important;
+  color: var(--erp-text) !important;
+  border-color: var(--erp-border) !important;
+}
+
+/* Override any Vuetify theme colors */
+.leftSidebar .v-list-item:hover {
+  background-color: var(--erp-accent-green) !important;
+  color: #ffffff !important;
+}
+.leftSidebar .v-list-item--active {
+  background-color: var(--erp-accent-green) !important;
+  color: #ffffff !important;
+}
+.leftSidebar .v-list-group > .v-list-item--active,
+.leftSidebar .v-list-group > .v-list-item:hover {
+  background-color: var(--erp-accent-green) !important;
+  color: #ffffff !important;
+}
+
+/* Ensure sidebar headers + items keep consistent styling even when feature pages inject CSS */
+.leftSidebar :is(.sidebar-header, .v-list-subheader) {
+  background: transparent !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--erp-border, #283141) 90%, transparent) !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+.leftSidebar .v-list-item {
+  box-shadow: none !important;
+  background-image: none !important;
+  border: none !important;
+  border-radius: 10px !important;
+}
+
+.leftSidebar .v-btn {
+  box-shadow: none !important;
+  background-image: none !important;
+  border: none !important;
+  border-radius: 10px !important;
+}
+
+.leftSidebar :is(.v-avatar, .v-icon, .icon-wrapper, .iconClass, .v-list-item__prepend) {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border-radius: 12px !important;
+}
+
+/* Dropdown surfaces use sidebar bg for both modes */
+.erp-dropdown-surface {
+  background-color: var(--erp-sidebar-bg) !important;
+  color: var(--erp-text) !important;
+  border: 1px solid var(--erp-border) !important;
+  border-radius: 12px !important;
+}
+
+/* Force immediate theme application for all project components */
+html body.dark-theme .project-details,
+html body.dark-theme .project-view,
+html body.dark-theme .project-workspace,
+html body.dark-theme .kanban-project-creator {
+  background-color: var(--erp-page-bg) !important;
+  color: var(--erp-text) !important;
+}
+
+html body.dark-theme .project-card,
+html body.dark-theme .info-card,
+html body.dark-theme .actions-card,
+html body.dark-theme .progress-card,
+html body.dark-theme .stat-card {
+  background-color: var(--erp-card-bg) !important;
+  color: var(--erp-text) !important;
+  border-color: var(--erp-border) !important;
+}
+
+/* Ensure all text elements inherit the correct color immediately - EXCEPT landing page */
+html body.dark-theme :not(.landing-page):not(.landing-page *) h1,
+html body.dark-theme :not(.landing-page):not(.landing-page *) h2,
+html body.dark-theme :not(.landing-page):not(.landing-page *) h3,
+html body.dark-theme :not(.landing-page):not(.landing-page *) h4,
+html body.dark-theme :not(.landing-page):not(.landing-page *) h5,
+html body.dark-theme :not(.landing-page):not(.landing-page *) h6,
+html body.dark-theme :not(.landing-page):not(.landing-page *) p,
+html body.dark-theme :not(.landing-page):not(.landing-page *) span,
+html body.dark-theme :not(.landing-page):not(.landing-page *) div {
+  color: var(--erp-text) !important;
+}
+
+/* Landing page should use its own styling */
+.landing-page, .landing-page * {
+  color: inherit !important;
+}
