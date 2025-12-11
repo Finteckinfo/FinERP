@@ -68,7 +68,7 @@
             <v-card-text class="pa-4">
               <div class="d-flex align-center justify-space-between">
                 <div class="d-flex align-center">
-                  <img src="/images/finerp-logo.png" alt="FIN" class="token-icon mr-3" />
+                  <v-icon size="32" color="primary" class="mr-3">mdi-coin</v-icon>
                   <div>
                     <div class="text-body-1 font-weight-medium">FIN</div>
                     <div class="text-caption text-medium-emphasis">FinToken</div>
