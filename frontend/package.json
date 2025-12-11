@@ -64,6 +64,7 @@
   "devDependencies": {
     "@eslint/js": "^9.17.0",
     "@rollup/plugin-commonjs": "^28.0.6",
+    "@tailwindcss/vite": "^4.1.18",
     "@types/chance": "1.1.6",
     "@types/lodash": "^4.17.20",
     "@types/node": "^22.18.0",
