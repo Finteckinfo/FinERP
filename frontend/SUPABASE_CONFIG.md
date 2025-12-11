@@ -113,10 +113,10 @@ VITE_API_URL=REPLACE_WITH_YOUR_SUPABASE_URL/rest/v1
 For local development, create `frontend/.env.local`:
 
 ```bash
-VITE_SUPABASE_URL=https://haslirlxxyrllbaytwop.supabase.co
+VITE_SUPABASE_URL=REPLACE_WITH_YOUR_SUPABASE_URL
 VITE_SUPABASE_ANON_KEY=your_anon_key_here
-VITE_BACKEND_URL=https://haslirlxxyrllbaytwop.supabase.co
-VITE_API_URL=https://haslirlxxyrllbaytwop.supabase.co/rest/v1
+VITE_BACKEND_URL=REPLACE_WITH_YOUR_SUPABASE_URL
+VITE_API_URL=REPLACE_WITH_YOUR_SUPABASE_URL/rest/v1
 ```
 
 ## Testing the Connection
