@@ -6,7 +6,7 @@ import Customizer from './customizer/CustomizerPanel.vue';
 import FooterPanel from './footer/FooterPanel.vue';
 import { InteractiveGridPattern } from '@/components/ui/interactive-grid-pattern';
 import { useCustomizerStore } from '../../stores/customizer';
-import SettingsIcon from 'vue-tabler-icons/icons/SettingsIcon';
+import { SettingsIcon } from 'vue-tabler-icons';
 import { useTheme } from '@/composables/useTheme';
 
 const customizer = useCustomizerStore();
