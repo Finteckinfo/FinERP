@@ -446,17 +446,17 @@ const shortenAddress = (address: string) => {
           <section class="mb-4">
             <h6 class="mb-3 text-subtitle-1 font-weight-medium">Connect Manually</h6>
             <p class="text-body-2 text-medium-emphasis mb-3">
-              Enter your Algorand wallet address (58 characters)
+              Enter your EVM wallet address (0x...)
             </p>
             <v-text-field
               v-model="manualWallet.address"
               label="Wallet Address"
               variant="outlined"
               density="comfortable"
-              placeholder="Enter your Algorand wallet address"
+              placeholder="0x..."
               :rules="[
                 v => !!v || 'Wallet address is required',
-                v => v.length === 58 || 'Wallet address must be 58 characters'
+                v => /^0x[a-fA-F0-9]{40}$/.test(v) || 'Invalid EVM address (must start with 0x and be 42 characters)'
               ]"
               class="mb-2"
             />
@@ -464,7 +464,7 @@ const shortenAddress = (address: string) => {
               color="primary"
               block
               @click="connectManualWallet"
-              :disabled="!manualWallet.address || manualWallet.address.length !== 58"
+              :disabled="!manualWallet.address || !/^0x[a-fA-F0-9]{40}$/.test(manualWallet.address)"
             >
               <v-icon start>mdi-link</v-icon>
               Connect Manual Wallet
