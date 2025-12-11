@@ -5,10 +5,10 @@ Copy and paste these into Netlify Dashboard → Site settings → Environment va
 ## Required Supabase Variables
 
 ```
-VITE_SUPABASE_URL=https://haslirlxxyrllbaytwop.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhc2xpcmx4eHlybGxiYXl0d29wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0NjI0MzUsImV4cCI6MjA4MTAzODQzNX0.Y19eGEHxorYxoQCT7rgHsrLboccQGpLQ6qb78EzFQx0
-VITE_BACKEND_URL=https://haslirlxxyrllbaytwop.supabase.co
-VITE_API_URL=https://haslirlxxyrllbaytwop.supabase.co/rest/v1
+VITE_SUPABASE_URL=REPLACE_WITH_YOUR_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY=REPLACE_WITH_YOUR_SUPABASE_ANON_KEY
+VITE_BACKEND_URL=REPLACE_WITH_YOUR_SUPABASE_URL
+VITE_API_URL=REPLACE_WITH_YOUR_SUPABASE_URL/rest/v1
 ```
 
 ## Network RPC URLs (Add your keys)

@@ -19,16 +19,16 @@ This guide walks you through getting ALL environment variables needed for FinERP
 **Status:** You already have these!
 
 ### Step-by-Step:
-1. Go to: https://supabase.com/dashboard/project/haslirlxxyrllbaytwop
+1. Go to: https://supabase.com/dashboard/project/REPLACE_WITH_YOUR_PROJECT_ID
 2. Click **Settings** (gear icon in left sidebar)
 3. Click **API** in the settings menu
 4. Copy these values:
 
 ```
-VITE_SUPABASE_URL=https://haslirlxxyrllbaytwop.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhc2xpcmx4eHlybGxiYXl0d29wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0NjI0MzUsImV4cCI6MjA4MTAzODQzNX0.Y19eGEHxorYxoQCT7rgHsrLboccQGpLQ6qb78EzFQx0
-VITE_BACKEND_URL=https://haslirlxxyrllbaytwop.supabase.co
-VITE_API_URL=https://haslirlxxyrllbaytwop.supabase.co/rest/v1
+VITE_SUPABASE_URL=REPLACE_WITH_YOUR_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY=REPLACE_WITH_YOUR_SUPABASE_ANON_KEY
+VITE_BACKEND_URL=REPLACE_WITH_YOUR_SUPABASE_URL
+VITE_API_URL=REPLACE_WITH_YOUR_SUPABASE_URL/rest/v1
 ```
 
 ---
@@ -289,7 +289,7 @@ VITE_COOKIE_DOMAIN=.netlify.app
 
 4. **Add Each Variable**
    - **Key**: `VITE_SUPABASE_URL`
-   - **Value**: `https://haslirlxxyrllbaytwop.supabase.co`
+   - **Value**: `REPLACE_WITH_YOUR_SUPABASE_URL`
    - Click **Save**
    - Repeat for each variable
 
@@ -297,10 +297,10 @@ VITE_COOKIE_DOMAIN=.netlify.app
    - Click **Add multiple** button
    - Paste all variables in this format:
    ```
-   VITE_SUPABASE_URL=https://haslirlxxyrllbaytwop.supabase.co
-   VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhc2xpcmx4eHlybGxiYXl0d29wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0NjI0MzUsImV4cCI6MjA4MTAzODQzNX0.Y19eGEHxorYxoQCT7rgHsrLboccQGpLQ6qb78EzFQx0
-   VITE_BACKEND_URL=https://haslirlxxyrllbaytwop.supabase.co
-   VITE_API_URL=https://haslirlxxyrllbaytwop.supabase.co/rest/v1
+   VITE_SUPABASE_URL=REPLACE_WITH_YOUR_SUPABASE_URL
+   VITE_SUPABASE_ANON_KEY=REPLACE_WITH_YOUR_SUPABASE_ANON_KEY
+   VITE_BACKEND_URL=REPLACE_WITH_YOUR_SUPABASE_URL
+   VITE_API_URL=REPLACE_WITH_YOUR_SUPABASE_URL/rest/v1
    VITE_ETHEREUM_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY
    VITE_POLYGON_RPC_URL=https://polygon-mainnet.g.alchemy.com/v2/YOUR_KEY
    VITE_SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/YOUR_KEY
@@ -360,10 +360,10 @@ Copy this template and fill in your values:
 
 ```bash
 # Supabase (You have these)
-VITE_SUPABASE_URL=https://haslirlxxyrllbaytwop.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhc2xpcmx4eHlybGxiYXl0d29wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0NjI0MzUsImV4cCI6MjA4MTAzODQzNX0.Y19eGEHxorYxoQCT7rgHsrLboccQGpLQ6qb78EzFQx0
-VITE_BACKEND_URL=https://haslirlxxyrllbaytwop.supabase.co
-VITE_API_URL=https://haslirlxxyrllbaytwop.supabase.co/rest/v1
+VITE_SUPABASE_URL=REPLACE_WITH_YOUR_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY=REPLACE_WITH_YOUR_SUPABASE_ANON_KEY
+VITE_BACKEND_URL=REPLACE_WITH_YOUR_SUPABASE_URL
+VITE_API_URL=REPLACE_WITH_YOUR_SUPABASE_URL/rest/v1
 
 # RPC URLs (Get from Alchemy/Infura)
 VITE_ETHEREUM_RPC_URL=

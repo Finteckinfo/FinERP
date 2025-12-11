@@ -2,16 +2,16 @@
 
 ## Supabase Project Details
 
-**Project URL**: `https://haslirlxxyrllbaytwop.supabase.co`
+**Project URL**: `REPLACE_WITH_YOUR_SUPABASE_URL`
 
 ## Next Steps
 
 ### 1. Get Your API Keys
 
-1. Go to your Supabase dashboard: https://supabase.com/dashboard/project/haslirlxxyrllbaytwop
+1. Go to your Supabase dashboard: https://supabase.com/dashboard/project/REPLACE_WITH_YOUR_PROJECT_ID
 2. Navigate to **Settings** → **API**
 3. Copy these values:
-   - **Project URL**: `https://haslirlxxyrllbaytwop.supabase.co` (you already have this)
+   - **Project URL**: `REPLACE_WITH_YOUR_SUPABASE_URL` (replace with your actual URL)
    - **anon/public key**: (starts with `eyJ...`) - Copy this!
 
 ### 2. Set Up Database Schema
@@ -102,10 +102,10 @@ See `NETLIFY_ENV_VARS.md` for the complete list of environment variables to add 
 
 Required Supabase variables:
 ```
-VITE_SUPABASE_URL=https://haslirlxxyrllbaytwop.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhc2xpcmx4eHlybGxiYXl0d29wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0NjI0MzUsImV4cCI6MjA4MTAzODQzNX0.Y19eGEHxorYxoQCT7rgHsrLboccQGpLQ6qb78EzFQx0
-VITE_BACKEND_URL=https://haslirlxxyrllbaytwop.supabase.co
-VITE_API_URL=https://haslirlxxyrllbaytwop.supabase.co/rest/v1
+VITE_SUPABASE_URL=REPLACE_WITH_YOUR_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY=REPLACE_WITH_YOUR_SUPABASE_ANON_KEY
+VITE_BACKEND_URL=REPLACE_WITH_YOUR_SUPABASE_URL
+VITE_API_URL=REPLACE_WITH_YOUR_SUPABASE_URL/rest/v1
 ```
 
 ### 5. Local Development
@@ -151,5 +151,5 @@ if (error) {
 
 ## Dashboard Link
 
-Your Supabase dashboard: https://supabase.com/dashboard/project/haslirlxxyrllbaytwop
+Your Supabase dashboard: https://supabase.com/dashboard/project/REPLACE_WITH_YOUR_PROJECT_ID
 

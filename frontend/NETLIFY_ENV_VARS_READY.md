@@ -6,21 +6,21 @@ Copy and paste these into Netlify Dashboard → Site settings → Environment va
 
 ```bash
 # Supabase Database
-VITE_SUPABASE_URL=https://haslirlxxyrllbaytwop.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhc2xpcmx4eHlybGxiYXl0d29wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0NjI0MzUsImV4cCI6MjA4MTAzODQzNX0.Y19eGEHxorYxoQCT7rgHsrLboccQGpLQ6qb78EzFQx0
-VITE_BACKEND_URL=https://haslirlxxyrllbaytwop.supabase.co
-VITE_API_URL=https://haslirlxxyrllbaytwop.supabase.co/rest/v1
+VITE_SUPABASE_URL=REPLACE_WITH_YOUR_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY=REPLACE_WITH_YOUR_SUPABASE_ANON_KEY
+VITE_BACKEND_URL=REPLACE_WITH_YOUR_SUPABASE_URL
+VITE_API_URL=REPLACE_WITH_YOUR_SUPABASE_URL/rest/v1
 
 # RPC URLs (All Complete!)
-VITE_ETHEREUM_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/FKZHDvByL0evFDiWtKzFy
-VITE_POLYGON_RPC_URL=https://polygon-mainnet.g.alchemy.com/v2/FKZHDvByL0evFDiWtKzFy
-VITE_SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/FKZHDvByL0evFDiWtKzFy
+VITE_ETHEREUM_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/REPLACE_WITH_YOUR_ALCHEMY_KEY
+VITE_POLYGON_RPC_URL=https://polygon-mainnet.g.alchemy.com/v2/REPLACE_WITH_YOUR_ALCHEMY_KEY
+VITE_SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/REPLACE_WITH_YOUR_ALCHEMY_KEY
 
 # WalletConnect (Multi-wallet support)
-VITE_WALLETCONNECT_PROJECT_ID=4e7282ceda516b26364a9827eeb51559
+VITE_WALLETCONNECT_PROJECT_ID=REPLACE_WITH_YOUR_WALLETCONNECT_PROJECT_ID
 
 # Block Explorer (Transaction history)
-VITE_ETHERSCAN_API_KEY=FGQHSYTAWKZ8B9FPJGM8631UCBGV27Q2KK
+VITE_ETHERSCAN_API_KEY=REPLACE_WITH_YOUR_ETHERSCAN_API_KEY
 ```
 
 ## ⏳ Still Need (Add Later)
