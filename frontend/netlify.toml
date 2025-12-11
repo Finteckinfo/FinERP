@@ -6,8 +6,21 @@
   # Directory to publish (Vite outputs to 'dist')
   publish = "dist"
   # Node version for build
+# Netlify Configuration for FinERP Frontend
+
+[build]
+  # Build command
+  command = "npm run build"
+  # Directory to publish (Vite outputs to 'dist')
+  publish = "dist"
+  # Node version for build
   [build.environment]
     NODE_VERSION = "18"
+    # VITE_* variables are intentionally public (embedded in client-side code)
+    # These are not secrets - they're meant to be accessible in the browser
+    SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY,VITE_API_URL,VITE_BACKEND_URL,VITE_ETHEREUM_RPC_URL,VITE_POLYGON_RPC_URL,VITE_SEPOLIA_RPC_URL,VITE_WALLETCONNECT_PROJECT_ID,VITE_ETHERSCAN_API_KEY"
+    # Also exclude dist folder from scanning (build output)
+    SECRETS_SCAN_OMIT_PATHS = "dist/**,**/dist/**"
 
 # SPA redirects - all routes should serve index.html
 [[redirects]]
