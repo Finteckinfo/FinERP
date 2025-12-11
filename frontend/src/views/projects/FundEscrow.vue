@@ -65,7 +65,7 @@
                   <div class="detail-row">
                     <span class="label">Asset:</span>
                     <div class="value-with-actions">
-                      <FINBadge :amount="0" />
+                      <FINBadge :amount="'0'" />
                       <span class="ml-2 text-caption">FIN Token</span>
                     </div>
                   </div>
@@ -73,26 +73,26 @@
                   <!-- Current Balance -->
                   <div class="detail-row balance-row">
                     <span class="label">Current Balance:</span>
-                    <span class="balance-value">{{ formatAmount(currentBalance) }} SIZ</span>
+                    <span class="balance-value">{{ formatAmount(currentBalance) }} FIN</span>
                   </div>
 
                   <!-- Obligation Details -->
                   <div class="detail-row">
                     <span class="label">Pending Task Hold:</span>
-                    <span class="value">{{ formatAmount(pendingHold) }} SIZ</span>
+                    <span class="value">{{ formatAmount(pendingHold) }} FIN</span>
                   </div>
                   <div class="detail-row">
                     <span class="label">Processing Transfers:</span>
-                    <span class="value">{{ formatAmount(processingHold) }} SIZ</span>
+                    <span class="value">{{ formatAmount(processingHold) }} FIN</span>
                   </div>
                   <div class="detail-row">
                     <span class="label">Total Obligations:</span>
-                    <span class="value">{{ formatAmount(obligationsTotal) }} SIZ</span>
+                    <span class="value">{{ formatAmount(obligationsTotal) }} FIN</span>
                   </div>
                   <div class="detail-row">
                     <span class="label">Net Available:</span>
                     <span :class="['value', netAvailable > 0 ? 'text-success' : 'text-warning']">
-                      {{ formatAmount(netAvailable) }} SIZ
+                      {{ formatAmount(netAvailable) }} FIN
                     </span>
                   </div>
 
@@ -100,7 +100,7 @@
                   <div class="detail-row remaining-row">
                     <span class="label">Recommended Top-up:</span>
                     <span :class="['value', remainingAmount > 0 ? 'text-warning' : 'text-success']">
-                      {{ formatAmount(remainingAmount) }} SIZ
+                      {{ formatAmount(remainingAmount) }} FIN
                     </span>
                   </div>
                 </div>
@@ -123,9 +123,9 @@
                       <div v-if="fundingNeeded.upcoming" class="mb-3">
                         <h4 class="text-subtitle-2 mb-2">Upcoming Payments:</h4>
                         <div class="text-caption">
-                          <div>Next 7 days: {{ formatAmount(fundingNeeded.upcoming.next7Days) }} SIZ</div>
-                          <div>Next 30 days: {{ formatAmount(fundingNeeded.upcoming.next30Days) }} SIZ</div>
-                          <div>Next 90 days: {{ formatAmount(fundingNeeded.upcoming.next90Days) }} SIZ</div>
+                          <div>Next 7 days: {{ formatAmount(fundingNeeded.upcoming.next7Days) }} FIN</div>
+                          <div>Next 30 days: {{ formatAmount(fundingNeeded.upcoming.next30Days) }} FIN</div>
+                          <div>Next 90 days: {{ formatAmount(fundingNeeded.upcoming.next90Days) }} FIN</div>
                         </div>
                       </div>
                       
@@ -137,7 +137,7 @@
                           @click="sendAmount = fundingNeeded.recommended"
                         >
                           <v-icon size="16" class="mr-1">mdi-cash-plus</v-icon>
-                          Fund {{ formatAmount(fundingNeeded.recommended) }} SIZ
+                          Fund {{ formatAmount(fundingNeeded.recommended) }} FIN
                         </v-btn>
                       </div>
                     </div>
@@ -196,7 +196,7 @@
                         type="number"
                         :min="0"
                         :step="0.01"
-                        suffix="SIZ"
+                        suffix="FIN"
                         variant="outlined"
                         class="mb-4"
                         hint="Enter the amount of FIN tokens to send from your wallet"
@@ -221,7 +221,7 @@
                           <strong>Sending to:</strong> {{ escrowData.escrowAddress }}
                         </div>
                         <div class="text-body-2 mt-2">
-                          <strong>Amount:</strong> {{ formatAmount(sendAmount) }} SIZ
+                          <strong>Amount:</strong> {{ formatAmount(sendAmount) }} FIN
                         </div>
                       </v-alert>
 
@@ -234,7 +234,7 @@
                         @click="sendFromWallet"
                       >
                         <v-icon start>mdi-send</v-icon>
-                        Send {{ formatAmount(sendAmount) }} SIZ to Escrow
+                        Send {{ formatAmount(sendAmount) }} FIN to Escrow
                       </v-btn>
                     </div>
                   </v-window-item>
@@ -296,7 +296,7 @@
                     </div>
                     <div class="stat-content">
                       <span class="stat-label">Total Obligations</span>
-                      <span class="stat-value">{{ formatAmount(obligationsTotal) }} SIZ</span>
+                      <span class="stat-value">{{ formatAmount(obligationsTotal) }} FIN</span>
                     </div>
                   </div>
 
@@ -306,7 +306,7 @@
                     </div>
                     <div class="stat-content">
                       <span class="stat-label">Escrow Balance</span>
-                      <span class="stat-value">{{ formatAmount(currentBalance) }} SIZ</span>
+                      <span class="stat-value">{{ formatAmount(currentBalance) }} FIN</span>
                     </div>
                   </div>
 
@@ -316,7 +316,7 @@
                     </div>
                     <div class="stat-content">
                       <span class="stat-label">Recommended Top-up</span>
-                      <span class="stat-value">{{ formatAmount(remainingAmount) }} SIZ</span>
+                      <span class="stat-value">{{ formatAmount(remainingAmount) }} FIN</span>
                     </div>
                   </div>
                 </div>
@@ -397,7 +397,7 @@
                     </template>
 
                     <v-list-item-title>
-                      +{{ formatAmount(tx.amount) }} SIZ
+                      +{{ formatAmount(tx.amount) }} FIN
                     </v-list-item-title>
                     
                     <v-list-item-subtitle>
@@ -484,7 +484,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { useEVMWallet } from '@/composables/useEVMWallet';
 import { ethers } from 'ethers';
 import { RetroGrid } from '@/components/ui/retro-grid';
-import { FINBadge } from '@/components/shared/FINBadge';
+import FINBadge from '@/components/shared/FINBadge.vue';
 import {
   getEscrowBalance,
   depositToEscrow,
