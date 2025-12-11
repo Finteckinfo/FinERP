@@ -209,6 +209,10 @@ const navigateToProjectsList = () => {
   router.push('/projects');
 };
 
+const navigateToCreateProject = () => {
+  router.push('/projects/create');
+};
+
 const navigateToInvitations = () => {
   router.push('/invitations');
 };
