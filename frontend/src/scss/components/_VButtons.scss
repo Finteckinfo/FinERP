@@ -43,19 +43,29 @@
     box-shadow: none !important;
   }
   
-  // Responsive sizing - Full width on mobile
+  // Responsive sizing - Full width on mobile for action buttons
   @media (max-width: 768px) {
     min-height: 48px !important;
     padding: 0 18px !important;
     font-size: 0.9375rem !important;
-    width: 100% !important;
-    max-width: 100% !important;
+    
+    // Full width for primary action buttons (not icon, not text variant, not in nav)
+    &:not(.v-btn--icon):not(.v-btn--variant-text):not(.nav-button):not(.erp-icon-btn) {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
   }
   
   @media (max-width: 480px) {
     min-height: 44px !important;
     padding: 0 16px !important;
     font-size: 0.875rem !important;
+    
+    // Full width for primary action buttons (not icon, not text variant, not in nav)
+    &:not(.v-btn--icon):not(.v-btn--variant-text):not(.nav-button):not(.erp-icon-btn) {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
   }
 }
 
