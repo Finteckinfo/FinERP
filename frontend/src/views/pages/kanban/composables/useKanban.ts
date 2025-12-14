@@ -72,7 +72,7 @@ export function useKanban() {
           return dueDate >= startDate && dueDate <= endDate;
         });
       }
-
+      
       // Apply soft-archive filter (hide archived cards by default)
       if (!filters.value.includeArchived) {
         filteredTasks = filteredTasks.filter((task: KanbanTask) => !task.archivedAt);
@@ -356,7 +356,7 @@ export function useKanban() {
   watch(() => filters.value, () => {
     // Enforce "project = board": do not load anything unless a projectId filter exists
     if (filters.value.projectIds && filters.value.projectIds.length > 0) {
-      loadKanbanData(true);
+    loadKanbanData(true);
     }
   }, { deep: true });
 
@@ -364,8 +364,8 @@ export function useKanban() {
   onMounted(() => {
     // Enforce "project = board": do not load anything unless a projectId filter exists
     if (filters.value.projectIds && filters.value.projectIds.length > 0) {
-      loadKanbanData();
-      connectWebSocket();
+    loadKanbanData();
+    connectWebSocket();
     }
   });
 

@@ -1,9 +1,5 @@
 # FinERP - Production-Grade EVM ERP System
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Solidity](https://img.shields.io/badge/Solidity-0.8.20-blue)](https://soliditylang.org/)
-[![Vue](https://img.shields.io/badge/Vue-3.5-green)](https://vuejs.org/)
-
 FinERP is a secure, blockchain-based Enterprise Resource Planning system built on EVM-compatible networks. It combines smart contract-powered escrow payments, integrated DEX functionality, and gasless transactions into a professional Web3 ERP experience.
 
 ## Architecture Overview
@@ -187,5 +183,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Inspired by the need for trust and transparency in remote work
 
 ---
+
+**Authored by Llakterian**
 
 **FinERP** - Transforming remote work with blockchain-powered trust and transparency.

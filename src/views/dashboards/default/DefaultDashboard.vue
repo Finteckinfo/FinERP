@@ -170,9 +170,9 @@ onMounted(() => {
         <div class="hero-text">
           <h1>Welcome back<span v-if="isConnected">, {{ userDisplayName }}</span></h1>
           <p>Your project command center</p>
-        </div>
+    </div>
         <div class="hero-actions">
-          <v-btn
+            <v-btn 
             v-if="!isConnected"
             color="primary"
             variant="flat"
@@ -182,20 +182,20 @@ onMounted(() => {
             class="connect-btn"
           >
             Connect Wallet
-          </v-btn>
-          <v-btn
+            </v-btn>
+            <v-btn 
             v-else
-            color="primary"
-            variant="flat"
+              color="primary" 
+              variant="flat" 
             size="large"
-            prepend-icon="mdi-plus"
+              prepend-icon="mdi-plus" 
             @click="showCreateProject = true"
             class="create-btn"
-          >
+            >
             New Project
-          </v-btn>
+            </v-btn>
+          </div>
         </div>
-      </div>
     </header>
 
     <!-- Stats Row -->
@@ -208,8 +208,8 @@ onMounted(() => {
           <span class="stat-value">{{ stats.activeProjects }}</span>
           <span class="stat-label">Active Projects</span>
         </div>
-      </div>
-      
+        </div>
+
       <div class="stat-card">
         <div class="stat-icon tasks">
           <v-icon>mdi-checkbox-marked-circle-outline</v-icon>
@@ -218,8 +218,8 @@ onMounted(() => {
           <span class="stat-value">{{ stats.completedTasks }}/{{ stats.totalTasks }}</span>
           <span class="stat-label">Tasks Done</span>
         </div>
-      </div>
-      
+        </div>
+
       <div class="stat-card">
         <div class="stat-icon pending">
           <v-icon>mdi-clock-outline</v-icon>
@@ -228,12 +228,12 @@ onMounted(() => {
           <span class="stat-value">{{ stats.pendingTasks }}</span>
           <span class="stat-label">Pending</span>
         </div>
-      </div>
-      
+            </div>
+            
       <div class="stat-card">
         <div class="stat-icon rate">
           <v-icon>mdi-chart-arc</v-icon>
-        </div>
+              </div>
         <div class="stat-info">
           <span class="stat-value">{{ stats.completionRate }}%</span>
           <span class="stat-label">Completion</span>
@@ -250,32 +250,32 @@ onMounted(() => {
             <v-icon class="section-icon">mdi-folder-star</v-icon>
             Projects
           </h2>
-          <v-btn
+                <v-btn 
             variant="text"
             color="primary"
-            size="small"
+                  size="small"
             @click="showCreateProject = true"
-          >
+                >
             + New
-          </v-btn>
-        </div>
+                </v-btn>
+              </div>
 
         <div v-if="loading" class="loading-state">
           <v-progress-circular indeterminate size="32"></v-progress-circular>
-        </div>
+            </div>
 
         <div v-else-if="recentProjects.length === 0" class="empty-state">
           <v-icon size="48" color="grey-lighten-1">mdi-folder-plus-outline</v-icon>
           <p>No projects yet</p>
-          <v-btn
+              <v-btn 
             variant="tonal"
             color="primary"
-            size="small"
+                size="small"
             @click="showCreateProject = true"
-          >
+              >
             Create your first project
-          </v-btn>
-        </div>
+              </v-btn>
+            </div>
 
         <div v-else class="projects-grid">
           <div
@@ -287,13 +287,13 @@ onMounted(() => {
             <div class="project-header">
               <div class="project-avatar">
                 {{ project.title?.charAt(0)?.toUpperCase() || 'P' }}
-              </div>
+                        </div>
               <div class="project-info">
                 <h3>{{ project.title }}</h3>
                 <span class="project-status" :class="project.status">
                   {{ project.status || 'active' }}
-                </span>
-              </div>
+                          </span>
+                        </div>
             </div>
             <p class="project-desc" v-if="project.description">
               {{ project.description }}
@@ -303,9 +303,9 @@ onMounted(() => {
                 <v-icon size="14">mdi-calendar</v-icon>
                 {{ new Date(project.created_at).toLocaleDateString() }}
               </span>
-            </div>
-          </div>
-        </div>
+                            </div>
+                        </div>
+                        </div>
       </section>
 
       <!-- Tasks Section -->
@@ -315,25 +315,25 @@ onMounted(() => {
             <v-icon class="section-icon">mdi-format-list-checks</v-icon>
             Upcoming Tasks
           </h2>
-          <v-btn
+                        <v-btn 
             variant="text"
             color="primary"
-            size="small"
+                          size="small"
             :to="{ path: '/kanban' }"
-          >
+                        >
             View All
-          </v-btn>
+                        </v-btn>
         </div>
 
         <div v-if="loading" class="loading-state">
           <v-progress-circular indeterminate size="32"></v-progress-circular>
-        </div>
+                      </div>
 
         <div v-else-if="upcomingTasks.length === 0" class="empty-state">
           <v-icon size="48" color="grey-lighten-1">mdi-check-all</v-icon>
           <p>All caught up!</p>
-        </div>
-
+              </div>
+              
         <div v-else class="tasks-list">
           <div
             v-for="task in upcomingTasks"
@@ -344,7 +344,7 @@ onMounted(() => {
               <v-icon :color="getStatusColor(task.status)" size="18">
                 mdi-circle
               </v-icon>
-            </div>
+              </div>
             <div class="task-content">
               <span class="task-title">{{ task.title }}</span>
               <span class="task-meta">
@@ -354,8 +354,8 @@ onMounted(() => {
                 {{ task.status?.replace('_', ' ') }}
               </span>
             </div>
-          </div>
-        </div>
+                </div>
+                </div>
       </section>
 
       <!-- Wallet Section -->
@@ -365,7 +365,7 @@ onMounted(() => {
             <v-icon class="section-icon">mdi-wallet</v-icon>
             Wallet
           </h2>
-        </div>
+                </div>
         <FINTokenBalance />
       </section>
 
@@ -376,11 +376,11 @@ onMounted(() => {
             <v-icon class="section-icon">mdi-swap-horizontal</v-icon>
             Swap
           </h2>
-        </div>
+                  </div>
         <DEXSwap />
       </section>
-    </div>
-
+                </div>
+                
     <!-- Create Project Dialog -->
     <v-dialog v-model="showCreateProject" max-width="500" persistent>
       <v-card class="create-dialog">
@@ -427,7 +427,7 @@ onMounted(() => {
             Create Project
           </v-btn>
         </v-card-actions>
-      </v-card>
+        </v-card>
     </v-dialog>
   </div>
 </template>
@@ -822,12 +822,12 @@ onMounted(() => {
     min-height: 44px;
     font-size: 0.85rem;
   }
-
+  
   .project-actions {
     flex-direction: column !important;
     gap: 8px !important;
   }
-
+  
   .project-actions .v-btn {
     width: 100%;
     justify-content: center !important;

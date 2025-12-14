@@ -135,7 +135,7 @@
 
               <div v-if="localDetails.checklist.length === 0" class="text-medium-emphasis text-body-2 mb-3">
                 No checklist items yet
-              </div>
+                </div>
 
               <div class="checklist-items">
                 <div
@@ -169,8 +169,8 @@
                   >
                     <v-icon size="18">mdi-close</v-icon>
                   </v-btn>
-                </div>
               </div>
+            </div>
 
               <div class="d-flex align-center gap-2 mt-3">
                 <v-text-field
@@ -1474,7 +1474,7 @@ const saveChanges = async () => {
       estimatedHours: editableTask.value.estimatedHours,
       actualHours: editableTask.value.actualHours
     };
-
+    
     if (isSupabaseOnly && supabase) {
       const payload: any = {};
       if (updateData.title !== undefined) payload.title = updateData.title;
@@ -1497,7 +1497,7 @@ const saveChanges = async () => {
       emit('task-updated', { ...props.task, ...(data as any) } as any);
     } else {
       const updatedTask = await taskApi.updateTask(props.task.id, updateData);
-      emit('task-updated', { ...props.task, ...updatedTask });
+    emit('task-updated', { ...props.task, ...updatedTask });
     }
     editMode.value = false;
     
