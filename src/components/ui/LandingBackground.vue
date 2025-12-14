@@ -27,13 +27,8 @@ const showThemeToggle = computed(() => props.showThemeToggle);
 .landing-page {
   min-height: 100vh;
   position: relative;
-  background-color: #ffffff;
-  color: #1a1a1a;
-}
-
-.landing-page.dark-theme {
-  background-color: #0a0a0a;
-  color: #ffffff;
+  background-color: var(--erp-page-bg);
+  color: var(--erp-text);
 }
 
 .theme-toggle-container {

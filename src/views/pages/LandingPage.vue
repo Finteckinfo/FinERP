@@ -136,14 +136,9 @@ const scrollToFeatures = () => {
   left: 0;
   right: 0;
   z-index: 100;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: color-mix(in srgb, var(--erp-card-bg) 92%, transparent);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.dark-theme .main-nav {
-  background-color: rgba(10, 10, 10, 0.95);
-  border-bottom-color: #1f1f1f;
+  border-bottom: 1px solid var(--erp-border);
 }
 
 .nav-container {
@@ -159,11 +154,7 @@ const scrollToFeatures = () => {
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #1a1a1a;
-}
-
-.dark-theme .logo-text {
-  color: #ffffff;
+  color: var(--erp-text);
 }
 
 .nav-links {
@@ -177,22 +168,14 @@ const scrollToFeatures = () => {
 }
 
 .nav-links a {
-  color: #4b5563;
+  color: color-mix(in srgb, var(--erp-text) 72%, transparent);
   text-decoration: none;
   font-size: 0.95rem;
   transition: color 0.2s;
 }
 
-.dark-theme .nav-links a {
-  color: #d1d5db;
-}
-
 .nav-links a:hover {
-  color: #1a1a1a;
-}
-
-.dark-theme .nav-links a:hover {
-  color: #ffffff;
+  color: var(--erp-text);
 }
 
 .nav-button {
@@ -223,26 +206,18 @@ const scrollToFeatures = () => {
   font-weight: 600;
   letter-spacing: -0.04em;
   margin-bottom: 1.5rem;
-  color: #1a1a1a;
+  color: var(--erp-text);
   line-height: 1.1;
-}
-
-.dark-theme .hero-title {
-  color: #ffffff;
 }
 
 .hero-subtitle {
   font-size: 1.25rem;
   line-height: 1.6;
-  color: #4b5563;
+  color: color-mix(in srgb, var(--erp-text) 78%, transparent);
   margin-bottom: 3rem;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-}
-
-.dark-theme .hero-subtitle {
-  color: #9ca3af;
 }
 
 .hero-actions {
@@ -268,33 +243,19 @@ const scrollToFeatures = () => {
 }
 
 .primary-button {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
-}
-
-.dark-theme .primary-button {
-  background-color: #ffffff !important;
-  color: #1a1a1a !important;
+  background-color: var(--erp-text) !important;
+  color: var(--erp-card-bg) !important;
 }
 
 .secondary-button {
-  border-color: #d1d5db !important;
-  color: #1a1a1a !important;
-}
-
-.dark-theme .secondary-button {
-  border-color: #4b5563 !important;
-  color: #ffffff !important;
+  border-color: var(--erp-border) !important;
+  color: var(--erp-text) !important;
 }
 
 /* Features Section */
 .features-section {
   padding: 6rem 2rem;
-  background-color: #f9fafb;
-}
-
-.dark-theme .features-section {
-  background-color: #0f0f0f;
+  background-color: var(--erp-surface);
 }
 
 .features-container {
@@ -308,23 +269,14 @@ const scrollToFeatures = () => {
   letter-spacing: -0.02em;
   text-align: center;
   margin-bottom: 4rem;
-  color: #1a1a1a;
-}
-
-.dark-theme .section-title {
-  color: #ffffff;
+  color: var(--erp-text);
 }
 
 /* Footer */
 .landing-footer {
-  background-color: #ffffff;
-  border-top: 1px solid #e5e7eb;
+  background-color: var(--erp-card-bg);
+  border-top: 1px solid var(--erp-border);
   padding: 4rem 2rem 2rem;
-}
-
-.dark-theme .landing-footer {
-  background-color: #0a0a0a;
-  border-top-color: #1f1f1f;
 }
 
 .footer-container {
@@ -351,20 +303,12 @@ const scrollToFeatures = () => {
   font-size: 1.25rem;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #1a1a1a;
-}
-
-.dark-theme .footer-logo-text {
-  color: #ffffff;
+  color: var(--erp-text);
 }
 
 .footer-tagline {
   font-size: 0.875rem;
-  color: #6b7280;
-}
-
-.dark-theme .footer-tagline {
-  color: #9ca3af;
+  color: color-mix(in srgb, var(--erp-text) 70%, transparent);
 }
 
 .footer-links {
@@ -374,42 +318,26 @@ const scrollToFeatures = () => {
 }
 
 .footer-links a {
-  color: #6b7280;
+  color: color-mix(in srgb, var(--erp-text) 70%, transparent);
   text-decoration: none;
   font-size: 0.875rem;
   transition: color 0.2s;
 }
 
-.dark-theme .footer-links a {
-  color: #9ca3af;
-}
-
 .footer-links a:hover {
-  color: #1a1a1a;
-}
-
-.dark-theme .footer-links a:hover {
-  color: #ffffff;
+  color: var(--erp-text);
 }
 
 .footer-bottom {
   padding-top: 2rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--erp-border);
   text-align: center;
-}
-
-.dark-theme .footer-bottom {
-  border-top-color: #1f1f1f;
 }
 
 .footer-copyright {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: color-mix(in srgb, var(--erp-text) 65%, transparent);
   margin: 0;
-}
-
-.dark-theme .footer-copyright {
-  color: #9ca3af;
 }
 
 /* Responsive */

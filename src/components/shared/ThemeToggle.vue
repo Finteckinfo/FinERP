@@ -3,7 +3,8 @@
     @click="handleToggle"
     :class="[
       'theme-toggle-btn',
-      'flex items-center w-full cursor-pointer mr-10 text-sm rounded-md',
+      // IMPORTANT: keep this control inline-sized (no w-full), otherwise it can overlap/steal clicks in navbars
+      'inline-flex items-center cursor-pointer text-sm rounded-md',
       isDark 
         ? 'text-gray-200 hover:bg-gray-700' 
         : 'text-gray-700 hover:bg-gray-100'

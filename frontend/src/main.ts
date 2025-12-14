@@ -32,8 +32,8 @@ if (typeof (window as any).global === 'undefined') {
 
 const app = createApp(App);
 
-// ---- NextAuth Session Management ----
-console.log('[main.ts] NextAuth session will be managed via SSO cookies');
+// ---- Session Management ----
+console.log('[main.ts] Session will be managed via SSO cookies / wallet connection');
 
 // ---- Standard Plugins ----
 console.log('[main.ts] Registering router, pinia, and other plugins');
