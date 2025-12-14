@@ -4,7 +4,7 @@
     :class="{ 'dark-theme': isDark }"
   >
     <RouterLink to="/dashboard">
-      <img src="/images/sizlogo.png" alt="SIZ Logo" width="92" height="76" class="logo-img" />
+      <img src="/images/banner3.png" alt="FinERP Logo" width="92" height="76" class="logo-img" />
     </RouterLink>
   </div>
 </template>

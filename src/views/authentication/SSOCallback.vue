@@ -20,12 +20,13 @@ onMounted(async () => {
     
     // If no token in URL, check cookie
     if (!ssoToken) {
-      const cookieMatch = document.cookie.match(/(?:^|;\s*)siz_sso_token=([^;]+)/);
+      const cookieMatch = document.cookie.match(/(?:^|;\s*)finerp_sso_token=([^;]+)/);
       if (cookieMatch) {
         ssoToken = cookieMatch[1];
         console.log('[SSO Callback] SSO token found in cookie');
         // Clear the cookie immediately after reading
-        document.cookie = 'siz_sso_token=; Domain=.siz.land; Path=/; Max-Age=0';
+        const cookieDomain = import.meta.env.VITE_COOKIE_DOMAIN || window.location.hostname;
+        document.cookie = `finerp_sso_token=; Domain=${cookieDomain}; Path=/; Max-Age=0`;
       }
     } else {
       console.log('[SSO Callback] SSO token found in URL');
@@ -38,8 +39,8 @@ onMounted(async () => {
     console.log('[SSO Callback] Validating SSO token...');
 
     // Determine backend URL based on current domain
-    // Use environment variable with fallback to www.siz.land
-    let backendUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || 'https://www.siz.land';
+    // Use environment variable with fallback to current origin
+    let backendUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || window.location.origin;
     
     // If we're on localhost or a dev environment, use localhost
     if (window.location.hostname === 'localhost' || 

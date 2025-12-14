@@ -128,7 +128,7 @@
                   <v-icon class="mr-2" size="24">mdi-alert</v-icon>
                   <div>
                     <h4 class="font-weight-bold mb-2">⚠️ Never Share Your Recovery Phrase!</h4>
-                    <p class="mb-0">Your 25-word recovery phrase is like the master key to your wallet. SizLand support will NEVER ask for it. Anyone with this phrase can access all your funds.</p>
+                    <p class="mb-0">Your 25-word recovery phrase is like the master key to your wallet. FinERP support will NEVER ask for it. Anyone with this phrase can access all your funds.</p>
                   </div>
                 </div>
               </v-alert>
@@ -140,7 +140,7 @@
             <div class="tutorial-step">
               <h3 class="text-h4 font-weight-bold mb-4 text-center">💰 How Payments Work</h3>
               <p class="text-body-1 mb-6 text-center mx-auto" style="max-width: 700px;">
-                Understanding the payment flow with SIZCOIN escrow system
+                Understanding the payment flow with FIN token escrow system
               </p>
 
               <v-timeline side="end" density="compact" class="mt-6">
@@ -164,8 +164,8 @@
                 <div class="d-flex align-items-start">
                   <v-icon color="info" class="mr-3" size="32">mdi-information</v-icon>
                   <div>
-                    <h4 class="font-weight-bold mb-2">SIZCOIN (SIZ)</h4>
-                    <p class="text-body-2 mb-2">All payments are made in SIZCOIN, our native token on Algorand blockchain.</p>
+                    <h4 class="font-weight-bold mb-2">FIN Token (FIN)</h4>
+                    <p class="text-body-2 mb-2">All payments are made in FIN tokens, our native token used for escrow-backed payouts.</p>
                     <ul class="text-body-2 pl-4">
                       <li>Low transaction fees (fractions of a cent)</li>
                       <li>Instant settlement (4-5 seconds)</li>
@@ -178,12 +178,12 @@
             </div>
           </v-window-item>
 
-          <!-- Step 5: Getting SIZCOIN -->
+          <!-- Step 5: Getting FIN -->
           <v-window-item :value="5">
             <div class="tutorial-step">
-              <h3 class="text-h4 font-weight-bold mb-4 text-center">🪙 Getting SIZCOIN</h3>
+              <h3 class="text-h4 font-weight-bold mb-4 text-center">🪙 Getting FIN</h3>
               <p class="text-body-1 mb-6 text-center mx-auto" style="max-width: 700px;">
-                Learn how to obtain SIZCOIN for payments and transactions
+                Learn how to obtain FIN for payments and transactions
               </p>
 
               <v-row class="mt-6">
@@ -191,15 +191,15 @@
                   <v-card variant="tonal" color="success" class="pa-4 h-100 text-center">
                     <v-icon size="60" color="success" class="mb-3">mdi-briefcase-check</v-icon>
                     <h4 class="text-h6 font-weight-bold mb-2">Earn from Projects</h4>
-                    <p class="text-body-2">Complete tasks and get paid in SIZCOIN automatically when work is approved.</p>
+                    <p class="text-body-2">Complete tasks and get paid in FIN automatically when work is approved.</p>
                   </v-card>
                 </v-col>
                 <v-col cols="12" md="4">
                   <v-card variant="tonal" color="primary" class="pa-4 h-100 text-center">
                     <v-icon size="60" color="primary" class="mb-3">mdi-swap-horizontal</v-icon>
                     <h4 class="text-h6 font-weight-bold mb-2">Buy on DEX</h4>
-                    <p class="text-body-2 mb-3">Purchase SIZCOIN on decentralized exchanges like Tinyman or Pact.</p>
-                    <v-btn size="small" variant="outlined" href="https://www.siz.land/wallet" target="_blank">
+                    <p class="text-body-2 mb-3">Purchase FIN on decentralized exchanges or use the built-in swap.</p>
+                    <v-btn size="small" variant="outlined" :href="import.meta.env.VITE_SSO_PRIMARY_DOMAIN || '#'" target="_blank">
                       <v-icon start size="16">mdi-open-in-new</v-icon>
                       Visit DEX
                     </v-btn>
@@ -209,14 +209,14 @@
                   <v-card variant="tonal" color="info" class="pa-4 h-100 text-center">
                     <v-icon size="60" color="info" class="mb-3">mdi-account-convert</v-icon>
                     <h4 class="text-h6 font-weight-bold mb-2">Receive from Others</h4>
-                    <p class="text-body-2">Get SIZCOIN transfers from other users by sharing your wallet address.</p>
+                    <p class="text-body-2">Receive FIN transfers from other users by sharing your wallet address.</p>
                   </v-card>
                 </v-col>
               </v-row>
 
               <v-alert type="info" variant="tonal" class="mt-6">
                 <v-icon slot="prepend">mdi-lightbulb</v-icon>
-                <strong>Pro Tip:</strong> You need to opt-in to SIZCOIN before receiving it. This is a one-time action that happens automatically when you set up your wallet.
+                <strong>Pro Tip:</strong> Make sure you’re on the correct network and have gas (ETH/MATIC) for transactions.
               </v-alert>
             </div>
           </v-window-item>
@@ -227,7 +227,7 @@
               <v-icon size="100" color="success" class="mb-4">mdi-check-circle</v-icon>
               <h3 class="text-h4 font-weight-bold mb-4">You're Ready to Go!</h3>
               <p class="text-body-1 mb-6 mx-auto" style="max-width: 700px;">
-                You now understand how crypto wallets work and how payments are processed in SizLand ERP.
+                You now understand how crypto wallets work and how payments are processed in FinERP.
               </p>
 
               <v-card variant="outlined" class="pa-6 mx-auto" style="max-width: 600px;">
@@ -318,7 +318,7 @@ const steps = [
   { title: 'Choose Path' },
   { title: 'Security' },
   { title: 'Payments' },
-  { title: 'Get SIZCOIN' },
+  { title: 'Get FIN' },
   { title: 'Ready!' }
 ]
 
@@ -346,7 +346,7 @@ const securityTips = [
     icon: 'mdi-shield-alert',
     color: 'error',
     title: 'Beware of Phishing',
-    description: 'Always verify URLs. SizLand will never ask for your recovery phrase or password.'
+    description: 'Always verify URLs. FinERP will never ask for your recovery phrase or password.'
   },
   {
     icon: 'mdi-backup-restore',
@@ -359,7 +359,7 @@ const securityTips = [
 const paymentStages = [
   {
     title: 'Project Funded',
-    description: 'Project owner funds escrow account with SIZCOIN for all project payments',
+    description: 'Project owner funds escrow account with FIN tokens for all project payments',
     icon: 'mdi-cash-multiple',
     color: 'primary'
   },
@@ -377,7 +377,7 @@ const paymentStages = [
   },
   {
     title: 'Approval & Payment',
-    description: 'Manager approves task and SIZCOIN is instantly transferred to your wallet',
+    description: 'Manager approves task and FIN tokens are instantly transferred to your wallet',
     icon: 'mdi-wallet-plus',
     color: 'warning'
   }
@@ -386,7 +386,7 @@ const paymentStages = [
 const recap = [
   ' Wallets give you control and enable global payments',
   '🔒 Keep your recovery phrase secret and secure',
-  '💰 Get paid in SIZCOIN when tasks are approved',
+  '💰 Get paid in FIN when tasks are approved',
   '🚀 Payments are instant and transparent on blockchain',
   '🛡️ Escrow system protects both owners and workers'
 ]

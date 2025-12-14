@@ -9,10 +9,11 @@ export const connectionError = ref<string | null>(null);
 let ws: WebSocket | null = null;
 let reconnectAttempts = 0;
 const maxReconnectAttempts = 5;
-let reconnectTimeout: NodeJS.Timeout | null = null;
+let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
 
 // Event listeners
-const eventListeners = reactive<{ [event: string]: Function[] }>({});
+type WebSocketEventCallback = (data?: unknown) => void;
+const eventListeners = reactive<Record<string, WebSocketEventCallback[]>>({});
 
 // Auth store
 const authStore = useAuthStore();
@@ -131,14 +132,14 @@ export const sendWebSocketMessage = (message: any) => {
 };
 
 // Event system
-export const on = (event: string, callback: Function) => {
+export const on = (event: string, callback: WebSocketEventCallback) => {
   if (!eventListeners[event]) {
     eventListeners[event] = [];
   }
   eventListeners[event].push(callback);
 };
 
-export const off = (event: string, callback: Function) => {
+export const off = (event: string, callback: WebSocketEventCallback) => {
   if (eventListeners[event]) {
     const index = eventListeners[event].indexOf(callback);
     if (index > -1) {
@@ -147,7 +148,7 @@ export const off = (event: string, callback: Function) => {
   }
 };
 
-export const emit = (event: string, data?: any) => {
+export const emit = (event: string, data?: unknown) => {
   if (eventListeners[event]) {
     eventListeners[event].forEach(callback => {
       try {

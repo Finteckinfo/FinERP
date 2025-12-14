@@ -65,34 +65,33 @@
                   <div class="detail-row">
                     <span class="label">Asset:</span>
                     <div class="value-with-actions">
-                      <SIZCOINBadge :amount="0" show-link />
-                      <span class="ml-2 text-caption">ID: {{ SIZCOIN_CONFIG.ASSET_ID }}</span>
+                      <span class="ml-2 text-caption">Token ID: {{ FIN_TOKEN_CONFIG.ASSET_ID }}</span>
                     </div>
                   </div>
 
                   <!-- Current Balance -->
                   <div class="detail-row balance-row">
                     <span class="label">Current Balance:</span>
-                    <span class="balance-value">{{ formatAmount(currentBalance) }} SIZ</span>
+                    <span class="balance-value">{{ formatAmount(currentBalance) }} FIN</span>
                   </div>
 
                   <!-- Obligation Details -->
                   <div class="detail-row">
                     <span class="label">Pending Task Hold:</span>
-                    <span class="value">{{ formatAmount(pendingHold) }} SIZ</span>
+                    <span class="value">{{ formatAmount(pendingHold) }} FIN</span>
                   </div>
                   <div class="detail-row">
                     <span class="label">Processing Transfers:</span>
-                    <span class="value">{{ formatAmount(processingHold) }} SIZ</span>
+                    <span class="value">{{ formatAmount(processingHold) }} FIN</span>
                   </div>
                   <div class="detail-row">
                     <span class="label">Total Obligations:</span>
-                    <span class="value">{{ formatAmount(obligationsTotal) }} SIZ</span>
+                    <span class="value">{{ formatAmount(obligationsTotal) }} FIN</span>
                   </div>
                   <div class="detail-row">
                     <span class="label">Net Available:</span>
                     <span :class="['value', netAvailable > 0 ? 'text-success' : 'text-warning']">
-                      {{ formatAmount(netAvailable) }} SIZ
+                      {{ formatAmount(netAvailable) }} FIN
                     </span>
                   </div>
 
@@ -100,7 +99,7 @@
                   <div class="detail-row remaining-row">
                     <span class="label">Recommended Top-up:</span>
                     <span :class="['value', remainingAmount > 0 ? 'text-warning' : 'text-success']">
-                      {{ formatAmount(remainingAmount) }} SIZ
+                      {{ formatAmount(remainingAmount) }} FIN
                     </span>
                   </div>
                 </div>
@@ -123,9 +122,9 @@
                       <div v-if="fundingNeeded.upcoming" class="mb-3">
                         <h4 class="text-subtitle-2 mb-2">Upcoming Payments:</h4>
                         <div class="text-caption">
-                          <div>Next 7 days: {{ formatAmount(fundingNeeded.upcoming.next7Days) }} SIZ</div>
-                          <div>Next 30 days: {{ formatAmount(fundingNeeded.upcoming.next30Days) }} SIZ</div>
-                          <div>Next 90 days: {{ formatAmount(fundingNeeded.upcoming.next90Days) }} SIZ</div>
+                          <div>Next 7 days: {{ formatAmount(fundingNeeded.upcoming.next7Days) }} FIN</div>
+                          <div>Next 30 days: {{ formatAmount(fundingNeeded.upcoming.next30Days) }} FIN</div>
+                          <div>Next 90 days: {{ formatAmount(fundingNeeded.upcoming.next90Days) }} FIN</div>
                         </div>
                       </div>
                       
@@ -137,7 +136,7 @@
                           @click="sendAmount = fundingNeeded.recommended"
                         >
                           <v-icon size="16" class="mr-1">mdi-cash-plus</v-icon>
-                          Fund {{ formatAmount(fundingNeeded.recommended) }} SIZ
+                          Fund {{ formatAmount(fundingNeeded.recommended) }} FIN
                         </v-btn>
                       </div>
                     </div>
@@ -196,10 +195,10 @@
                         type="number"
                         :min="0"
                         :step="0.01"
-                        suffix="SIZ"
+                        suffix="FIN"
                         variant="outlined"
                         class="mb-4"
-                        hint="Enter the amount of SIZCOIN to send from your wallet"
+                        hint="Enter the amount of FIN to send from your wallet"
                         persistent-hint
                       >
                         <template v-slot:append-inner>
@@ -221,7 +220,7 @@
                           <strong>Sending to:</strong> {{ escrowData.escrowAddress }}
                         </div>
                         <div class="text-body-2 mt-2">
-                          <strong>Amount:</strong> {{ formatAmount(sendAmount) }} SIZ
+                          <strong>Amount:</strong> {{ formatAmount(sendAmount) }} FIN
                         </div>
                       </v-alert>
 
@@ -234,7 +233,7 @@
                         @click="sendFromWallet"
                       >
                         <v-icon start>mdi-send</v-icon>
-                        Send {{ formatAmount(sendAmount) }} SIZ to Escrow
+                        Send {{ formatAmount(sendAmount) }} FIN to Escrow
                       </v-btn>
                     </div>
                   </v-window-item>
@@ -242,7 +241,7 @@
                   <!-- Manual Confirmation -->
                   <v-window-item value="manual">
                     <p class="text-body-2 mb-4">
-                      If you've already sent SIZCOIN to the escrow address, enter the transaction hash below to confirm the deposit.
+                      If you've already sent FIN to the escrow address, enter the transaction hash below to confirm the deposit.
                     </p>
 
                     <v-text-field
@@ -251,7 +250,7 @@
                       placeholder="Enter Algorand transaction hash"
                       variant="outlined"
                       class="mb-2"
-                      hint="The TX hash from your wallet after sending SIZCOIN"
+                      hint="The TX hash from your wallet after sending FIN"
                       persistent-hint
                     />
 
@@ -261,7 +260,7 @@
                       type="number"
                       :min="0"
                       :step="0.01"
-                      suffix="SIZ"
+                      suffix="FIN"
                       variant="outlined"
                       class="mb-4"
                     />
@@ -296,7 +295,7 @@
                     </div>
                     <div class="stat-content">
                       <span class="stat-label">Total Obligations</span>
-                      <span class="stat-value">{{ formatAmount(obligationsTotal) }} SIZ</span>
+                      <span class="stat-value">{{ formatAmount(obligationsTotal) }} FIN</span>
                     </div>
                   </div>
 
@@ -306,7 +305,7 @@
                     </div>
                     <div class="stat-content">
                       <span class="stat-label">Escrow Balance</span>
-                      <span class="stat-value">{{ formatAmount(currentBalance) }} SIZ</span>
+                      <span class="stat-value">{{ formatAmount(currentBalance) }} FIN</span>
                     </div>
                   </div>
 
@@ -316,7 +315,7 @@
                     </div>
                     <div class="stat-content">
                       <span class="stat-label">Recommended Top-up</span>
-                      <span class="stat-value">{{ formatAmount(remainingAmount) }} SIZ</span>
+                      <span class="stat-value">{{ formatAmount(remainingAmount) }} FIN</span>
                     </div>
                   </div>
                 </div>
@@ -334,7 +333,7 @@
                   <div class="help-step">
                     <div class="step-number">1</div>
                     <div class="step-content">
-                      <strong>Send SIZCOIN</strong>
+                      <strong>Send FIN</strong>
                       <p>Use your connected wallet or send manually to the escrow address</p>
                     </div>
                   </div>
@@ -397,7 +396,7 @@
                     </template>
 
                     <v-list-item-title>
-                      +{{ formatAmount(tx.amount) }} SIZ
+                      +{{ formatAmount(tx.amount) }} FIN
                     </v-list-item-title>
                     
                     <v-list-item-subtitle>
@@ -426,7 +425,7 @@
             <p class="text-caption mt-2">QR Code: {{ escrowData?.escrowAddress }}</p>
           </div>
           <p class="text-body-2 mt-4">
-            Scan this QR code with your Algorand wallet to send SIZCOIN to the escrow address.
+            Scan this QR code with your wallet to send FIN to the escrow address.
           </p>
         </v-card-text>
         <v-card-actions>
@@ -446,10 +445,10 @@
         <v-card-text>
           <v-alert type="success" variant="tonal" class="mb-4">
             <div class="text-body-2">
-              <strong>Amount Received:</strong> {{ formatAmount(lastDepositAmount) }} SIZ
+              <strong>Amount Received:</strong> {{ formatAmount(lastDepositAmount) }} FIN
             </div>
             <div class="text-body-2 mt-2">
-              <strong>New Balance:</strong> {{ formatAmount(currentBalance) }} SIZ
+              <strong>New Balance:</strong> {{ formatAmount(currentBalance) }} FIN
             </div>
             <div class="text-body-2 mt-2">
               <strong>Transaction:</strong> 
@@ -484,14 +483,13 @@ import { useRouter, useRoute } from 'vue-router';
 import { useWallet } from '@txnlab/use-wallet-vue';
 import algosdk from 'algosdk';
 import { RetroGrid } from '@/components/ui/retro-grid';
-import { SIZCOINBadge } from '@/components/shared/SIZCOINBadge';
 import {
   getEscrowBalance,
   depositToEscrow,
   getEscrowTransactions,
   getEscrowFundingNeeded,
-  SIZCOIN_CONFIG,
-  sizToMicroUnits,
+  FIN_TOKEN_CONFIG,
+  finToBaseUnits,
   getExplorerUrl
 } from '@/services/paymentService';
 import { projectApi } from '@/services/projectApi';
@@ -597,7 +595,7 @@ const loadEscrowData = async () => {
   }
 };
 
-// Send SIZCOIN from connected wallet
+// Send FIN from connected wallet
 const sendFromWallet = async () => {
   if (!activeAccount.value || sendAmount.value <= 0) {
     alert('Please connect wallet and enter amount');
@@ -616,12 +614,12 @@ const sendFromWallet = async () => {
     const algodClient = new algosdk.Algodv2('', nodeUrl, '');
     const params = await algodClient.getTransactionParams().do();
 
-    // Create SIZCOIN transfer transaction
+    // Create token transfer transaction
     const txn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
       sender: activeAccount.value.address,
       receiver: escrowData.value.escrowAddress,
-      assetIndex: SIZCOIN_CONFIG.ASSET_ID,
-      amount: sizToMicroUnits(sendAmount.value),
+      assetIndex: FIN_TOKEN_CONFIG.ASSET_ID,
+      amount: finToBaseUnits(sendAmount.value),
       note: new TextEncoder().encode(`Funding project ${projectId.value}`),
       suggestedParams: params
     });
@@ -659,8 +657,8 @@ const sendFromWallet = async () => {
     }
 
   } catch (err: any) {
-    console.error('Failed to send SIZCOIN:', err);
-    alert(`Failed to send SIZCOIN: ${err.message || 'Unknown error'}`);
+    console.error('Failed to send token:', err);
+    alert(`Failed to send token: ${err.message || 'Unknown error'}`);
   } finally {
     sending.value = false;
   }

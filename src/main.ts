@@ -33,7 +33,7 @@ if (typeof (window as any).global === 'undefined') {
 const app = createApp(App);
 
 // ---- NextAuth Session Management ----
-console.log('[main.ts] NextAuth session will be managed via SSO cookies from siz.land');
+console.log('[main.ts] NextAuth session will be managed via SSO cookies');
 
 // ---- Standard Plugins ----
 console.log('[main.ts] Registering router, pinia, and other plugins');

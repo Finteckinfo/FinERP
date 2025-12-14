@@ -63,9 +63,9 @@
               </div>
               <div v-else-if="walletBalance && walletBalance.found" class="wallet-balance-display">
                 <img 
-                  src="/images/sizlogo.png" 
-                  alt="SIZ Logo" 
-                  class="siz-logo-small"
+                  src="/images/banner3.png" 
+                  alt="FinERP Logo" 
+                  class="token-logo-small"
                 />
                 <span class="earning-value">
                   {{ formatAmount(parseFloat(walletBalance.formattedBalance || '0')) }} {{ walletBalance.symbol || 'FIN' }}
@@ -76,12 +76,12 @@
               </span>
               <div v-else class="wallet-balance-display">
                 <img 
-                  src="/images/sizlogo.png" 
-                  alt="SIZ Logo" 
-                  class="siz-logo-small"
+                  src="/images/banner3.png" 
+                  alt="FinERP Logo" 
+                  class="token-logo-small"
                 />
                 <span class="earning-value">
-                  0.00 SIZ
+                  0.00 FIN
                 </span>
               </div>
             </div>
@@ -94,7 +94,7 @@
             </div>
             <div class="earning-content">
               <span class="earning-label text-center">Total Earned</span>
-              <span class="earning-value text-center">{{ formatAmount(totalEarned) }} SIZ</span>
+              <span class="earning-value text-center">{{ formatAmount(totalEarned) }} FIN</span>
             </div>
           </div>
 
@@ -105,7 +105,7 @@
             </div>
             <div class="earning-content">
               <span class="earning-label text-center">Pending</span>
-              <span class="earning-value text-center">{{ formatAmount(pendingEarned) }} SIZ</span>
+              <span class="earning-value text-center">{{ formatAmount(pendingEarned) }} FIN</span>
             </div>
           </div>
 
@@ -116,7 +116,7 @@
             </div>
             <div class="earning-content">
               <span class="earning-label text-center">Processing</span>
-              <span class="earning-value text-center">{{ formatAmount(processingEarned) }} SIZ</span>
+              <span class="earning-value text-center">{{ formatAmount(processingEarned) }} FIN</span>
             </div>
           </div>
         </div>
@@ -153,7 +153,7 @@
                 <div class="tx-date">{{ formatDate(tx.submittedAt) }}</div>
               </div>
               <div class="tx-amount">
-                <span class="amount">+{{ tx.amount.toFixed(2) }} SIZ</span>
+                <span class="amount">+{{ tx.amount.toFixed(2) }} FIN</span>
                 <a 
                   :href="getExplorerUrl(tx.txHash)" 
                   target="_blank"
@@ -477,7 +477,7 @@ onMounted(() => {
   gap: 8px;
 }
 
-.siz-logo-small {
+.token-logo-small {
   width: 24px;
   height: 24px;
   object-fit: contain;

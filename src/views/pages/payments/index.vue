@@ -8,7 +8,7 @@
           <v-icon size="48">mdi-cash-multiple</v-icon>
         </div>
         <h1 class="hero-title">Payments & Earnings</h1>
-        <p class="hero-subtitle">Manage your SIZCOIN transactions and track earnings</p>
+        <p class="hero-subtitle">Manage your FIN token transactions and track earnings</p>
       </div>
     </div>
 
@@ -135,7 +135,7 @@
                   <td>{{ tx.taskTitle || 'N/A' }}</td>
                   <td class="font-weight-bold">
                     <span :class="tx.type === 'TASK_PAYMENT' ? 'text-success' : 'text-error'">
-                      {{ tx.type === 'TASK_PAYMENT' ? '+' : '-' }}{{ tx.amount.toFixed(2) }} SIZ
+                      {{ tx.type === 'TASK_PAYMENT' ? '+' : '-' }}{{ tx.amount.toFixed(2) }} FIN
                     </span>
                   </td>
                   <td>

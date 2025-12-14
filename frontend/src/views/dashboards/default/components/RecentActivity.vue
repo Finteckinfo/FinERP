@@ -65,7 +65,7 @@ const formatTimeAgo = (date: Date) => {
 
       <div class="activity-list">
         <div 
-          v-for="(activity, index) in activities" 
+          v-for="activity in activities" 
           :key="activity.id"
           class="activity-item d-flex align-start mb-4"
         >

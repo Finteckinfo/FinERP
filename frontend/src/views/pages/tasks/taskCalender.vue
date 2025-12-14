@@ -127,11 +127,12 @@ const getDateRange = (view: string, date: Date) => {
       start.setDate(1)
       end.setMonth(end.getMonth() + 1, 0)
       break
-    case 'week':
+    case 'week': {
       const dayOfWeek = start.getDay()
       start.setDate(start.getDate() - dayOfWeek)
       end.setDate(start.getDate() + 6)
       break
+    }
     case 'day':
       // Same day
       break
@@ -404,7 +405,7 @@ watch(selectedProject, (newProjectId) => {
 // Helper: wait for Clerk to be ready before making API calls
 const waitForAuthReady = async (timeoutMs = 8000) => {
   const start = Date.now()
-  // eslint-disable-next-line no-constant-condition
+   
   while (true) {
     const clerk = (window as any).Clerk
     if (clerk?.session && clerk?.user) return

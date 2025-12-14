@@ -281,7 +281,7 @@ const handleDragLeave = (event: DragEvent) => {
   }
 };
 
-const handleDrop = (event: DragEvent) => {
+const handleDrop = async (event: DragEvent) => {
   event.preventDefault();
   isDragOver.value = false;
   
@@ -300,26 +300,53 @@ const handleDrop = (event: DragEvent) => {
   const dataTransferTaskId = event.dataTransfer?.getData('text/plain');
   const taskId = draggedTaskId.value || dataTransferTaskId || null;
 
+  // Best-effort parse of dragged task metadata (permissions + finance fields)
+  let draggedTaskMeta: any = null;
+  try {
+    const json = event.dataTransfer?.getData('application/json');
+    if (json) draggedTaskMeta = JSON.parse(json);
+  } catch {
+    // ignore parse errors
+  }
+
   if (!taskId) {
     console.warn('[KanbanColumn] Drop event but no dragged task ID - ignoring');
     return;
   }
-  
-  // Find the task being moved to check permissions
-  let sourceTask: any = null;
-  Object.keys(props.column).forEach(() => {
-    const task = props.tasks.find(t => t.id === taskId);
-    if (task) {
-      sourceTask = task;
-    }
-  });
-  
-  // Check if moving to APPROVED column - only project owner can approve tasks
+
+  // Check if moving to APPROVED column:
+  // Financial rule: paid tasks must be approved via "Approve & Pay" (so escrow release is executed),
+  // not via drag-and-drop status changes that could bypass payment.
   if (props.column.status === 'APPROVED') {
-    // Check if user has permission to approve (only project owners)
-    if (!sourceTask?.canApprove && !props.userPermissions.canEditAllTasks) {
+    const fromStatus = draggedTaskMeta?.status;
+    const hasPayment = Number(draggedTaskMeta?.paymentAmount || 0) > 0;
+    const canApprove = !!draggedTaskMeta?.canApprove;
+
+    // Only allow transition to APPROVED from COMPLETED (Trello-like "done -> approved")
+    if (fromStatus && fromStatus !== 'COMPLETED') {
+      const toast = document.createElement('div');
+      toast.textContent = '⚠️ Only completed tasks can be moved to Approved';
+      toast.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: #f59e0b;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 9999;
+        font-size: 14px;
+        font-weight: 500;
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+      return;
+    }
+
+    // Permission rule: only project owner can approve (or managers with edit-all)
+    if (!canApprove && !props.userPermissions.canEditAllTasks) {
       console.warn('[KanbanColumn] Only project owner can approve tasks - ignoring drop');
-      // Show a visual feedback that the action was denied
       const toast = document.createElement('div');
       toast.textContent = '⚠️ Only the project owner can approve tasks';
       toast.style.cssText = `
@@ -337,6 +364,28 @@ const handleDrop = (event: DragEvent) => {
       `;
       document.body.appendChild(toast);
       setTimeout(() => toast.remove(), 3000);
+      return;
+    }
+
+    // Escrow-safety: if there's a payment amount, force the explicit approve action (which triggers payment)
+    if (hasPayment) {
+      const toast = document.createElement('div');
+      toast.textContent = '💸 Paid tasks must be approved via “Approve & Pay” in task details';
+      toast.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: #0ea5e9;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 9999;
+        font-size: 14px;
+        font-weight: 600;
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3500);
       return;
     }
   }

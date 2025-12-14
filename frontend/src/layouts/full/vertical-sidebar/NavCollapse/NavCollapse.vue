@@ -3,18 +3,18 @@ import { useTheme } from '@/composables/useTheme';
 import NavItem from '../NavItem/NavItem.vue';
 import Icon from '../IconSet.vue';
 
-interface NavItem {
+interface NavItemModel {
   title?: string;
   icon?: any;
   subCaption?: string;
-  children?: NavItem[];
+  children?: NavItemModel[];
   to?: string;
   type?: string;
   disabled?: boolean;
 }
 
 interface Props {
-  item?: NavItem;
+  item?: NavItemModel;
   level?: number;
 }
 

@@ -178,7 +178,7 @@
             </div>
           </v-window-item>
 
-          <!-- Step 5: Getting SIZCOIN -->
+          <!-- Step 5: Getting FIN Tokens -->
           <v-window-item :value="5">
             <div class="tutorial-step">
               <h3 class="text-h4 font-weight-bold mb-4 text-center">🪙 Getting FIN Tokens</h3>
@@ -215,7 +215,9 @@
               </v-row>
 
               <v-alert type="info" variant="tonal" class="mt-6">
-                <v-icon slot="prepend">mdi-lightbulb</v-icon>
+                <template v-slot:prepend>
+<v-icon >mdi-lightbulb</v-icon>
+</template>
                 <strong>Pro Tip:</strong> FIN tokens are ERC20 tokens on EVM blockchains. Make sure you have enough gas (ETH/MATIC) to receive tokens.
               </v-alert>
             </div>

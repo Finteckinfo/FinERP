@@ -300,7 +300,7 @@
                 </h4>
                 <div class="payment-info">
                   <div class="payment-amount">
-                    <span class="amount-value">{{ task.paymentAmount.toFixed(2) }} SIZ</span>
+                    <span class="amount-value">{{ task.paymentAmount.toFixed(2) }} FIN</span>
                   </div>
                   <v-chip
                     :color="getPaymentStatusColor(task.paymentStatus || 'PENDING')"
@@ -376,7 +376,7 @@
         <div class="approve-pay-info">
           <v-icon color="success" class="mr-2">mdi-information</v-icon>
           <span class="text-caption">
-            Task completed. Approve to release payment of <strong>{{ task.paymentAmount?.toFixed(2) }} SIZ</strong>
+            Task completed. Approve to release payment of <strong>{{ task.paymentAmount?.toFixed(2) }} FIN</strong>
           </span>
         </div>
         <v-spacer />
@@ -405,7 +405,7 @@
               <strong>Task:</strong> {{ task?.title }}
             </div>
             <div class="text-body-2 mt-2">
-              <strong>Payment Amount:</strong> {{ task?.paymentAmount?.toFixed(2) }} SIZ
+              <strong>Payment Amount:</strong> {{ task?.paymentAmount?.toFixed(2) }} FIN
             </div>
             <div class="text-body-2 mt-2">
               <strong>Assignee:</strong> {{ task?.assignedUser?.name || task?.assignedUser?.email || 'Unassigned' }}
@@ -799,6 +799,34 @@ const approveAndPayTask = async () => {
   try {
     approving.value = true;
     
+    // Finance guard: ensure escrow is funded enough before attempting approval/release.
+    // Also fail early if backend isn't configured (since approval is backend-mediated).
+    const apiBase = ((import.meta as any).env?.VITE_BACKEND_URL as string | undefined) || '';
+    if (!apiBase) {
+      alert('❌ Cannot approve & pay: backend URL (VITE_BACKEND_URL) is not configured.');
+      return;
+    }
+
+    const amount = Number(props.task.paymentAmount || 0);
+    if (amount <= 0) {
+      alert('❌ Cannot approve & pay: task has no payment amount.');
+      return;
+    }
+
+    try {
+      const { getEscrowBalance } = await import('@/services/paymentService');
+      const balance = await getEscrowBalance(props.task.projectId);
+      if (typeof balance?.netAvailable === 'number' && balance.netAvailable < amount) {
+        alert(`❌ Insufficient escrow balance.\n\nNet available: ${balance.netAvailable.toFixed(2)} FIN\nRequired: ${amount.toFixed(2)} FIN`);
+        return;
+      }
+    } catch (e) {
+      // If escrow balance check fails, block approval to avoid unsafe releases.
+      const msg = e instanceof Error ? e.message : String(e);
+      alert(`❌ Cannot verify escrow balance.\n\n${msg}`);
+      return;
+    }
+
     // Import payment service
     const { approveAndPayTask: approvePaymentAPI } = await import('@/services/paymentService');
     

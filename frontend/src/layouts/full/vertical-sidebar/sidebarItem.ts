@@ -64,9 +64,9 @@ const sidebarItem: menu[] = [
     to: '/tasks/calendar'
   },
   {
-    title: 'Kanban Board',
+    title: 'Boards',
     icon: BrandChromeIcon,
-    to: '/kanban'
+    to: '/boards'
   },
   { divider: true },
   { header: 'Communication' },

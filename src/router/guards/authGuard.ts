@@ -2,7 +2,7 @@ import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 import { getCookie } from '@/utils/cookies';
 
 /**
- * Authentication Guard for ERP (erp.siz.land)
+ * Authentication Guard for FinERP
  * 
  * PERFORMANCE OPTIMIZED:
  * - Uses synchronous cookie/storage checks (no network calls)
@@ -15,7 +15,7 @@ function hasValidSession(): boolean {
   // Check cookies first (fastest)
   const sessionToken = getCookie('next-auth.session-token') ||
     getCookie('__Secure-next-auth.session-token') ||
-    getCookie('siz_sso_token');
+    getCookie('finerp_sso_token');
   
   if (sessionToken) return true;
   
@@ -36,7 +36,7 @@ function hasValidSession(): boolean {
   
   // Check localStorage cache
   try {
-    const cached = localStorage.getItem('siz_session_cache');
+    const cached = localStorage.getItem('finerp_session_cache');
     if (cached) {
       const parsed = JSON.parse(cached);
       const cacheAge = Date.now() - (parsed.timestamp || 0);
@@ -87,7 +87,7 @@ export async function authGuard(
   }
   
   // Redirect to primary domain's login page
-  const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || 'https://www.siz.land';
+  const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || window.location.origin;
   const redirectUrl = encodeURIComponent(window.location.href);
   window.location.href = `${ssoUrl}/login?redirect=${redirectUrl}`;
 }

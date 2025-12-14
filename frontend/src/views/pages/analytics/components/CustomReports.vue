@@ -158,7 +158,7 @@
                 color="primary" 
                 @click="handleExport"
                 :disabled="!exportFormValid"
-                :loading="loading"
+                :loading="exportLoading"
               >
                 Export
               </v-btn>
@@ -188,7 +188,7 @@ const emit = defineEmits<Emits>();
 
 const showExportDialog = ref(false);
 const exportFormValid = ref(false);
-const loading = ref(false);
+const exportLoading = ref(false);
 
 const exportData = reactive({
   format: 'PDF' as 'PDF' | 'Excel' | 'CSV',
@@ -228,7 +228,7 @@ const formatDate = (dateString: string) => {
 };
 
 const handleExport = async () => {
-  loading.value = true;
+  exportLoading.value = true;
   try {
     const exportPayload = {
       reportType: props.data?.reportId || 'custom',
@@ -244,7 +244,7 @@ const handleExport = async () => {
   } catch (error) {
     console.error('Export failed:', error);
   } finally {
-    loading.value = false;
+    exportLoading.value = false;
   }
 };
 </script>

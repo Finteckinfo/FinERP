@@ -267,7 +267,7 @@ const selectedTimeRange = ref('30d');
 // Computed
 const bottlenecks = computed(() => {
   if (!metrics.value) return [];
-  return metrics.value.bottlenecks.sort((a, b) => {
+  return [...metrics.value.bottlenecks].sort((a, b) => {
     if (a.isBottleneck && !b.isBottleneck) return -1;
     if (!a.isBottleneck && b.isBottleneck) return 1;
     return b.taskCount - a.taskCount;

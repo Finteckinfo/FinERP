@@ -12,7 +12,7 @@ export interface SecurityQuestion {
 
 export interface SecurityAnswer {
   questionId: string;
-  hashedAnswer: string;
+  answerHash: string;
 }
 
 // Predefined security questions
@@ -75,7 +75,7 @@ export async function storeSecurityAnswers(
     const hashed = await hashAnswer(answer.answer);
     hashedAnswers.push({
       questionId: answer.questionId,
-      hashedAnswer: hashed
+      answerHash: hashed
     });
   }
 
@@ -133,7 +133,7 @@ export async function verifySecurityAnswers(
       }
 
       const hashedInput = await hashAnswer(answer.answer);
-      if (hashedInput !== stored.hashedAnswer) {
+      if (hashedInput !== stored.answerHash) {
         return false;
       }
     }

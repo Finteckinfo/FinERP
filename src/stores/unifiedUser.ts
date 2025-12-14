@@ -4,8 +4,7 @@ import { useNextAuth } from '@/composables/useNextAuth';
 
 /**
  * Unified User Store
- * Provides consistent user data across siz.land and erp.siz.land
- * Uses Clerk's session which is shared across both domains
+ * Provides consistent user data across the app
  */
 export const useUnifiedUser = defineStore('unifiedUser', () => {
   const { user, isLoaded, isSignedIn } = useNextAuth();

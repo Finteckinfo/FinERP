@@ -127,7 +127,7 @@ const scrollToFeatures = () => {
 </script>
 
 <style lang="scss" scoped>
-/* Navigation - Sleek siz.land style */
+/* Navigation - Sleek FinERP style */
 .main-nav {
   position: fixed;
   top: 0;

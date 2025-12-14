@@ -135,7 +135,7 @@
                   <td>{{ tx.taskTitle || 'N/A' }}</td>
                   <td class="font-weight-bold">
                     <span :class="tx.type === 'TASK_PAYMENT' ? 'text-success' : 'text-error'">
-                      {{ tx.type === 'TASK_PAYMENT' ? '+' : '-' }}{{ tx.amount.toFixed(2) }} SIZ
+                      {{ tx.type === 'TASK_PAYMENT' ? '+' : '-' }}{{ tx.amount.toFixed(2) }} FIN
                     </span>
                   </td>
                   <td>

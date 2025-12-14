@@ -593,8 +593,9 @@ const priorityLevels = ref<Array<{title: string, value: string}>>([
   { title: 'High', value: 'HIGH' },
   { title: 'Critical', value: 'CRITICAL' }
 ]);
-// API base URL
-const API_BASE = import.meta.env.VITE_BACKEND_URL;
+// API base URL (optional in local dev)
+// When not set, backend-powered features will be skipped gracefully.
+const API_BASE = import.meta.env.VITE_BACKEND_URL || '';
 const ssoDomain = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || '';
 
 // Computed properties
@@ -677,6 +678,7 @@ const canSubmit = computed(() => !!canCreateProject.value && walletConnected.val
 
 // API Functions
 const fetchConfigData = async () => {
+  if (!API_BASE) return;
   try {
     const response = await fetch(`${API_BASE}/api/config/enums`);
     if (response.ok) {
@@ -712,6 +714,7 @@ const fetchConfigData = async () => {
 // Templates fetch removed
 
 const fetchUserPermissions = async () => {
+  if (!API_BASE) return;
   if (!user.value?.id) return;
   
   try {
@@ -728,6 +731,7 @@ const fetchUserPermissions = async () => {
 
 const validateProjectName = async (name: string) => {
   if (!name) return { available: true };
+  if (!API_BASE) return { available: true };
   
   try {
     const response = await fetch(`${API_BASE}/api/projects/validate-name?name=${encodeURIComponent(name)}`);
@@ -742,6 +746,7 @@ const validateProjectName = async (name: string) => {
 
 const searchTags = async (query: string) => {
   if (!query || query.length < 2) return [];
+  if (!API_BASE) return [];
   
   try {
     const response = await fetch(`${API_BASE}/api/tags/suggest?query=${encodeURIComponent(query)}`);
@@ -757,6 +762,7 @@ const searchTags = async (query: string) => {
 
 const searchUsers = async (query: string) => {
   if (!query || query.length < 2) return [];
+  if (!API_BASE) return [];
   
   try {
     const response = await fetch(`${API_BASE}/api/users/search?query=${encodeURIComponent(query)}`);
@@ -772,6 +778,7 @@ const searchUsers = async (query: string) => {
 
 const resolveUserEmails = async (emails: string[]) => {
   if (emails.length === 0) return [];
+  if (!API_BASE) return [];
   
   try {
     const response = await fetch(`${API_BASE}/api/users/resolve-by-emails`, {

@@ -25,7 +25,7 @@ const footerLink = shallowRef([
     <v-row justify="center" align="center" no-gutters style="width: 100%">
       <v-col cols="12" sm="6">
         <p class="text-body-1 mb-0 text-sm-left text-center">
-          SIZLAND ♥ crafted by BBS
+          FinERP ♥ crafted by BBS
         </p>
       </v-col>
       <v-col class="text-sm-right text-center" cols="12" sm="6">

@@ -142,7 +142,8 @@ async function deriveKey(
   return crypto.subtle.deriveKey(
     {
       name: 'PBKDF2',
-      salt: salt.buffer as ArrayBuffer,
+      // Pass the view (Uint8Array) to avoid cross-realm ArrayBuffer issues in jsdom/node
+      salt,
       iterations: iterations,
       hash: 'SHA-256'
     },
@@ -177,10 +178,11 @@ export async function encryptWallet(
     const encryptedBuffer = await crypto.subtle.encrypt(
       {
         name: ALGORITHM,
-        iv: iv.buffer as ArrayBuffer
+        // Pass the view (Uint8Array) to avoid cross-realm ArrayBuffer issues in jsdom/node
+        iv
       },
       key,
-      dataBuffer.buffer as ArrayBuffer
+      dataBuffer
     );
 
     // Return encrypted wallet object
@@ -217,10 +219,11 @@ export async function decryptWallet(
     const decryptedBuffer = await crypto.subtle.decrypt(
       {
         name: encryptedWallet.algorithm,
-        iv: iv.buffer as ArrayBuffer
+        // Pass the view (Uint8Array) to avoid cross-realm ArrayBuffer issues in jsdom/node
+        iv
       },
       key,
-      encryptedData.buffer as ArrayBuffer
+      encryptedData
     );
 
     // Convert decrypted buffer to string

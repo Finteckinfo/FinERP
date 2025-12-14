@@ -533,13 +533,17 @@ onMounted(() => {
       const parsed = JSON.parse(raw);
       prefs.value = { ...prefs.value, ...parsed };
     }
-  } catch {}
+  } catch {
+    // ignore malformed / unavailable localStorage
+  }
   applyTheme();
   // React to OS theme changes when set to system
   try {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     mq.addEventListener?.('change', () => prefs.value.theme === 'system' && applyTheme());
-  } catch {}
+  } catch {
+    // ignore matchMedia issues in non-browser contexts
+  }
   
   // Check URL params for tab selection
   const urlParams = new URLSearchParams(window.location.search);
@@ -571,7 +575,9 @@ onUnmounted(() => {
 const savePrefs = () => {
   try {
     localStorage.setItem(saveKey, JSON.stringify(prefs.value));
-  } catch {}
+  } catch {
+    // ignore storage quota / permissions errors
+  }
 };
 
 // Theme application
@@ -1770,7 +1776,7 @@ const clerkAppearance = {
     font-size: 1.25rem;
   }
   
-  .siz-logo {
+  .token-logo {
     width: 60px;
     height: 60px;
   }

@@ -45,7 +45,7 @@
             type="number"
             :min="0"
             :step="0.01"
-            suffix="SIZ"
+            suffix="FIN"
             variant="outlined"
             density="compact"
             :rules="[v => v > 0 || 'Amount required']"
@@ -101,7 +101,7 @@
         type="number"
         :min="0"
         :step="0.01"
-        suffix="SIZ"
+        suffix="FIN"
         variant="outlined"
         density="compact"
         hint="Paid when all department tasks are completed"
@@ -125,7 +125,7 @@
             type="number"
             :min="0"
             :step="0.01"
-            suffix="SIZ"
+            suffix="FIN"
             variant="outlined"
             density="compact"
           />
@@ -177,7 +177,7 @@
       <v-divider class="mb-3" />
       <div class="cost-row">
         <span class="cost-label">Estimated Cost (30 days):</span>
-        <span class="cost-value">{{ formatAmount(estimatedCost) }} SIZ</span>
+        <span class="cost-value">{{ formatAmount(estimatedCost) }} FIN</span>
       </div>
     </div>
   </div>
@@ -278,7 +278,7 @@ const formatSalaryPreview = computed(() => {
   }
 
   const freq = localConfig.value.salaryFrequency.toLowerCase();
-  return `${formatAmount(localConfig.value.salaryAmount)} SIZ ${freq}`;
+  return `${formatAmount(localConfig.value.salaryAmount)} FIN ${freq}`;
 });
 
 // Estimated 30-day cost

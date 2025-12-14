@@ -1,7 +1,7 @@
 <template>
   <div class="kanban-board">
     <!-- Skip to content link for accessibility -->
-    <a href="#kanban-columns" class="skip-to-content">Skip to Kanban Board</a>
+    <a href="#kanban-columns" class="skip-to-content">Skip to Board</a>
     
     <!-- Hero Section with Retro Grid -->
     <div class="kanban-hero">
@@ -10,8 +10,8 @@
         <div class="hero-icon">
           <v-icon size="48">mdi-view-column</v-icon>
         </div>
-        <h1 class="hero-title">Kanban Board</h1>
-        <p class="hero-subtitle">Visualize your workflow and manage tasks efficiently</p>
+        <h1 class="hero-title">Boards</h1>
+        <p class="hero-subtitle">Trello-style lists and cards, with escrow-safe approvals</p>
       </div>
     </div>
     
@@ -113,7 +113,7 @@
       <div 
         class="columns-container"
         role="region"
-        aria-label="Kanban Board Columns"
+        aria-label="Board Lists"
         aria-live="polite"
       >
         <KanbanColumn

@@ -56,8 +56,8 @@
             Amount Required
           </h3>
           <div class="amount-display">
-            <span class="amount-value">{{ formatAmount(requiredAmount) }} SIZ</span>
-            <span class="amount-label">({{ requiredAmount }} SIZCOIN)</span>
+            <span class="amount-value">{{ formatAmount(requiredAmount) }} FIN</span>
+            <span class="amount-label">({{ requiredAmount }} FIN)</span>
           </div>
         </div>
 
@@ -75,7 +75,7 @@
               Fungua wallet yako (Pera/Defly/MyAlgo)
             </li>
             <li class="mb-2">
-              Tuma <strong>{{ formatAmount(requiredAmount) }} SIZ</strong> kwa address iliyo juu
+              Tuma <strong>{{ formatAmount(requiredAmount) }} FIN</strong> kwa address iliyo juu
             </li>
             <li class="mb-2">
               Baada ya kutuma, copy transaction hash

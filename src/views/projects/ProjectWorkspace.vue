@@ -385,7 +385,7 @@
                     <v-col cols="12" md="6">
                       <v-text-field
                         v-model.number="newTask.paymentAmount"
-                        label="Payment Amount (SIZ)"
+                        label="Payment Amount (FIN)"
                         type="number"
                         variant="outlined"
                         class="workspace-input"
@@ -461,11 +461,11 @@
                       <v-col cols="12" md="6">
                         <v-text-field 
                           v-model.number="invite.salaryAmount" 
-                          label="Salary Amount (SIZ)" 
+                          label="Salary Amount (FIN)" 
                           type="number"
                           variant="outlined" 
                           :rules="[v=>!!v||'Required', v=>v>0||'Must be positive']"
-                          suffix="SIZ"
+                          suffix="FIN"
                           class="mt-2"
                           :class="['workspace-input', 'mt-2']"
                         />
@@ -507,11 +507,11 @@
                       <v-col cols="12" md="6">
                         <v-text-field 
                           v-model.number="invite.milestoneAmount" 
-                          label="Milestone Payment Amount (SIZ)" 
+                          label="Milestone Payment Amount (FIN)" 
                           type="number"
                           variant="outlined" 
                           :rules="[v=>!!v||'Required', v=>v>0||'Must be positive']"
-                          suffix="SIZ"
+                          suffix="FIN"
                           class="workspace-input"
                         />
                       </v-col>
@@ -527,10 +527,10 @@
                           </div>
                         </template>
                         <div v-if="invite.paymentType === 'SALARY' && invite.salaryAmount">
-                          <strong>{{ invite.salaryAmount }} SIZ {{ invite.salaryFrequency?.toLowerCase() }}</strong>
+                          <strong>{{ invite.salaryAmount }} FIN {{ invite.salaryFrequency?.toLowerCase() }}</strong>
                           <br>
                           <span class="text-caption">
-                            Estimated monthly: {{ calculateMonthlySalary(invite.salaryAmount, invite.salaryFrequency) }} SIZ
+                            Estimated monthly: {{ calculateMonthlySalary(invite.salaryAmount, invite.salaryFrequency) }} FIN
                           </span>
                         </div>
                         <div v-else-if="invite.paymentType === 'OVERSIGHT' && invite.oversightRate">
@@ -539,7 +539,7 @@
                           <span class="text-caption">Automatically calculated when tasks are approved</span>
                         </div>
                         <div v-else-if="invite.paymentType === 'MILESTONE' && invite.milestoneAmount">
-                          <strong>{{ invite.milestoneAmount }} SIZ per milestone</strong>
+                          <strong>{{ invite.milestoneAmount }} FIN per milestone</strong>
                           <br>
                           <span class="text-caption">Paid when project milestones are reached</span>
                         </div>
@@ -977,11 +977,11 @@ const submitInvite = async () => {
     if (inviteData.paymentType && inviteData.paymentType !== 'PER_TASK') {
       let paymentInfo = '';
       if (inviteData.paymentType === 'SALARY') {
-        paymentInfo = `\n💰 Salary: ${inviteData.salaryAmount} SIZ ${inviteData.salaryFrequency.toLowerCase()}`;
+        paymentInfo = `\n💰 Salary: ${inviteData.salaryAmount} FIN ${inviteData.salaryFrequency.toLowerCase()}`;
       } else if (inviteData.paymentType === 'OVERSIGHT') {
         paymentInfo = `\n👥 Oversight: ${(inviteData.oversightRate * 100).toFixed(1)}% of task payments`;
       } else if (inviteData.paymentType === 'MILESTONE') {
-        paymentInfo = `\n🎯 Milestone: ${inviteData.milestoneAmount} SIZ per milestone`;
+        paymentInfo = `\n🎯 Milestone: ${inviteData.milestoneAmount} FIN per milestone`;
       }
       
       console.log(`✅ Invite sent successfully!${paymentInfo}\n\n⚠️ Project owner needs to fund escrow for this team member.`);

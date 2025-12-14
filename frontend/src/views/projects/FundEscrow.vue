@@ -261,7 +261,7 @@
                       type="number"
                       :min="0"
                       :step="0.01"
-                      suffix="SIZ"
+                      suffix="FIN"
                       variant="outlined"
                       class="mb-4"
                     />

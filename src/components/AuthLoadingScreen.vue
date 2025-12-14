@@ -4,7 +4,7 @@
       <!-- Animated Logo/Icon -->
       <div class="logo-container">
         <div class="logo-circle">
-          <img src="/images/sizlogo.png" alt="SIZ Logo" class="logo-icon" />
+          <img src="/images/banner3.png" alt="FinERP Logo" class="logo-icon" />
         </div>
         <div class="pulse-ring"></div>
         <div class="pulse-ring delay-1"></div>

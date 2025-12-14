@@ -1770,7 +1770,7 @@ const clerkAppearance = {
     font-size: 1.25rem;
   }
   
-  .siz-logo {
+  .token-logo {
     width: 60px;
     height: 60px;
   }

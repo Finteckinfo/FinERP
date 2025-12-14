@@ -93,7 +93,7 @@
         class="payment-chip"
       >
         <v-icon start size="14">mdi-cash</v-icon>
-        {{ task.paymentAmount.toFixed(2) }} SIZ
+        {{ task.paymentAmount.toFixed(2) }} FIN
       </v-chip>
       <v-chip
         v-if="task.paymentStatus === 'PAID'"
@@ -382,6 +382,21 @@ const handleDragStart = (event: DragEvent) => {
   
   event.dataTransfer!.effectAllowed = 'move';
   event.dataTransfer!.setData('text/plain', props.task.id);
+
+  // Attach structured payload for permission + finance-aware drop rules.
+  // This fixes cases where the target column can't "see" the dragged task's metadata.
+  try {
+    event.dataTransfer!.setData('application/json', JSON.stringify({
+      taskId: props.task.id,
+      status: props.task.status,
+      projectId: props.task.projectId,
+      paymentAmount: props.task.paymentAmount ?? 0,
+      paymentStatus: props.task.paymentStatus ?? 'PENDING',
+      canApprove: !!props.task.canApprove,
+    }));
+  } catch {
+    // ignore (dataTransfer may reject custom types in some browsers)
+  }
   
   // Add a drag image
   const dragImage = event.currentTarget as HTMLElement;

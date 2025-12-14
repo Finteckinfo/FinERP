@@ -361,18 +361,22 @@ const getPreviewText = () => {
   const count = props.taskIds.length;
   
   switch (selectedAction.value) {
-    case 'status':
+    case 'status': {
       const statusTitle = statusOptions.find(s => s.value === bulkUpdate.value.status)?.title;
       return `Change status of ${count} tasks to "${statusTitle}"`;
-    case 'assignee':
+    }
+    case 'assignee': {
       const assigneeName = assigneeOptions.value.find(a => a.value === bulkUpdate.value.assignedRoleId)?.title;
       return `Assign ${count} tasks to "${assigneeName}"`;
-    case 'priority':
+    }
+    case 'priority': {
       const priorityTitle = priorityOptions.find(p => p.value === bulkUpdate.value.priority)?.title;
       return `Change priority of ${count} tasks to "${priorityTitle}"`;
-    case 'due-date':
+    }
+    case 'due-date': {
       const dueDate = new Date(bulkUpdate.value.dueDate!).toLocaleDateString();
       return `Set due date of ${count} tasks to ${dueDate}`;
+    }
     case 'progress':
       return `Update progress of ${count} tasks to ${bulkUpdate.value.progress}%`;
     default:

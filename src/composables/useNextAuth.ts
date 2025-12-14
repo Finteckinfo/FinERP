@@ -23,7 +23,7 @@ const isLoaded = ref(false);
 const isValidating = ref(false);
 const lastValidated = ref<number>(0);
 const CACHE_TTL = 10 * 60 * 1000; // 10 minutes - increased for better performance
-const SESSION_STORAGE_KEY = 'siz_session_cache';
+const SESSION_STORAGE_KEY = 'finerp_session_cache';
 
 // PERFORMANCE: Initialize from localStorage on module load (synchronous)
 function initializeFromStorage(): void {
@@ -66,7 +66,7 @@ function parseJwt(token: string) {
 
 /**
  * NextAuth composable to replace Clerk's useAuth()
- * Validates session from shared cookie across siz.land domains
+ * Validates session from shared cookie
  */
 export function useNextAuth() {
   const validateSession = async (force = false) => {
@@ -85,10 +85,10 @@ export function useNextAuth() {
     isValidating.value = true;
 
     try {
-      // Check for NextAuth session cookie (shared across .siz.land domains)
+      // Check for NextAuth session cookie
       const sessionToken = getCookie('next-auth.session-token') ||
         getCookie('__Secure-next-auth.session-token') ||
-        getCookie('siz_sso_token'); // Also check specifically for our SSO token
+        getCookie('finerp_sso_token'); // Also check specifically for our SSO token
 
       if (!sessionToken) {
         // Fallback: Check SSO sessionStorage for ERP users

@@ -4,8 +4,8 @@
     class="flex items-center no-underline hover:no-underline focus:no-underline active:no-underline logo-link"
     aria-label="Logo">
     <img 
-      src="/images/sizlogo.png" 
-      alt="SIZ Logo" 
+      src="/images/banner3.png" 
+      alt="FinERP Logo" 
       class="logo-image"
       width="50" 
       height="50" 

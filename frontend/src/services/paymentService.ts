@@ -4,16 +4,16 @@ import { api } from './projectApi';
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 // ============================================
-// SIZCOIN ASSET CONFIGURATION
+// TOKEN CONFIGURATION
 // ============================================
 /**
- * SIZCOIN - The official project token
- * Asset ID: 2905622564
- * Created on Algorand MainNet at Block #48747393
+ * FIN - Project token configuration (legacy compatibility)
+ *
+ * Note: If you migrate token rails, update these fields accordingly.
  */
-export const SIZCOIN_CONFIG = {
+export const FIN_TOKEN_CONFIG = {
   ASSET_ID: 2905622564,
-  UNIT_NAME: 'SIZ',
+  UNIT_NAME: 'FIN',
   DECIMALS: 2,
   ASSET_URL: 'https://ipfs.io/ipfs/bafybeiex5cvfmggxjyjaxpdxevyhhzvrrsjw5xnee2ydw5metghl3y6fvq',
   CREATED_BLOCK: 48747393,
@@ -21,31 +21,31 @@ export const SIZCOIN_CONFIG = {
 } as const;
 
 /**
- * Formats SIZCOIN amount with proper decimals
- * @param microAmount - Amount in micro units (1 SIZ = 100 micro units)
+ * Formats FIN amount with proper decimals
+ * @param microAmount - Amount in base units (1 FIN = 100 base units, per DECIMALS=2)
  */
-export function formatSIZCOIN(microAmount: number): string {
-  const sizAmount = microAmount / Math.pow(10, SIZCOIN_CONFIG.DECIMALS);
+export function formatFIN(microAmount: number): string {
+  const finAmount = microAmount / Math.pow(10, FIN_TOKEN_CONFIG.DECIMALS);
   return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: SIZCOIN_CONFIG.DECIMALS,
-    maximumFractionDigits: SIZCOIN_CONFIG.DECIMALS
-  }).format(sizAmount);
+    minimumFractionDigits: FIN_TOKEN_CONFIG.DECIMALS,
+    maximumFractionDigits: FIN_TOKEN_CONFIG.DECIMALS
+  }).format(finAmount);
 }
 
 /**
- * Converts SIZ to micro units for blockchain transactions
- * @param sizAmount - Amount in SIZ
+ * Converts FIN to base units for blockchain transactions
+ * @param finAmount - Amount in FIN
  */
-export function sizToMicroUnits(sizAmount: number): number {
-  return Math.floor(sizAmount * Math.pow(10, SIZCOIN_CONFIG.DECIMALS));
+export function finToBaseUnits(finAmount: number): number {
+  return Math.floor(finAmount * Math.pow(10, FIN_TOKEN_CONFIG.DECIMALS));
 }
 
 /**
- * Converts micro units to SIZ
- * @param microAmount - Amount in micro units
+ * Converts base units to FIN
+ * @param microAmount - Amount in base units
  */
-export function microUnitsToSiz(microAmount: number): number {
-  return microAmount / Math.pow(10, SIZCOIN_CONFIG.DECIMALS);
+export function baseUnitsToFin(microAmount: number): number {
+  return microAmount / Math.pow(10, FIN_TOKEN_CONFIG.DECIMALS);
 }
 
 // ============================================
@@ -72,8 +72,8 @@ export interface EscrowBalance {
 }
 
 /**
- * Creates an Algorand escrow account for a project
- * Now includes SIZCOIN asset information
+ * Creates an escrow account for a project
+ * Includes token configuration information
  */
 export async function createProjectEscrow(projectId: string): Promise<EscrowAccount & {
   assetId: number;
@@ -85,10 +85,10 @@ export async function createProjectEscrow(projectId: string): Promise<EscrowAcco
 }
 
 /**
- * Opts escrow account into SIZCOIN asset
- * This must be called after creating escrow and before receiving SIZCOIN
+ * Opts escrow account into the project token
+ * This must be called after creating escrow and before receiving tokens
  */
-export async function optInEscrowToSIZCOIN(projectId: string): Promise<{
+export async function optInEscrowToFINToken(projectId: string): Promise<{
   success: boolean;
   assetId: number;
   txHash: string;
@@ -99,7 +99,7 @@ export async function optInEscrowToSIZCOIN(projectId: string): Promise<{
 
 /**
  * Records a deposit transaction to project escrow
- * Now verifies SIZCOIN asset transactions (not ALGO)
+ * Verifies token transfers (not the native coin)
  */
 export async function depositToEscrow(projectId: string, txHash: string, amount: number): Promise<{
   success: boolean;
@@ -155,7 +155,7 @@ export interface TaskPaymentStatus {
 
 /**
  * Approves a task and triggers payment release
- * Now checks employee SIZCOIN opt-in before payment
+ * Checks employee token readiness before payment
  * Also processes manager oversight fees automatically
  */
 export async function approveAndPayTask(taskId: string): Promise<{
@@ -405,13 +405,13 @@ export interface UserWalletInfo {
   walletAddress: string;
   verified: boolean;
   verifiedAt?: string;
-  sizOptedIn?: boolean; // SIZCOIN opt-in status
+  tokenOptedIn?: boolean; // Token opt-in status
   assetId?: number; // Should be 2905622564
 }
 
 /**
  * Verifies user owns the wallet address
- * Now also validates SIZCOIN opt-in status
+ * Also validates token opt-in status (if applicable)
  */
 export async function verifyWallet(
   walletAddress: string,
@@ -419,7 +419,7 @@ export async function verifyWallet(
   message: string
 ): Promise<{ 
   verified: boolean;
-  sizOptedIn?: boolean;
+  tokenOptedIn?: boolean;
   assetId?: number;
   message?: string;
 }> {

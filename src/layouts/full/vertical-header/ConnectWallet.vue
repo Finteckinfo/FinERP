@@ -419,7 +419,7 @@ const shortenAddress = (address: string) => {
 
         <!-- Not Connected State - Wallet Options -->
         <div v-else>
-          <!-- Siz Wallet Option (First and Primary) -->
+          <!-- Fin Wallet Option -->
           <section class="mb-4">
             <h6 class="mb-3 text-subtitle-1 font-weight-medium">Recommended</h6>
             <v-btn
@@ -432,11 +432,11 @@ const shortenAddress = (address: string) => {
               @click="showCreateWallet = true; isWalletModalOpen = false"
             >
               <div class="wallet-action-btn__icon" :style="walletIconStyle">
-                <v-img src="/wallets/siz.png" alt="Siz Wallet logo" />
+                <v-img src="/wallets/walletconnect.png" alt="Fin Wallet logo" />
               </div>
               <div class="wallet-action-btn__body">
-                <span class="wallet-action-btn__title">Siz Wallet</span>
-                <span class="wallet-action-btn__subtitle">Create or connect your Siz wallet</span>
+                <span class="wallet-action-btn__title">Fin Wallet</span>
+                <span class="wallet-action-btn__subtitle">Create or connect your wallet</span>
               </div>
               <v-icon class="wallet-action-btn__chevron" color="success">mdi-chevron-right</v-icon>
             </v-btn>
@@ -549,7 +549,7 @@ const shortenAddress = (address: string) => {
   <v-dialog v-model="showCreateWallet" max-width="500" z-index="2001">
     <v-card class="rounded-xl">
       <v-card-title class="headline text-center">
-        🎉 Create Your Sizland Wallet
+        🎉 Create Your FinERP Wallet
       </v-card-title>
       <v-card-text>
         <p class="text-body-1 text-center text-medium-emphasis mb-4">

@@ -3,31 +3,10 @@
 import { ref } from 'vue';
 
 // Try imports but don't crash at build-time if package API differs.
-// Use dynamic require / import via try-catch.
+// Use dynamic import via try-catch.
 let TxnLabWalletManager: any = null;
 let WalletId: any = null;
 let PeraWalletConnect: any = null;
-
-try {
-  // txnlab (if installed)
-  // NOTE: package export names can change; this is feature-detective
-  // If using ESM and depending on your bundler you might need to `import` instead.
-  // We use require inside try-catch to avoid breaking Vite when module shape differs.
-  // @ts-ignore
-  const t = require('@txnlab/use-wallet-vue');
-  TxnLabWalletManager = t?.WalletManager ?? t?.default ?? null;
-  WalletId = t?.WalletId ?? null;
-} catch (e) {
-  // not present or different API — ignore
-}
-
-try {
-  // Pera Wallet
-  // @ts-ignore
-  PeraWalletConnect = require('@perawallet/connect').default ?? require('@perawallet/connect');
-} catch (e) {
-  // not present
-}
 
 const connected = ref(false);
 const address = ref<string | null>(null);
@@ -35,6 +14,15 @@ let managerInstance: any = null;
 let peraConnector: any = null;
 
 async function initTxnLab() {
+  if (!TxnLabWalletManager) {
+    try {
+      const t: any = await import('@txnlab/use-wallet-vue');
+      TxnLabWalletManager = t?.WalletManager ?? t?.default ?? null;
+      WalletId = t?.WalletId ?? null;
+    } catch {
+      // not present or different API — ignore
+    }
+  }
   if (!TxnLabWalletManager) return null;
   try {
     managerInstance = new TxnLabWalletManager({
@@ -51,6 +39,14 @@ async function initTxnLab() {
 }
 
 async function initPera() {
+  if (!PeraWalletConnect) {
+    try {
+      const mod: any = await import('@perawallet/connect');
+      PeraWalletConnect = mod?.default ?? mod;
+    } catch {
+      // not present
+    }
+  }
   if (!PeraWalletConnect) return null;
   try {
     peraConnector = new PeraWalletConnect();

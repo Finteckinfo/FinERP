@@ -14,11 +14,16 @@ export function getCookie(name: string): string | null {
 export function setCookie(name: string, value: string, days: number = 30): void {
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;domain=.siz.land;secure;samesite=lax`;
+  // Use configured cookie domain if provided; otherwise default to current hostname.
+  const configuredDomain = (import.meta as any)?.env?.VITE_COOKIE_DOMAIN as string | undefined;
+  const domain = configuredDomain || window.location.hostname;
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;domain=${domain};secure;samesite=lax`;
 }
 
 export function deleteCookie(name: string): void {
-  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;domain=.siz.land`;
+  const configuredDomain = (import.meta as any)?.env?.VITE_COOKIE_DOMAIN as string | undefined;
+  const domain = configuredDomain || window.location.hostname;
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;domain=${domain}`;
 }
 
 export function getAllCookies(): Record<string, string> {

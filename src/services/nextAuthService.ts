@@ -26,7 +26,7 @@ export class NextAuthService {
   private hasSession(): boolean {
     const sessionToken = getCookie('next-auth.session-token') ||
       getCookie('__Secure-next-auth.session-token') ||
-      getCookie('siz_sso_token'); // Add check for SSO token
+      getCookie('finerp_sso_token'); // Also check for SSO token
     return !!sessionToken;
   }
 
@@ -43,7 +43,7 @@ export class NextAuthService {
     // Get token from cookie (synchronous)
     const sessionToken = getCookie('next-auth.session-token') ||
       getCookie('__Secure-next-auth.session-token') ||
-      getCookie('siz_sso_token');
+      getCookie('finerp_sso_token');
 
     if (sessionToken) {
       this.tokenCache = sessionToken;
@@ -90,7 +90,7 @@ export class NextAuthService {
         // Get token from cookie
         const sessionToken = getCookie('next-auth.session-token') ||
           getCookie('__Secure-next-auth.session-token') ||
-          getCookie('siz_sso_token');
+          getCookie('finerp_sso_token');
 
         if (sessionToken) {
           // PERFORMANCE: Use token directly without backend validation
@@ -147,7 +147,7 @@ export class NextAuthService {
     // First, try to get NextAuth session token
     const sessionToken = getCookie('next-auth.session-token') ||
       getCookie('__Secure-next-auth.session-token') ||
-      getCookie('siz_sso_token'); // Add check for SSO token
+      getCookie('finerp_sso_token'); // Also check for SSO token
 
     if (sessionToken) {
       return {
@@ -224,7 +224,7 @@ export class NextAuthService {
       this.clearTokenCache();
 
       // Redirect to SSO login
-      const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || 'https://www.siz.land';
+      const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || window.location.origin;
       window.location.href = `${ssoUrl}/login?redirect=${encodeURIComponent(window.location.href)}`;
     }
   }

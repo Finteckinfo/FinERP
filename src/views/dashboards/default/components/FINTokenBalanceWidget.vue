@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="0" class="siz-token-balance-card">
+  <v-card elevation="0" class="token-balance-card">
     <v-card-title class="d-flex flex-column align-center justify-center pa-4 position-relative">
       <div class="d-flex align-center justify-center gap-2 w-100">
         <v-icon size="24" color="primary">mdi-coin</v-icon>
@@ -82,12 +82,12 @@
 
         <!-- Balance Amount -->
         <div class="text-center mb-4">
-          <!-- SIZ Logo -->
-          <div class="siz-logo-container mb-3">
+          <!-- Token Logo -->
+          <div class="token-logo-container mb-3">
             <img 
-              src="/images/sizlogo.png" 
-              alt="SIZ Logo" 
-              class="siz-logo"
+              src="/images/banner3.png" 
+              alt="FinERP Logo" 
+              class="token-logo"
             />
           </div>
           <div class="text-h3 font-weight-bold mb-2" style="color: var(--erp-accent-green);">
@@ -127,7 +127,7 @@
           <template v-slot:prepend>
             <v-icon>mdi-information</v-icon>
           </template>
-          No SIZ tokens found in this wallet. You may need to opt-in to the SIZ token.
+          No FIN tokens found in this wallet.
         </v-alert>
       </div>
     </v-card-text>

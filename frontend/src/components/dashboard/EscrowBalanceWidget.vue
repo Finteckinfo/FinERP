@@ -27,7 +27,7 @@
           <div class="balance-amount d-flex align-items-center">
             <v-icon size="32" color="warning" class="mr-2">mdi-currency-usd</v-icon>
             <span class="text-h3 font-weight-bold">{{ formatAmount(balance.currentBalance) }}</span>
-            <span class="text-h6 ml-1 text-medium-emphasis">SIZ</span>
+            <span class="text-h6 ml-1 text-medium-emphasis">FIN</span>
           </div>
         </div>
 
@@ -36,7 +36,7 @@
           <v-col cols="12" sm="4">
             <v-card variant="tonal" color="success" class="pa-3">
               <div class="text-caption">Available</div>
-              <div class="text-h6 font-weight-bold">{{ formatAmount(balance.available) }} SIZ</div>
+              <div class="text-h6 font-weight-bold">{{ formatAmount(balance.available) }} FIN</div>
               <v-progress-linear
                 :model-value="availablePercent"
                 color="success"
@@ -49,7 +49,7 @@
           <v-col cols="12" sm="4">
             <v-card variant="tonal" color="warning" class="pa-3">
               <div class="text-caption">Allocated</div>
-              <div class="text-h6 font-weight-bold">{{ formatAmount(balance.allocated) }} SIZ</div>
+              <div class="text-h6 font-weight-bold">{{ formatAmount(balance.allocated) }} FIN</div>
               <v-progress-linear
                 :model-value="allocatedPercent"
                 color="warning"
@@ -62,7 +62,7 @@
           <v-col cols="12" sm="4">
             <v-card variant="tonal" color="primary" class="pa-3">
               <div class="text-caption">Released</div>
-              <div class="text-h6 font-weight-bold">{{ formatAmount(balance.released) }} SIZ</div>
+              <div class="text-h6 font-weight-bold">{{ formatAmount(balance.released) }} FIN</div>
               <v-progress-linear
                 :model-value="releasedPercent"
                 color="primary"
@@ -110,7 +110,9 @@
           density="compact"
           class="mt-4"
         >
-          <v-icon slot="prepend" size="20">mdi-alert</v-icon>
+          <template v-slot:prepend>
+<v-icon  size="20">mdi-alert</v-icon>
+</template>
           <span class="text-caption">
             Low available balance. Consider adding more funds to cover upcoming payments.
           </span>

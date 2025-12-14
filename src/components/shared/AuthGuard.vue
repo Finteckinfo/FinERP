@@ -12,7 +12,7 @@ const { isDark } = useTheme();
 onMounted(() => {
   if (isLoaded.value && !isSignedIn.value) {
     // Redirect to primary domain for authentication
-    const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || 'https://siz.land';
+    const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || window.location.origin;
     const redirectUrl = encodeURIComponent(window.location.href);
     window.location.href = `${ssoUrl}/login?redirect=${redirectUrl}`;
   }

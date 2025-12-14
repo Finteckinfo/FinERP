@@ -40,7 +40,7 @@
             </h2>
             
             <p class="text-body-1 text-medium-emphasis mb-6">
-              You need to be logged in with a wallet-connected account. Please log in at siz.land to continue.
+              You need to be logged in with a wallet-connected account. Please log in to continue.
             </p>
             
             <!-- Debug info for development -->
@@ -153,7 +153,7 @@ const isDevelopment = computed(() => {
 
 // Open wallet modal (redirect to login page)
 const handleOpenWalletModal = () => {
-  const ssoDomain = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || 'https://www.siz.land';
+  const ssoDomain = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || window.location.origin;
   window.location.href = `${ssoDomain}/login`;
 };
 
@@ -187,13 +187,13 @@ const checkWalletStatus = () => {
 
 const forceRefresh = () => {
   console.log('[WalletGuard] Redirecting to login');
-  const ssoDomain = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || 'https://www.siz.land';
+  const ssoDomain = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || window.location.origin;
   window.location.href = `${ssoDomain}/login`;
 };
 
 const clearWallet = () => {
   console.log('[WalletGuard] Logging out');
-  const ssoDomain = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || 'https://www.siz.land';
+  const ssoDomain = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || window.location.origin;
   window.location.href = `${ssoDomain}/logout`;
 };
 </script>

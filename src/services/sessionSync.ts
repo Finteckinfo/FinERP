@@ -1,6 +1,6 @@
 /**
  * Session Synchronization Service
- * Ensures sessions are properly synced across domains (siz.land and erp.siz.land)
+ * Ensures sessions are properly synced across configured domains
  */
 
 export class SessionSyncService {

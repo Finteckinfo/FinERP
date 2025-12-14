@@ -11,7 +11,7 @@
     "build-prod": "vue-tsc --noEmit && vite build",
     "preview": "vite preview --port 5050",
     "typecheck": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-pattern .gitignore",
+    "lint": "NODE_OPTIONS=--max-old-space-size=4096 eslint \"src/**/*.{ts,tsx,js,jsx,vue}\" \"api/**/*.{ts,js}\" --fix --cache",
     "deploy": "touch dist/.nojekyll && gh-pages -d dist --dotfiles"
   },
   "dependencies": {
@@ -80,6 +80,7 @@
     "eslint": "9.17.0",
     "eslint-plugin-vue": "9.32.0",
     "gh-pages": "^6.3.0",
+    "jsdom": "^27.3.0",
     "postcss": "^8.5.6",
     "prettier": "3.4.2",
     "process": "^0.11.10",

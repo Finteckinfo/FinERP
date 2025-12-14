@@ -113,7 +113,7 @@
               <div v-else-if="invitation.paymentConfig.paymentType === 'SALARY'" class="payment-info">
                 <v-icon size="18" class="mr-2" color="success">mdi-cash-multiple</v-icon>
                 <span class="text-body-2">
-                  {{ invitation.paymentConfig.salaryAmount }} SIZ / 
+                  {{ invitation.paymentConfig.salaryAmount }} FIN /
                   {{ invitation.paymentConfig.salaryFrequency }}
                 </span>
               </div>
@@ -128,14 +128,14 @@
               <div v-else-if="invitation.paymentConfig.paymentType === 'MILESTONE'" class="payment-info">
                 <v-icon size="18" class="mr-2" color="success">mdi-flag-checkered</v-icon>
                 <span class="text-body-2">
-                  {{ invitation.paymentConfig.milestoneAmount }} SIZ per milestone
+                  {{ invitation.paymentConfig.milestoneAmount }} FIN per milestone
                 </span>
               </div>
 
               <v-alert type="info" variant="tonal" density="compact" class="mt-3">
                 <v-icon slot="prepend" size="20">mdi-information</v-icon>
                 <span class="text-caption">
-                  Payments in SIZCOIN are held in secure escrow and released automatically when work is approved
+                  Payments in FIN tokens are held in secure escrow and released automatically when work is approved
                 </span>
               </v-alert>
             </div>
@@ -167,7 +167,7 @@
             </v-timeline-item>
             <v-timeline-item dot-color="info" size="small">
               <div class="text-body-2">
-                <strong>Connect Wallet</strong> - Set up SIZCOIN payments (if not done)
+                <strong>Connect Wallet</strong> - Set up FIN token payments (if not done)
               </div>
             </v-timeline-item>
             <v-timeline-item dot-color="primary" size="small">
@@ -177,7 +177,7 @@
             </v-timeline-item>
             <v-timeline-item dot-color="warning" size="small">
               <div class="text-body-2">
-                <strong>Get Paid</strong> - Receive SIZCOIN when tasks approved
+                <strong>Get Paid</strong> - Receive FIN when tasks are approved
               </div>
             </v-timeline-item>
           </v-timeline>

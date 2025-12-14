@@ -1,6 +1,6 @@
 import vue from '@vitejs/plugin-vue';
 import { fileURLToPath, URL } from 'url';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import vuetify from 'vite-plugin-vuetify';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import tailwindcss from '@tailwindcss/vite';
@@ -31,6 +31,19 @@ export default defineConfig({
     })
   ],
   base: '/',
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    testTimeout: 20000,
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/cypress/**',
+      '**/.{idea,git,cache,output,temp}/**',
+      // Hardhat tests live here; Vitest shouldn't try to run them.
+      'contracts/**'
+    ],
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -79,10 +92,7 @@ export default defineConfig({
       'process',
       'crypto-browserify',
       'stream-browserify',
-      '@walletconnect/web3-provider',
-      '@blockshake/defly-connect',
-      '@perawallet/connect',
-      'algosdk'
+      // Keep this list limited to actual dependencies to avoid optimize errors.
     ]
   },
   esbuild: {
