@@ -1,6 +1,13 @@
 <template>
-  <v-dialog v-model="localValue" max-width="800" scrollable>
-    <v-card v-if="task">
+  <v-navigation-drawer
+    v-model="localValue"
+    location="right"
+    temporary
+    :scrim="true"
+    class="task-drawer"
+    :width="drawerWidth"
+  >
+    <v-card v-if="task" class="drawer-card">
       <!-- Header -->
       <v-card-title class="task-header">
         <div class="header-content">
@@ -86,25 +93,126 @@
               </div>
             </div>
 
-            <!-- Checklist Section -->
-            <div v-if="task.checklistCount" class="content-section">
-              <h3 class="section-title">Checklist</h3>
-              <div class="checklist-info">
-                <div class="checklist-progress">
-                  <v-icon color="primary" class="mr-2">mdi-format-list-checks</v-icon>
-                  <span>{{ task.checklistCompleted || 0 }} of {{ task.checklistCount }} completed</span>
-                  <v-progress-circular
-                    :model-value="checklistProgress"
-                    :color="getProgressColor(checklistProgress)"
-                    size="24"
-                    width="3"
-                    class="ml-auto"
+            <!-- Checklist Section (Trello-like items; stored locally, counts sync to backend when possible) -->
+            <div class="content-section">
+              <div class="d-flex align-center justify-space-between mb-2">
+                <h3 class="section-title mb-0">Checklist</h3>
+                <span class="text-caption text-medium-emphasis">
+                  {{ checklistDoneCount }} / {{ checklistTotalCount }}
+                </span>
+              </div>
+
+              <v-progress-linear
+                :model-value="checklistProgressLocal"
+                :color="getProgressColor(checklistProgressLocal)"
+                height="8"
+                rounded
+                class="mb-3"
+              />
+
+              <div v-if="localDetails.checklist.length === 0" class="text-medium-emphasis text-body-2 mb-3">
+                No checklist items yet
+              </div>
+
+              <div class="checklist-items">
+                <div v-for="item in localDetails.checklist" :key="item.id" class="checklist-item">
+                  <v-checkbox
+                    v-model="item.done"
+                    density="compact"
+                    hide-details
+                    class="mr-2"
+                    @update:model-value="persistAndSyncChecklist"
                   />
+                  <div class="checklist-text" :class="{ done: item.done }">
+                    {{ item.text }}
+                  </div>
+                  <v-spacer />
+                  <v-btn
+                    icon
+                    variant="text"
+                    size="small"
+                    :disabled="!canEditTask"
+                    @click="() => { localDetails.checklist = localDetails.checklist.filter(i => i.id !== item.id); persistAndSyncChecklist(); }"
+                    aria-label="Remove checklist item"
+                  >
+                    <v-icon size="18">mdi-close</v-icon>
+                  </v-btn>
+                </div>
+              </div>
+
+              <div class="d-flex align-center gap-2 mt-3">
+                <v-text-field
+                  v-model="newChecklistText"
+                  label="Add checklist item"
+                  variant="outlined"
+                  density="compact"
+                  hide-details
+                  :disabled="!canEditTask"
+                  @keydown.enter.prevent="addChecklistItem"
+                />
+                <v-btn color="primary" :disabled="!canEditTask" @click="addChecklistItem">
+                  Add
+                </v-btn>
+              </div>
+            </div>
+
+            <!-- Attachments (links / references; stored locally) -->
+            <div class="content-section">
+              <h3 class="section-title">Attachments</h3>
+
+              <div v-if="localDetails.attachments.length === 0" class="text-medium-emphasis text-body-2 mb-3">
+                No attachments yet
+              </div>
+
+              <v-list density="compact" class="attachments-list" v-else>
+                <v-list-item
+                  v-for="a in localDetails.attachments"
+                  :key="a.id"
+                  :title="a.name"
+                  :subtitle="a.url"
+                  @click="() => window.open(a.url, '_blank')"
+                >
+                  <template #prepend>
+                    <v-icon>mdi-paperclip</v-icon>
+                  </template>
+                  <template #append>
+                    <v-btn
+                      icon
+                      variant="text"
+                      size="small"
+                      :disabled="!canEditTask"
+                      @click.stop="() => { localDetails.attachments = localDetails.attachments.filter(x => x.id !== a.id); props.task && persistLocalDetails(props.task.id); }"
+                    >
+                      <v-icon size="18">mdi-close</v-icon>
+                    </v-btn>
+                  </template>
+                </v-list-item>
+              </v-list>
+
+              <div class="d-flex flex-column gap-2 mt-3">
+                <v-text-field
+                  v-model="newAttachmentUrl"
+                  label="Attachment URL"
+                  variant="outlined"
+                  density="compact"
+                  hide-details
+                  :disabled="!canEditTask"
+                />
+                <div class="d-flex align-center gap-2">
+                  <v-text-field
+                    v-model="newAttachmentName"
+                    label="Name (optional)"
+                    variant="outlined"
+                    density="compact"
+                    hide-details
+                    :disabled="!canEditTask"
+                  />
+                  <v-btn color="primary" :disabled="!canEditTask" @click="addAttachment">Add</v-btn>
                 </div>
               </div>
             </div>
 
-            <!-- Activity Timeline -->
+            <!-- Comments (local) + Activity Timeline (backend) -->
             <div class="content-section">
               <div class="d-flex align-center justify-space-between mb-3">
                 <h3 class="section-title mb-0">Activity</h3>
@@ -117,6 +225,32 @@
                   <v-icon start>mdi-refresh</v-icon>
                   Refresh
                 </v-btn>
+              </div>
+
+              <div class="mb-4">
+                <h4 class="sidebar-title mb-2">Comments</h4>
+                <v-textarea
+                  v-model="newCommentText"
+                  placeholder="Write a comment..."
+                  variant="outlined"
+                  rows="2"
+                  auto-grow
+                  hide-details
+                  :disabled="!canEditTask"
+                />
+                <div class="d-flex justify-end mt-2">
+                  <v-btn color="primary" :disabled="!canEditTask" @click="addComment">Comment</v-btn>
+                </div>
+
+                <div v-if="localDetails.comments.length" class="comments-list mt-3">
+                  <div v-for="c in localDetails.comments" :key="c.id" class="comment-item">
+                    <div class="comment-meta">
+                      <strong>{{ c.author }}</strong>
+                      <span class="text-caption text-medium-emphasis">{{ formatActivityTime(c.createdAt) }}</span>
+                    </div>
+                    <div class="comment-text">{{ c.text }}</div>
+                  </div>
+                </div>
               </div>
               
               <div v-if="loadingActivity" class="activity-loading">
@@ -240,6 +374,109 @@
                   variant="outlined"
                   density="compact"
                   hide-details
+                />
+              </div>
+
+              <!-- Labels -->
+              <div class="sidebar-section">
+                <div class="d-flex align-center justify-space-between">
+                  <h4 class="sidebar-title mb-0">Labels</h4>
+                  <v-menu :close-on-content-click="false">
+                    <template #activator="{ props: menuProps }">
+                      <v-btn
+                        size="x-small"
+                        variant="text"
+                        v-bind="menuProps"
+                        :disabled="!canEditTask"
+                      >
+                        Edit
+                      </v-btn>
+                    </template>
+                    <v-card elevation="2" class="pa-3" style="width: 280px;">
+                      <div class="text-subtitle-2 mb-2">Select labels</div>
+                      <v-list density="compact">
+                        <v-list-item
+                          v-for="tag in availableTags"
+                          :key="tag.id"
+                          @click="toggleLabel(tag.id)"
+                        >
+                          <template #prepend>
+                            <v-checkbox
+                              :model-value="localDetails.labelIds.includes(tag.id)"
+                              hide-details
+                              density="compact"
+                            />
+                          </template>
+                          <v-list-item-title>
+                            <span class="label-dot" :style="{ background: tag.color }" />
+                            {{ tag.name }}
+                          </v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+
+                      <v-divider class="my-3" />
+                      <div class="text-subtitle-2 mb-2">Create label</div>
+                      <div class="d-flex gap-2">
+                        <v-text-field
+                          v-model="newLabelName"
+                          label="Name"
+                          variant="outlined"
+                          density="compact"
+                          hide-details
+                          :disabled="!canEditTask"
+                        />
+                        <v-btn color="primary" :loading="creatingLabel" :disabled="!canEditTask" @click="createLabel">
+                          Add
+                        </v-btn>
+                      </div>
+                    </v-card>
+                  </v-menu>
+                </div>
+
+                <div v-if="selectedTags.length === 0" class="text-medium-emphasis text-body-2">
+                  No labels
+                </div>
+                <div v-else class="d-flex flex-wrap gap-2 mt-2">
+                  <v-chip
+                    v-for="tag in selectedTags"
+                    :key="tag.id"
+                    size="small"
+                    variant="tonal"
+                    :style="{ background: `color-mix(in srgb, ${tag.color} 22%, transparent)`, color: 'var(--erp-text)' }"
+                  >
+                    <span class="label-dot" :style="{ background: tag.color }" />
+                    {{ tag.name }}
+                  </v-chip>
+                </div>
+              </div>
+
+              <!-- Members (assignee + optional watchers) -->
+              <div class="sidebar-section">
+                <h4 class="sidebar-title">Members</h4>
+                <div class="text-caption text-medium-emphasis mb-2">
+                  Assignee is saved to the backend. Additional watchers are stored locally.
+                </div>
+                <v-select
+                  v-model="editableTask.assignedRoleId"
+                  :items="assigneeOptions"
+                  label="Assignee"
+                  variant="outlined"
+                  density="compact"
+                  hide-details
+                  clearable
+                  :disabled="!canEditTask"
+                />
+                <v-select
+                  v-model="localDetails.watcherRoleIds"
+                  :items="memberOptions"
+                  label="Watchers"
+                  multiple
+                  variant="outlined"
+                  density="compact"
+                  hide-details
+                  class="mt-2"
+                  :disabled="!canEditTask"
+                  @update:model-value="() => { props.task && persistLocalDetails(props.task.id); }"
                 />
               </div>
 
@@ -464,13 +701,14 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-dialog>
+  </v-navigation-drawer>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { kanbanApi } from '../services/kanbanApi';
-import { taskApi } from '@/services/projectApi';
+import { taskApi, userRoleApi, tagApi, type UserRole, type ProjectTag } from '@/services/projectApi';
+import { useNextAuth } from '@/composables/useNextAuth';
 import type { KanbanTask, TaskActivity } from '../types/kanban';
 
 interface Props {
@@ -509,6 +747,42 @@ const confirmApproveAndPay = ref(false);
 const activities = ref<TaskActivity[]>([]);
 const editableTask = ref<Partial<KanbanTask>>({});
 
+// Drawer sizing (responsive)
+const viewportWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1200);
+const drawerWidth = computed(() => (viewportWidth.value < 600 ? viewportWidth.value : 520));
+
+// Viewer identity (for local comments)
+const { user } = useNextAuth();
+
+// Trello-like details (localStorage fallback for missing APIs)
+type LocalChecklistItem = { id: string; text: string; done: boolean };
+type LocalComment = { id: string; author: string; text: string; createdAt: string };
+type LocalAttachment = { id: string; name: string; url: string; createdAt: string };
+type LocalTaskDetails = {
+  labelIds: string[];
+  watcherRoleIds: string[];
+  checklist: LocalChecklistItem[];
+  comments: LocalComment[];
+  attachments: LocalAttachment[];
+};
+
+const availableTags = ref<ProjectTag[]>([]);
+const teamRoles = ref<UserRole[]>([]);
+const localDetails = ref<LocalTaskDetails>({
+  labelIds: [],
+  watcherRoleIds: [],
+  checklist: [],
+  comments: [],
+  attachments: []
+});
+
+const newChecklistText = ref('');
+const newCommentText = ref('');
+const newAttachmentName = ref('');
+const newAttachmentUrl = ref('');
+const newLabelName = ref('');
+const creatingLabel = ref(false);
+
 // Options
 const statusOptions = [
   { title: 'To Do', value: 'PENDING' },
@@ -524,18 +798,157 @@ const priorityOptions = [
   { title: 'Low', value: 'LOW' }
 ];
 
-const assigneeOptions = ref([
-  { title: 'Unassigned', value: null },
-  { title: 'John Doe', value: 'user1' },
-  { title: 'Jane Smith', value: 'user2' }
-  // This would be loaded from your project's team members
-]);
+const assigneeOptions = computed(() => {
+  const options = [{ title: 'Unassigned', value: null as string | null }];
+  for (const role of teamRoles.value) {
+    const displayName =
+      role.user?.firstName || role.user?.lastName
+        ? `${role.user.firstName || ''} ${role.user.lastName || ''}`.trim()
+        : role.user?.email || role.id;
+    options.push({ title: `${displayName} (${role.role})`, value: role.id });
+  }
+  return options;
+});
+
+const memberOptions = computed(() => {
+  return teamRoles.value.map((role) => {
+    const displayName =
+      role.user?.firstName || role.user?.lastName
+        ? `${role.user.firstName || ''} ${role.user.lastName || ''}`.trim()
+        : role.user?.email || role.id;
+    return { title: `${displayName} (${role.role})`, value: role.id };
+  });
+});
+
+const selectedTags = computed(() => {
+  const ids = new Set(localDetails.value.labelIds || []);
+  return availableTags.value.filter((t) => ids.has(t.id));
+});
+
+const checklistDoneCount = computed(() => localDetails.value.checklist.filter((i) => i.done).length);
+const checklistTotalCount = computed(() => localDetails.value.checklist.length);
+const checklistProgressLocal = computed(() =>
+  checklistTotalCount.value === 0 ? 0 : Math.round((checklistDoneCount.value / checklistTotalCount.value) * 100)
+);
+
+const canEditTask = computed(() => !!props.task && (props.userPermissions.canEditAllTasks || !!props.task.canEdit));
+
+const localKeyForTask = (taskId: string) => `finerp.taskDetails.${taskId}`;
+
+const loadLocalDetails = (taskId: string) => {
+  try {
+    const raw = localStorage.getItem(localKeyForTask(taskId));
+    if (!raw) return;
+    const parsed = JSON.parse(raw) as Partial<LocalTaskDetails>;
+    localDetails.value = {
+      labelIds: Array.isArray(parsed.labelIds) ? parsed.labelIds : [],
+      watcherRoleIds: Array.isArray(parsed.watcherRoleIds) ? parsed.watcherRoleIds : [],
+      checklist: Array.isArray(parsed.checklist) ? parsed.checklist : [],
+      comments: Array.isArray(parsed.comments) ? parsed.comments : [],
+      attachments: Array.isArray(parsed.attachments) ? parsed.attachments : []
+    };
+  } catch {
+    // ignore corrupt local data
+  }
+};
+
+const persistLocalDetails = (taskId: string) => {
+  try {
+    localStorage.setItem(localKeyForTask(taskId), JSON.stringify(localDetails.value));
+  } catch {
+    // ignore quota
+  }
+};
+
+const syncChecklistCounts = async () => {
+  if (!props.task || !canEditTask.value) return;
+  try {
+    await taskApi.updateTask(props.task.id, {
+      checklistCount: checklistTotalCount.value,
+      checklistCompleted: checklistDoneCount.value
+    } as any);
+  } catch (e) {
+    console.warn('[TaskDetailModal] Failed to sync checklist counts', e);
+  }
+};
+
+const persistAndSyncChecklist = async () => {
+  if (!props.task) return;
+  persistLocalDetails(props.task.id);
+  await syncChecklistCounts();
+};
+
+const addChecklistItem = async () => {
+  if (!props.task) return;
+  const text = newChecklistText.value.trim();
+  if (!text) return;
+  localDetails.value.checklist.push({ id: crypto.randomUUID(), text, done: false });
+  newChecklistText.value = '';
+  await persistAndSyncChecklist();
+};
+
+const addComment = () => {
+  if (!props.task) return;
+  const text = newCommentText.value.trim();
+  if (!text) return;
+  const author = user.value?.email || 'You';
+  localDetails.value.comments.unshift({
+    id: crypto.randomUUID(),
+    author,
+    text,
+    createdAt: new Date().toISOString()
+  });
+  newCommentText.value = '';
+  persistLocalDetails(props.task.id);
+};
+
+const addAttachment = () => {
+  if (!props.task) return;
+  const url = newAttachmentUrl.value.trim();
+  if (!url) return;
+  const name = newAttachmentName.value.trim() || url;
+  localDetails.value.attachments.unshift({
+    id: crypto.randomUUID(),
+    name,
+    url,
+    createdAt: new Date().toISOString()
+  });
+  newAttachmentName.value = '';
+  newAttachmentUrl.value = '';
+  persistLocalDetails(props.task.id);
+};
+
+const toggleLabel = (tagId: string) => {
+  if (!props.task) return;
+  const ids = new Set(localDetails.value.labelIds);
+  if (ids.has(tagId)) ids.delete(tagId);
+  else ids.add(tagId);
+  localDetails.value.labelIds = Array.from(ids);
+  persistLocalDetails(props.task.id);
+};
+
+const createLabel = async () => {
+  if (!props.task) return;
+  const name = newLabelName.value.trim();
+  if (!name) return;
+  try {
+    creatingLabel.value = true;
+    const palette = ['#5BC85B', '#615fff', '#f59e0b', '#ef4444', '#06b6d4', '#a855f7'];
+    const color = palette[Math.floor(Math.random() * palette.length)];
+    const created = await tagApi.createTag({ name, color, projectId: props.task.projectId });
+    availableTags.value = [...availableTags.value, created];
+    toggleLabel(created.id);
+    newLabelName.value = '';
+  } catch (e) {
+    console.warn('[TaskDetailModal] Failed to create label', e);
+  } finally {
+    creatingLabel.value = false;
+  }
+};
 
 // Computed
-const checklistProgress = computed(() => {
-  if (!props.task?.checklistCount) return 0;
-  return Math.round(((props.task.checklistCompleted || 0) / props.task.checklistCount) * 100);
-});
+// Legacy backend-only checklist progress is replaced by item-based local checklist.
+// (Counts are still synced back to the backend when possible.)
 
 const isOverdue = computed(() => {
   if (!props.task?.dueDate) return false;
@@ -865,11 +1278,46 @@ const approveAndPayTask = async () => {
   }
 };
 
+const loadTagsAndTeam = async () => {
+  if (!props.task) return;
+  try {
+    const [tags, team] = await Promise.all([
+      tagApi.getProjectTags(props.task.projectId),
+      userRoleApi.getAccessibleProjectTeam(props.task.projectId)
+    ]);
+    availableTags.value = Array.isArray(tags) ? tags : (tags?.data || tags?.tags || []);
+    teamRoles.value = Array.isArray(team) ? team : (team?.data || team?.team || []);
+  } catch (e) {
+    console.warn('[TaskDetailModal] Failed to load tags/team', e);
+  }
+};
+
+const onResize = () => {
+  if (typeof window === 'undefined') return;
+  viewportWidth.value = window.innerWidth;
+};
+
+onMounted(() => {
+  onResize();
+  if (typeof window !== 'undefined') {
+    window.addEventListener('resize', onResize, { passive: true });
+  }
+  loadTagsAndTeam();
+});
+
+onBeforeUnmount(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('resize', onResize as any);
+  }
+});
+
 // Watch for task changes
 watch(() => props.task, (newTask) => {
   if (newTask) {
     editableTask.value = { ...newTask };
     loadActivity();
+    loadLocalDetails(newTask.id);
+    loadTagsAndTeam();
   }
 }, { immediate: true });
 
@@ -882,6 +1330,67 @@ watch(() => props.modelValue, (isOpen) => {
 </script>
 
 <style scoped>
+.task-drawer :deep(.v-navigation-drawer__content) {
+  overflow: hidden;
+}
+
+.drawer-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--erp-card-bg);
+  color: var(--erp-text);
+}
+
+.task-content {
+  padding: 1.25rem;
+  overflow: auto;
+}
+
+.checklist-items {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0;
+}
+
+.checklist-text.done {
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.comments-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.comment-item {
+  padding: 0.75rem;
+  border: 1px solid var(--erp-border);
+  border-radius: 12px;
+  background: var(--erp-surface);
+}
+
+.comment-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.label-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  margin-right: 0.5rem;
+}
 .task-header {
   border-bottom: 1px solid var(--erp-border);
   background: var(--erp-surface);
