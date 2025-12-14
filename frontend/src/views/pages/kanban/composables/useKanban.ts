@@ -47,7 +47,7 @@ export function useKanban() {
       COMPLETED: [],
       APPROVED: []
     };
-
+    
     const filtered: {
       PENDING: KanbanTask[];
       IN_PROGRESS: KanbanTask[];
@@ -61,23 +61,23 @@ export function useKanban() {
     };
 
     const cols = kanbanData.value.columns;
-
+    
     // Process each column
     Object.keys(filtered).forEach(status => {
       const tasks = cols[status as keyof typeof cols] || [];
-
+      
       // Apply search filter
       let filteredTasks: KanbanTask[] = [...tasks];
       if (filters.value.search) {
         const searchLower = filters.value.search.toLowerCase();
-        filteredTasks = filteredTasks.filter((task: KanbanTask) =>
+        filteredTasks = filteredTasks.filter((task: KanbanTask) => 
           task.title.toLowerCase().includes(searchLower) ||
           task.description?.toLowerCase().includes(searchLower) ||
           task.assignedUser?.email.toLowerCase().includes(searchLower) ||
           task.department.name.toLowerCase().includes(searchLower)
         );
       }
-
+      
       // Apply due date filter
       if (filters.value.dueDateRange) {
         const { start, end } = filters.value.dueDateRange;
@@ -89,7 +89,7 @@ export function useKanban() {
           return dueDate >= startDate && dueDate <= endDate;
         });
       }
-
+      
       // Apply soft-archive filter (hide archived cards by default)
       if (!filters.value.includeArchived) {
         filteredTasks = filteredTasks.filter((task: KanbanTask) => !task.archivedAt);
@@ -97,7 +97,7 @@ export function useKanban() {
 
       filtered[status as keyof typeof filtered] = filteredTasks;
     });
-
+    
     return filtered;
   });
 
