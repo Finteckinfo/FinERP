@@ -102,6 +102,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
 import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import finerpLogo from '@/assets/images/finerp-logo.svg';
 
 const { user, isConnected, connect } = useMetaMaskWallet();
 
@@ -110,7 +111,7 @@ const tokens = {
   FIN: {
     symbol: 'FIN',
     name: 'FinERP Token',
-    icon: '/images/finerp-logo.png',
+    icon: finerpLogo,
     decimals: 18
   },
   USDT: {

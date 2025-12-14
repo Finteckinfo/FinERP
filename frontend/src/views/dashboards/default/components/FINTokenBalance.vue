@@ -46,7 +46,7 @@
         <!-- FIN Token Balance -->
         <div class="balance-item main">
           <div class="balance-icon fin">
-            <img src="/images/finerp-logo.png" alt="FIN" />
+            <img :src="finerpLogo" alt="FIN" />
           </div>
           <div class="balance-info">
             <span class="balance-label">FIN Token</span>
@@ -110,6 +110,7 @@
 </template>
 
 <script setup lang="ts">
+import finerpLogo from '@/assets/images/finerp-logo.svg';
 import { ref, computed, watch, onMounted } from 'vue';
 import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
 
