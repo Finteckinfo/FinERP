@@ -78,10 +78,11 @@ const ALGORITHM = 'AES-GCM';
 const KEY_LENGTH = 256;
 
 /**
- * Convert ArrayBuffer to Base64 string
+ * Convert ArrayBuffer or Uint8Array to Base64 string
+ * Accepts Uint8Array directly to avoid cross-realm ArrayBuffer issues in jsdom/node
  */
-function arrayBufferToBase64(buffer: ArrayBuffer): string {
-  const bytes = new Uint8Array(buffer);
+function arrayBufferToBase64(buffer: ArrayBuffer | Uint8Array): string {
+  const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
   let binary = '';
   for (let i = 0; i < bytes.byteLength; i++) {
     binary += String.fromCharCode(bytes[i]);
@@ -186,10 +187,11 @@ export async function encryptWallet(
     );
 
     // Return encrypted wallet object
+    // Pass Uint8Arrays directly to avoid cross-realm ArrayBuffer issues in jsdom/node
     return {
       encryptedData: arrayBufferToBase64(encryptedBuffer),
-      salt: arrayBufferToBase64(salt.buffer as ArrayBuffer),
-      iv: arrayBufferToBase64(iv.buffer as ArrayBuffer),
+      salt: arrayBufferToBase64(salt),
+      iv: arrayBufferToBase64(iv),
       iterations: PBKDF2_ITERATIONS,
       algorithm: ALGORITHM
     };
