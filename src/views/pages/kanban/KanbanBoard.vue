@@ -430,28 +430,48 @@ const closeCreateProject = () => {
 };
 
 const createProjectInSupabase = async () => {
-  if (!isSupabaseOnly || !supabase) return;
+  console.log('[KanbanBoard] createProjectInSupabase called', { isSupabaseOnly, hasSupabase: !!supabase });
+  if (!isSupabaseOnly || !supabase) {
+    console.warn('[KanbanBoard] Supabase not available or not in Supabase-only mode');
+    createProjectError.value = 'Supabase not configured. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.';
+    return;
+  }
   const title = newProjectTitle.value.trim();
-  if (!title) return;
+  if (!title) {
+    createProjectError.value = 'Project title is required';
+    return;
+  }
   creatingProject.value = true;
   createProjectError.value = null;
+  
+  const payload = {
+    title,
+    description: newProjectDescription.value.trim() || null,
+    status: 'active'
+  };
+  console.log('[KanbanBoard] Inserting project:', payload);
+  
   try {
     const { data, error } = await supabase
       .from('projects')
-      .insert([{
-        title,
-        description: newProjectDescription.value.trim() || null,
-        status: 'active'
-      }])
+      .insert([payload])
       .select()
       .single();
-    if (error) throw error;
+    
+    console.log('[KanbanBoard] Supabase insert response:', { data, error });
+    
+    if (error) {
+      console.error('[KanbanBoard] Supabase insert error:', error);
+      throw error;
+    }
 
+    console.log('[KanbanBoard] Project created successfully:', data);
     await loadProjectPicker();
     selectedProjectId.value = data.id;
     closeCreateProject();
     router.push({ path: '/kanban', query: { projectId: data.id } });
   } catch (e: any) {
+    console.error('[KanbanBoard] createProjectInSupabase error:', e);
     createProjectError.value = e?.message || 'Failed to create project in Supabase';
   } finally {
     creatingProject.value = false;
@@ -595,6 +615,11 @@ const handleBulkActionsCompleted = () => {
 const { isDark } = useTheme();
 
 onMounted(() => {
+  console.log('[KanbanBoard] Mounted. isSupabaseOnly:', isSupabaseOnly);
+  console.log('[KanbanBoard] supabase client:', supabase ? 'initialized' : 'NULL');
+  console.log('[KanbanBoard] VITE_SUPABASE_URL:', (import.meta as any).env?.VITE_SUPABASE_URL ? 'set' : 'MISSING');
+  console.log('[KanbanBoard] VITE_SUPABASE_ANON_KEY:', (import.meta as any).env?.VITE_SUPABASE_ANON_KEY ? 'set' : 'MISSING');
+  console.log('[KanbanBoard] VITE_BACKEND_URL:', (import.meta as any).env?.VITE_BACKEND_URL || 'not set (Supabase-only mode)');
   loadBoardContext();
   if (!boardProjectId.value) {
     loadProjectPicker();
