@@ -20,7 +20,30 @@
             >
               {{ task.priority }}
             </v-chip>
-            <h2 class="task-title">{{ task.title }}</h2>
+            <div class="title-wrap">
+              <h2
+                v-if="!isEditingTitle"
+                class="task-title"
+                :class="{ clickable: canEditTask }"
+                @click="startTitleEdit"
+                title="Click to edit title"
+              >
+                {{ task.title }}
+              </h2>
+              <v-text-field
+                v-else
+                v-model="titleDraft"
+                variant="outlined"
+                density="compact"
+                hide-details
+                class="title-edit"
+                :disabled="!canEditTask"
+                :loading="savingTitle"
+                @keydown.enter.prevent="saveTitle"
+                @keydown.esc.prevent="cancelTitleEdit"
+                @blur="saveTitle"
+              />
+            </div>
           </div>
           
           <div class="header-actions">
@@ -115,7 +138,16 @@
               </div>
 
               <div class="checklist-items">
-                <div v-for="item in localDetails.checklist" :key="item.id" class="checklist-item">
+                <div
+                  v-for="item in localDetails.checklist"
+                  :key="item.id"
+                  class="checklist-item"
+                  draggable="true"
+                  @dragstart="onChecklistDragStart(item.id)"
+                  @dragover.prevent
+                  @drop.prevent="onChecklistDrop(item.id)"
+                >
+                  <v-icon class="drag-handle" size="18" title="Drag to reorder">mdi-drag</v-icon>
                   <v-checkbox
                     v-model="item.done"
                     density="compact"
@@ -296,6 +328,25 @@
           <!-- Sidebar -->
           <v-col cols="12" md="4">
             <div class="task-sidebar">
+              <!-- Quick Actions (Trello-like) -->
+              <div class="sidebar-section">
+                <h4 class="sidebar-title">Quick actions</h4>
+                <div class="quick-actions">
+                  <v-btn variant="outlined" size="small" @click="openMove" :disabled="!canEditTask">
+                    <v-icon start size="18">mdi-arrow-right</v-icon>
+                    Move
+                  </v-btn>
+                  <v-btn variant="outlined" size="small" @click="copyCard" :loading="copying">
+                    <v-icon start size="18">mdi-content-copy</v-icon>
+                    Copy
+                  </v-btn>
+                  <v-btn color="error" variant="outlined" size="small" @click="archiveCard" :disabled="!canEditTask">
+                    <v-icon start size="18">mdi-archive-outline</v-icon>
+                    Archive
+                  </v-btn>
+                </div>
+              </div>
+
               <!-- Status -->
               <div class="sidebar-section">
                 <h4 class="sidebar-title">Status</h4>
@@ -579,6 +630,30 @@
         </v-row>
       </v-card-text>
 
+      <!-- Move Dialog -->
+      <v-dialog v-model="showMoveDialog" max-width="420">
+        <v-card>
+          <v-card-title>Move card</v-card-title>
+          <v-card-text>
+            <v-select
+              v-model="moveToStatus"
+              :items="statusOptions"
+              item-title="title"
+              item-value="value"
+              label="List"
+              variant="outlined"
+              density="compact"
+              hide-details
+            />
+          </v-card-text>
+          <v-card-actions>
+            <v-btn variant="text" @click="showMoveDialog = false">Cancel</v-btn>
+            <v-spacer />
+            <v-btn color="primary" :loading="saving" @click="applyMove">Move</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
       <!-- Actions -->
       <v-card-actions v-if="editMode" class="px-6 pb-4">
         <v-btn
@@ -776,12 +851,22 @@ const localDetails = ref<LocalTaskDetails>({
   attachments: []
 });
 
+// Inline title edit
+const isEditingTitle = ref(false);
+const titleDraft = ref('');
+const savingTitle = ref(false);
+
 const newChecklistText = ref('');
 const newCommentText = ref('');
 const newAttachmentName = ref('');
 const newAttachmentUrl = ref('');
 const newLabelName = ref('');
 const creatingLabel = ref(false);
+const showMoveDialog = ref(false);
+const moveToStatus = ref<'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'APPROVED'>('PENDING');
+const copying = ref(false);
+
+const draggedChecklistId = ref<string | null>(null);
 
 // Options
 const statusOptions = [
@@ -944,6 +1029,119 @@ const createLabel = async () => {
   } finally {
     creatingLabel.value = false;
   }
+};
+
+const startTitleEdit = () => {
+  if (!props.task || !canEditTask.value) return;
+  isEditingTitle.value = true;
+  titleDraft.value = props.task.title || '';
+};
+
+const cancelTitleEdit = () => {
+  isEditingTitle.value = false;
+  titleDraft.value = props.task?.title || '';
+};
+
+const saveTitle = async () => {
+  if (!props.task || !canEditTask.value) return;
+  const nextTitle = titleDraft.value.trim();
+  if (!nextTitle) {
+    cancelTitleEdit();
+    return;
+  }
+  if (nextTitle === props.task.title) {
+    isEditingTitle.value = false;
+    return;
+  }
+  try {
+    savingTitle.value = true;
+    const updated = await taskApi.updateTask(props.task.id, { title: nextTitle } as any);
+    emit('task-updated', { ...props.task, ...updated, title: nextTitle });
+    editableTask.value.title = nextTitle;
+    isEditingTitle.value = false;
+  } catch (e) {
+    console.warn('[TaskDetailModal] Failed to update title', e);
+  } finally {
+    savingTitle.value = false;
+  }
+};
+
+const openMove = () => {
+  if (!props.task) return;
+  moveToStatus.value = props.task.status;
+  showMoveDialog.value = true;
+};
+
+const applyMove = async () => {
+  if (!props.task || !canEditTask.value) return;
+  try {
+    saving.value = true;
+    await kanbanApi.updateTaskPosition(props.task.id, {
+      taskId: props.task.id,
+      status: moveToStatus.value,
+      order: props.task.order
+    });
+    const updated = await taskApi.updateTask(props.task.id, { status: moveToStatus.value } as any);
+    emit('task-updated', { ...props.task, ...updated, status: moveToStatus.value });
+    showMoveDialog.value = false;
+  } catch (e) {
+    console.warn('[TaskDetailModal] Failed to move card', e);
+  } finally {
+    saving.value = false;
+  }
+};
+
+const copyCard = async () => {
+  if (!props.task || !props.task.departmentId) return;
+  try {
+    copying.value = true;
+    const created = await taskApi.createTask({
+      title: `${props.task.title} (copy)`,
+      description: props.task.description,
+      departmentId: props.task.departmentId,
+      assignedRoleId: props.task.assignedRoleId,
+      priority: props.task.priority,
+      estimatedHours: props.task.estimatedHours,
+      dueDate: props.task.dueDate
+    } as any);
+    try {
+      await kanbanApi.updateTaskPosition(created.id, {
+        taskId: created.id,
+        status: props.task.status,
+        order: (props.task.order || 0) + 1
+      });
+    } catch {
+      // ignore
+    }
+    emit('task-updated', { ...props.task });
+    localValue.value = false;
+  } catch (e) {
+    console.warn('[TaskDetailModal] Failed to copy card', e);
+  } finally {
+    copying.value = false;
+  }
+};
+
+const archiveCard = () => {
+  confirmDelete.value = true;
+};
+
+const onChecklistDragStart = (id: string) => {
+  draggedChecklistId.value = id;
+};
+
+const onChecklistDrop = async (targetId: string) => {
+  const fromId = draggedChecklistId.value;
+  draggedChecklistId.value = null;
+  if (!fromId || fromId === targetId) return;
+  const list = [...localDetails.value.checklist];
+  const fromIdx = list.findIndex((i) => i.id === fromId);
+  const toIdx = list.findIndex((i) => i.id === targetId);
+  if (fromIdx < 0 || toIdx < 0) return;
+  const [moved] = list.splice(fromIdx, 1);
+  list.splice(toIdx, 0, moved);
+  localDetails.value.checklist = list;
+  await persistAndSyncChecklist();
 };
 
 // Computed
@@ -1355,6 +1553,32 @@ watch(() => props.modelValue, (isOpen) => {
 </script>
 
 <style scoped>
+.title-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-title.clickable {
+  cursor: text;
+}
+
+.title-edit {
+  max-width: 100%;
+}
+
+.quick-actions {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.drag-handle {
+  opacity: 0.6;
+  cursor: grab;
+}
+
+.checklist-item:active .drag-handle {
+  cursor: grabbing;
+}
 .task-header {
   border-bottom: 1px solid var(--erp-border);
   background: var(--erp-surface);
