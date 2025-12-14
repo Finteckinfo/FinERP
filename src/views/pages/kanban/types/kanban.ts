@@ -3,6 +3,7 @@ export interface KanbanTask {
   title: string;
   description?: string;
   status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'APPROVED';
+  archivedAt?: string | null;
   priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   estimatedHours?: number;
   actualHours?: number;
@@ -90,6 +91,7 @@ export interface KanbanFilters {
   assignedRoleIds?: string[];
   priorities?: ('LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL')[];
   includeCompleted?: boolean;
+  includeArchived?: boolean;
   search?: string;
   dueDateRange?: {
     start: string;

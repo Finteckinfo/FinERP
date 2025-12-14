@@ -50,12 +50,16 @@ CREATE TABLE IF NOT EXISTS tasks (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
+-- Soft-archive support (safe to re-run)
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS archived_at TIMESTAMP;
+
 -- ============================================
 -- Create Indexes (IF NOT EXISTS handles duplicates)
 -- ============================================
 CREATE INDEX IF NOT EXISTS idx_projects_owner ON projects(owner_id);
 CREATE INDEX IF NOT EXISTS idx_tasks_project ON tasks(project_id);
 CREATE INDEX IF NOT EXISTS idx_tasks_assigned ON tasks(assigned_to);
+CREATE INDEX IF NOT EXISTS idx_tasks_archived ON tasks(archived_at);
 
 -- ============================================
 -- Enable Row Level Security

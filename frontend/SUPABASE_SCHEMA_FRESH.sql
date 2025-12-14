@@ -47,6 +47,7 @@ CREATE TABLE tasks (
   assigned_to UUID REFERENCES users(id),
   payment_amount DECIMAL(18, 2),
   payment_status VARCHAR(50),
+  archived_at TIMESTAMP,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -57,6 +58,7 @@ CREATE TABLE tasks (
 CREATE INDEX idx_projects_owner ON projects(owner_id);
 CREATE INDEX idx_tasks_project ON tasks(project_id);
 CREATE INDEX idx_tasks_assigned ON tasks(assigned_to);
+CREATE INDEX idx_tasks_archived ON tasks(archived_at);
 
 -- ============================================
 -- Enable Row Level Security

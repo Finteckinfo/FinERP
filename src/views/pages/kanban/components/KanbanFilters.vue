@@ -153,6 +153,18 @@
             />
           </v-col>
 
+          <!-- Show Archived Toggle -->
+          <v-col cols="12" md="2">
+            <v-switch
+              v-model="localFilters.includeArchived"
+              label="Show Archived"
+              color="primary"
+              density="compact"
+              hide-details
+              @update:model-value="updateFilters"
+            />
+          </v-col>
+
           <!-- Actions -->
           <v-col cols="12" md="1" class="text-right">
             <v-btn-group variant="outlined" density="compact">
@@ -235,6 +247,16 @@
               @click:close="clearFilter('priorities')"
             >
               Priority: {{ localFilters.priorities.length }} selected
+            </v-chip>
+
+            <v-chip
+              v-if="localFilters.includeArchived"
+              size="small"
+              variant="outlined"
+              closable
+              @click:close="clearFilter('includeArchived')"
+            >
+              Showing archived
             </v-chip>
             
             <v-chip
@@ -352,6 +374,7 @@ const hasActiveFilters = computed(() => {
     localFilters.value.priorities?.length ||
     localFilters.value.assignedRoleIds?.length ||
     localFilters.value.includeCompleted ||
+    localFilters.value.includeArchived ||
     localFilters.value.dueDateRange
   );
 });
@@ -373,6 +396,7 @@ const clearFilters = () => {
     priorities: [],
     assignedRoleIds: [],
     includeCompleted: false,
+    includeArchived: false,
     dueDateRange: undefined
   };
   updateFilters();
@@ -397,6 +421,9 @@ const clearFilter = (filterKey: keyof KanbanFilters) => {
       break;
     case 'includeCompleted':
       localFilters.value.includeCompleted = false;
+      break;
+    case 'includeArchived':
+      localFilters.value.includeArchived = false;
       break;
     case 'dueDateRange':
       localFilters.value.dueDateRange = undefined;

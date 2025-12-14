@@ -126,6 +126,7 @@ export interface Task {
   title: string;
   description?: string;
   status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'APPROVED';
+  archivedAt?: string | null;
   projectId: string;
   departmentId: string;
   assignedRoleId?: string;

@@ -340,9 +340,27 @@
                     <v-icon start size="18">mdi-content-copy</v-icon>
                     Copy
                   </v-btn>
-                  <v-btn color="error" variant="outlined" size="small" @click="archiveCard" :disabled="!canEditTask">
+                  <v-btn
+                    v-if="!task.archivedAt"
+                    color="error"
+                    variant="outlined"
+                    size="small"
+                    @click="archiveCard"
+                    :disabled="!canEditTask"
+                  >
                     <v-icon start size="18">mdi-archive-outline</v-icon>
                     Archive
+                  </v-btn>
+                  <v-btn
+                    v-else
+                    color="primary"
+                    variant="outlined"
+                    size="small"
+                    @click="restoreCard"
+                    :disabled="!canEditTask"
+                  >
+                    <v-icon start size="18">mdi-backup-restore</v-icon>
+                    Restore
                   </v-btn>
                 </div>
               </div>
@@ -1122,8 +1140,32 @@ const copyCard = async () => {
   }
 };
 
-const archiveCard = () => {
-  confirmDelete.value = true;
+const archiveCard = async () => {
+  if (!props.task || !canEditTask.value) return;
+  try {
+    saving.value = true;
+    const archivedAt = new Date().toISOString();
+    const updated = await taskApi.updateTask(props.task.id, { archivedAt } as any);
+    emit('task-updated', { ...props.task, ...updated, archivedAt });
+    localValue.value = false;
+  } catch (e) {
+    console.warn('[TaskDetailModal] Failed to archive card', e);
+  } finally {
+    saving.value = false;
+  }
+};
+
+const restoreCard = async () => {
+  if (!props.task || !canEditTask.value) return;
+  try {
+    saving.value = true;
+    const updated = await taskApi.updateTask(props.task.id, { archivedAt: null } as any);
+    emit('task-updated', { ...props.task, ...updated, archivedAt: null });
+  } catch (e) {
+    console.warn('[TaskDetailModal] Failed to restore card', e);
+  } finally {
+    saving.value = false;
+  }
 };
 
 const onChecklistDragStart = (id: string) => {

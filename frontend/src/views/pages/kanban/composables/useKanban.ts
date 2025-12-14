@@ -72,6 +72,11 @@ export function useKanban() {
           return dueDate >= startDate && dueDate <= endDate;
         });
       }
+
+      // Apply soft-archive filter (hide archived cards by default)
+      if (!filters.value.includeArchived) {
+        filteredTasks = filteredTasks.filter((task: KanbanTask) => !task.archivedAt);
+      }
       
       filtered[status] = filteredTasks;
     });

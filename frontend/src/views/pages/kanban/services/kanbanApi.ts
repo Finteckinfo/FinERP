@@ -101,6 +101,10 @@ export const kanbanApi = {
       params.append('includeCompleted', filters.includeCompleted.toString());
     }
 
+    if (filters?.includeArchived !== undefined) {
+      params.append('includeArchived', filters.includeArchived.toString());
+    }
+
     if (filters?.search) {
       params.append('search', filters.search);
     }
