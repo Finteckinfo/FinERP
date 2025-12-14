@@ -10,36 +10,36 @@ This page (folder) is a sneak peek into the premium features available in <b>ver
 
 ## Included in the Pro Version:
 
-[🚀 Dashboards](https://SIZLANDdashboard.io/vue/dashboard/default) : Advanced dashboards with real-time insights and data visualizations for actionable metrics.
+[Dashboards](https://SIZLANDdashboard.io/vue/dashboard/default) : Advanced dashboards with real-time insights and data visualizations for actionable metrics.
 
-[📦 Widgets](https://SIZLANDdashboard.io/vue/widget/statistics) : A curated library of pre-built widgets for enhanced functionality and faster development.
+[Widgets](https://SIZLANDdashboard.io/vue/widget/statistics) : A curated library of pre-built widgets for enhanced functionality and faster development.
 
-[🔧 Components](https://SIZLANDdashboard.io/vue/components/buttons) : A rich collection of reusable and customizable UI components.
+[Components](https://SIZLANDdashboard.io/vue/components/buttons) : A rich collection of reusable and customizable UI components.
 
-[🚀 Advanced Components](https://SIZLANDdashboard.io/vue/advance/snackbar) : Customizable and dynamic Snackbar components for delivering seamless notifications and user feedback in your application.
+[Advanced Components](https://SIZLANDdashboard.io/vue/advance/snackbar) : Customizable and dynamic Snackbar components for delivering seamless notifications and user feedback in your application.
 
-[📝 Forms](https://SIZLANDdashboard.io/vue/forms/formvalidation) : Dynamic and customizable forms with advanced validation features for a smooth user experience.
+[Forms](https://SIZLANDdashboard.io/vue/forms/formvalidation) : Dynamic and customizable forms with advanced validation features for a smooth user experience.
 
-[📊 Tables](https://SIZLANDdashboard.io/vue/tables/tbl-basic) :  Simple and clean tables for displaying structured data effectively.
+[Tables](https://SIZLANDdashboard.io/vue/tables/tbl-basic) :  Simple and clean tables for displaying structured data effectively.
 
-[📈 Charts](https://SIZLANDdashboard.io/vue/forms/charts/apexchart) : Beautifully designed charts powered by modern data visualization libraries.
+[Charts](https://SIZLANDdashboard.io/vue/forms/charts/apexchart) : Beautifully designed charts powered by modern data visualization libraries.
 
-[🔒 Authentication](https://SIZLANDdashboard.io/vue/register1) : Secure pages for login, registration, and password recovery, ensuring robust user management.
+[Authentication](https://SIZLANDdashboard.io/vue/register1) : Secure pages for login, registration, and password recovery, ensuring robust user management.
 
-[🛒 E-commerce App](https://SIZLANDdashboard.io/vue/ecommerce/products) : A streamlined system for managing products and inventory in your e-commerce platform.
+[E-commerce App](https://SIZLANDdashboard.io/vue/ecommerce/products) : A streamlined system for managing products and inventory in your e-commerce platform.
 
-[💬 Chat Messages](https://SIZLANDdashboard.io/vue/app/chats) : An integrated chat system to enhance communication within your application.
+[Chat Messages](https://SIZLANDdashboard.io/vue/app/chats) : An integrated chat system to enhance communication within your application.
 
-[👤 Account Profile](https://SIZLANDdashboard.io/vue/app/user/account-profile/profile1) : A sleek and customizable account profile page for managing user details and settings.
+[Account Profile](https://SIZLANDdashboard.io/vue/app/user/account-profile/profile1) : A sleek and customizable account profile page for managing user details and settings.
 
 ## Why Upgrade to the Pro Version?
 
-🚀 <b>Advanced Features</b> : Access premium components and tools designed for modern, high-end projects. <br/><br/>
-⚡ <b>Faster Development</b> : Pre-designed pages, widgets, and features help you save time and effort. <br/><br/>
-📱 <b>Fully Responsive Design</b> : Enjoy a flawless experience across desktops, tablets, and smartphones. <br/><br/>
-🛠 <b>Developer-Friendly</b> : Modular code, clear documentation, and well-structured components make customization a breeze. <br/><br/>
-🎨 <b>Customization-Ready</b> : Personalize every aspect of your project with ease to match your branding needs.
+**Advanced Features** : Access premium components and tools designed for modern, high-end projects. <br/><br/>
+**Faster Development** : Pre-designed pages, widgets, and features help you save time and effort. <br/><br/>
+**Fully Responsive Design** : Enjoy a flawless experience across desktops, tablets, and smartphones. <br/><br/>
+**Developer-Friendly** : Modular code, clear documentation, and well-structured components make customization a breeze. <br/><br/>
+**Customization-Ready** : Personalize every aspect of your project with ease to match your branding needs.
 
 ## Get Started with the Pro Version!
 
-👉 [Explore the Pro version now](https://codedthemes.com/item/SIZLAND-vue-admin-dashboard/) - and supercharge your development experience!
+[Explore the Pro version now](https://codedthemes.com/item/SIZLAND-vue-admin-dashboard/) - and supercharge your development experience!

@@ -2,7 +2,7 @@
 
 A comprehensive, production-ready kanban board for the ERP system with real-time collaboration, drag & drop, analytics, and advanced task management.
 
-## 🎯 Features
+## Features
 
 ### Core Functionality
 - **Drag & Drop**: Smooth task movement between columns with visual feedback
@@ -64,7 +64,7 @@ src/views/pages/kanban/
 - **Real-time**: WebSocket for live updates
 - **Error Handling**: Comprehensive error states and retry mechanisms
 
-## 🚀 Usage
+## Usage
 
 ### Basic Setup
 The kanban board is automatically available at `/kanban` route. It requires a project ID to function:
@@ -92,7 +92,7 @@ The following backend endpoints must be implemented:
 - `GET /api/analytics/kanban/{projectId}/metrics` - Analytics
 - `WS /api/tasks/live/{projectId}` - Real-time updates
 
-## 🎨 Customization
+## Customization
 
 ### Column Configuration
 Modify `DEFAULT_COLUMNS` in `types/kanban.ts`:
@@ -132,7 +132,7 @@ interface UserPermissions {
 }
 ```
 
-## 📱 Mobile Support
+## Mobile Support
 
 ### Touch Interactions
 - **Touch Drag**: Long press to start dragging
@@ -145,7 +145,7 @@ interface UserPermissions {
 - **Tablet**: Condensed layout with collapsible filters
 - **Mobile**: Stack layout with touch-optimized interactions
 
-## 🔧 Performance
+## Performance
 
 ### Optimizations
 - **Virtual Scrolling**: Large task lists (planned)
@@ -159,7 +159,7 @@ interface UserPermissions {
 - **Lazy Chunks**: Analytics (~15KB), Modals (~20KB)
 - **CSS**: ~8KB gzipped with animations
 
-## 🧪 Testing
+## Testing
 
 ### Component Testing
 ```bash
@@ -181,7 +181,7 @@ npm run test:e2e kanban.spec.ts
 - **Composables**: 90% coverage
 - **API Layer**: 85% coverage
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -213,7 +213,7 @@ Enable debug logging:
 localStorage.setItem('kanban-debug', 'true');
 ```
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 ### Planned Features
 - **Custom Workflows**: User-defined column configurations
@@ -230,11 +230,11 @@ localStorage.setItem('kanban-debug', 'true');
 - **Worker Threads**: Heavy computations in web workers
 - **CDN Assets**: Optimized asset delivery
 
-## 📄 License
+## License
 
 This kanban board implementation is part of the SIZ ERP system and follows the same licensing terms.
 
-## 🤝 Contributing
+## Contributing
 
 1. Follow the existing code style and patterns
 2. Add tests for new features
@@ -244,4 +244,4 @@ This kanban board implementation is part of the SIZ ERP system and follows the s
 
 ---
 
-**Built with ❤️ for the SIZ ERP System**
+**Built with love for the SIZ ERP System**
