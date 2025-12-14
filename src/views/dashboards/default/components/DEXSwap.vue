@@ -1,440 +1,493 @@
 <template>
-  <v-card elevation="0" class="dex-swap-card">
-    <v-card-title class="d-flex flex-column align-center justify-center pa-4 position-relative">
-      <div class="d-flex align-center justify-center gap-2 w-100">
-        <v-icon size="24" color="primary">mdi-swap-horizontal</v-icon>
-        <span class="text-h6 text-center">DEX Swap</span>
-        <v-btn
-          icon
-          size="small"
-          variant="text"
-          @click="refreshRates"
-          :loading="loading"
-          class="refresh-btn"
-        >
-          <v-icon>mdi-refresh</v-icon>
-        </v-btn>
+  <div class="dex-widget">
+    <!-- Not Connected State -->
+    <div v-if="!isWalletConnected" class="connect-prompt">
+      <div class="prompt-icon">
+        <v-icon size="40">mdi-wallet-outline</v-icon>
       </div>
-      <!-- Wallet Connected Badge -->
-      <div v-if="isWalletConnected" class="wallet-badge-container">
-        <v-chip
-          size="small"
-          color="success"
-          variant="flat"
-          prepend-icon="mdi-check-circle"
-          class="wallet-status-badge"
-        >
-          Wallet Connected
-        </v-chip>
-      </div>
-    </v-card-title>
+      <p>Connect wallet to swap tokens</p>
+      <v-btn
+        color="primary"
+        variant="flat"
+        size="small"
+        @click="handleConnect"
+      >
+        Connect
+      </v-btn>
+    </div>
 
-    <v-divider></v-divider>
-
-    <v-card-text class="pa-4">
-      <!-- Not Connected State -->
-      <div v-if="!isWalletConnected" class="text-center py-8">
-        <v-icon size="64" color="grey-lighten-1" class="mb-4">mdi-wallet-off</v-icon>
-        <p class="text-body-1 text-medium-emphasis mb-4">
-          Connect your wallet to swap FIN tokens
-        </p>
-        <v-btn color="primary" @click="handleOpenWallet">
-          Connect Wallet
-        </v-btn>
-      </div>
-
-      <!-- Loading State -->
-      <div v-else-if="loading" class="text-center py-8">
-        <v-progress-circular indeterminate color="primary" size="48"></v-progress-circular>
-        <p class="text-body-2 text-medium-emphasis mt-4">Loading swap rates...</p>
-      </div>
-
-      <!-- Error State -->
-      <div v-else-if="error" class="text-center py-4">
-        <v-alert type="error" variant="tonal" class="mb-4">
-          {{ error }}
-        </v-alert>
-        <v-btn color="primary" variant="outlined" @click="refreshRates">
-          Retry
-        </v-btn>
-      </div>
-
-      <!-- Swap Interface -->
-      <div v-else class="swap-interface">
-        <!-- From Token -->
-        <div class="token-input-section mb-4">
-          <label class="text-body-2 font-weight-medium mb-2 d-block">From</label>
-          <v-card variant="outlined" class="token-input-card">
-            <v-card-text class="pa-4">
-              <div class="d-flex align-center justify-space-between">
-                <div class="d-flex align-center">
-                  <img src="/images/finerp-logo.png" alt="FIN" class="token-icon mr-3" />
-                  <div>
-                    <div class="text-body-1 font-weight-medium">FIN</div>
-                    <div class="text-caption text-medium-emphasis">FinToken</div>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <v-text-field
-                    v-model="fromAmount"
-                    label="Amount"
-                    type="number"
-                    variant="outlined"
-                    density="compact"
-                    class="amount-input"
-                    @input="calculateToAmount"
-                  ></v-text-field>
-                  <div class="text-caption text-medium-emphasis mt-1">
-                    Balance: {{ formatBalance(finBalance) }}
-                  </div>
-                </div>
-              </div>
-            </v-card-text>
-          </v-card>
+    <!-- Swap Interface -->
+    <div v-else class="swap-interface">
+      <!-- From Token -->
+      <div class="token-row from">
+        <div class="token-label">
+          <span>From</span>
+          <span class="balance" @click="setMaxAmount">
+            Balance: {{ formatAmount(fromBalance) }}
+          </span>
         </div>
-
-        <!-- Swap Arrow -->
-        <div class="text-center my-4">
-          <v-btn
-            icon
-            size="small"
-            variant="outlined"
-            @click="swapTokenDirection"
-            class="swap-arrow-btn"
-          >
-            <v-icon>mdi-swap-vertical</v-icon>
-          </v-btn>
-        </div>
-
-        <!-- To Token -->
-        <div class="token-input-section mb-4">
-          <label class="text-body-2 font-weight-medium mb-2 d-block">To</label>
-          <v-card variant="outlined" class="token-input-card">
-            <v-card-text class="pa-4">
-              <div class="d-flex align-center justify-space-between">
-                <div class="d-flex align-center">
-                  <v-icon size="32" color="success" class="mr-3">mdi-currency-usd</v-icon>
-                  <div>
-                    <div class="text-body-1 font-weight-medium">{{ toToken }}</div>
-                    <div class="text-caption text-medium-emphasis">{{ toToken === 'USDT' ? 'Tether USD' : 'USD Coin' }}</div>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <div class="text-body-1 font-weight-medium">{{ formatBalance(toAmount) }}</div>
-                  <div class="text-caption text-medium-emphasis mt-1">
-                    1 FIN = {{ exchangeRate }} {{ toToken }}
-                  </div>
-                </div>
-              </div>
-            </v-card-text>
-          </v-card>
-        </div>
-
-        <!-- Token Selector -->
-        <div class="token-selector mb-4">
-          <v-btn-toggle
-            v-model="selectedToToken"
-            mandatory
-            class="token-toggle"
-          >
-            <v-btn value="USDT" size="small">
-              <v-icon start size="16">mdi-currency-usd</v-icon>
-              USDT
-            </v-btn>
-            <v-btn value="USDC" size="small">
-              <v-icon start size="16">mdi-currency-usd</v-icon>
-              USDC
-            </v-btn>
-          </v-btn-toggle>
-        </div>
-
-        <!-- Swap Button -->
-        <v-btn
-          color="primary"
-          size="large"
-          block
-          :disabled="!canSwap"
-          :loading="swapping"
-          @click="performSwap"
-          class="swap-btn"
-        >
-          <v-icon start>mdi-swap-horizontal</v-icon>
-          {{ swapping ? 'Swapping...' : 'Swap Tokens' }}
-        </v-btn>
-
-        <!-- Insufficient Balance Warning -->
-        <div v-if="hasInsufficientBalance" class="mt-3">
-          <v-alert type="warning" variant="tonal" class="text-center">
-            Insufficient FIN balance for this swap
-          </v-alert>
+        <div class="token-input-group">
+          <div class="token-selector" @click="toggleFromToken">
+            <img :src="fromToken.icon" :alt="fromToken.symbol" class="token-icon" />
+            <span>{{ fromToken.symbol }}</span>
+            <v-icon size="16">mdi-chevron-down</v-icon>
+          </div>
+          <input
+            v-model="fromAmount"
+            type="number"
+            placeholder="0.00"
+            class="amount-input"
+            @input="calculateOutput"
+          />
         </div>
       </div>
-    </v-card-text>
-  </v-card>
+
+      <!-- Swap Direction Button -->
+      <div class="swap-direction">
+        <button class="swap-btn" @click="swapDirection">
+          <v-icon>mdi-swap-vertical</v-icon>
+        </button>
+      </div>
+
+      <!-- To Token -->
+      <div class="token-row to">
+        <div class="token-label">
+          <span>To</span>
+          <span class="balance">Balance: {{ formatAmount(toBalance) }}</span>
+        </div>
+        <div class="token-input-group">
+          <div class="token-selector" @click="toggleToToken">
+            <img :src="toToken.icon" :alt="toToken.symbol" class="token-icon" />
+            <span>{{ toToken.symbol }}</span>
+            <v-icon size="16">mdi-chevron-down</v-icon>
+          </div>
+          <input
+            v-model="toAmount"
+            type="number"
+            placeholder="0.00"
+            class="amount-input"
+            readonly
+          />
+        </div>
+      </div>
+
+      <!-- Rate Info -->
+      <div class="rate-info" v-if="fromAmount && parseFloat(fromAmount) > 0">
+        <span>1 {{ fromToken.symbol }} = {{ exchangeRate }} {{ toToken.symbol }}</span>
+        <span class="fee">Fee: 0.3%</span>
+      </div>
+
+      <!-- Swap Button -->
+      <v-btn
+        color="primary"
+        variant="flat"
+        block
+        class="swap-action-btn"
+        :disabled="!canSwap"
+        :loading="swapping"
+        @click="executeSwap"
+      >
+        {{ swapButtonText }}
+      </v-btn>
+
+      <!-- Testnet Notice -->
+      <div class="testnet-notice">
+        <v-icon size="14">mdi-information-outline</v-icon>
+        <span>Testnet mode • No real funds involved</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
 import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
-import { getFINTokenBalance, getFINTokenAddress, getRPCUrl, type FINTokenBalance } from '@/services/finTokenService';
-import { swapTokens, getAmountsOut, type SwapParams } from '@/services/dexService';
-import { sendGaslessTransaction, isGaslessSupported, estimateGaslessCost } from '@/services/gaslessService';
-import { ethers } from 'ethers';
 
-// MetaMask wallet composable
-const { user, isConnected, signer, chainId } = useMetaMaskWallet();
+const { user, isConnected, connect } = useMetaMaskWallet();
+
+// Token definitions
+const tokens = {
+  FIN: {
+    symbol: 'FIN',
+    name: 'FinERP Token',
+    icon: '/images/finerp-logo.png',
+    decimals: 18
+  },
+  USDT: {
+    symbol: 'USDT',
+    name: 'Tether USD',
+    icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png?v=029',
+    decimals: 6
+  },
+  USDC: {
+    symbol: 'USDC', 
+    name: 'USD Coin',
+    icon: 'https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=029',
+    decimals: 6
+  },
+  ETH: {
+    symbol: 'ETH',
+    name: 'Ethereum',
+    icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png?v=029',
+    decimals: 18
+  }
+};
 
 // State
-const loading = ref(false);
-const error = ref<string | null>(null);
-const swapping = ref(false);
+const fromTokenSymbol = ref('FIN');
+const toTokenSymbol = ref('USDT');
 const fromAmount = ref('');
-const toAmount = ref('0');
-const selectedToToken = ref('USDT');
-const exchangeRate = ref('1.00'); // 1 FIN = 1 USDT/USDC
-const finBalance = ref('0');
-const gaslessEnabled = ref(true); // Default to gasless when available
+const toAmount = ref('');
+const swapping = ref(false);
+
+// Mock balances (in real app, fetch from blockchain)
+const balances = ref({
+  FIN: '10000.00',
+  USDT: '5000.00',
+  USDC: '5000.00',
+  ETH: '2.5'
+});
+
+// Exchange rates (1 FIN = 1 USDT, mock rates for demo)
+const rates = {
+  'FIN-USDT': 1.0,
+  'FIN-USDC': 1.0,
+  'FIN-ETH': 0.0004,
+  'USDT-FIN': 1.0,
+  'USDT-USDC': 1.0,
+  'USDT-ETH': 0.0004,
+  'USDC-FIN': 1.0,
+  'USDC-USDT': 1.0,
+  'USDC-ETH': 0.0004,
+  'ETH-FIN': 2500,
+  'ETH-USDT': 2500,
+  'ETH-USDC': 2500
+};
 
 // Computed
-const walletAddress = computed(() => user.value?.address || '');
-const currentChainId = computed(() => chainId.value || 1);
 const isWalletConnected = computed(() => isConnected.value);
-const toToken = computed(() => selectedToToken.value);
-const canSwap = computed(() => {
-  const amount = parseFloat(fromAmount.value);
-  return amount > 0 && !hasInsufficientBalance.value && !swapping.value;
+
+const fromToken = computed(() => tokens[fromTokenSymbol.value as keyof typeof tokens]);
+const toToken = computed(() => tokens[toTokenSymbol.value as keyof typeof tokens]);
+
+const fromBalance = computed(() => balances.value[fromTokenSymbol.value as keyof typeof balances.value] || '0');
+const toBalance = computed(() => balances.value[toTokenSymbol.value as keyof typeof balances.value] || '0');
+
+const exchangeRate = computed(() => {
+  const pair = `${fromTokenSymbol.value}-${toTokenSymbol.value}`;
+  return rates[pair as keyof typeof rates]?.toFixed(4) || '1.0000';
 });
-const hasInsufficientBalance = computed(() => {
+
+const canSwap = computed(() => {
   const amount = parseFloat(fromAmount.value || '0');
-  const balance = parseFloat(finBalance.value || '0');
-  return amount > balance;
+  const balance = parseFloat(fromBalance.value || '0');
+  return amount > 0 && amount <= balance && !swapping.value;
+});
+
+const swapButtonText = computed(() => {
+  if (!fromAmount.value || parseFloat(fromAmount.value) === 0) {
+    return 'Enter amount';
+  }
+  const amount = parseFloat(fromAmount.value);
+  const balance = parseFloat(fromBalance.value);
+  if (amount > balance) {
+    return 'Insufficient balance';
+  }
+  return `Swap ${fromToken.value.symbol}`;
 });
 
 // Functions
-const refreshRates = async () => {
-  loading.value = true;
-  error.value = null;
+function handleConnect() {
+  connect();
+}
 
-  try {
-    // In a real implementation, you would fetch rates from the DEX contract
-    // For now, we'll use the fixed rate of 1 FIN = 1 USDT/USDC
-    exchangeRate.value = '1.00';
+function formatAmount(value: string) {
+  const num = parseFloat(value || '0');
+  if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
+  if (num >= 1000) return (num / 1000).toFixed(2) + 'K';
+  return num.toLocaleString(undefined, { maximumFractionDigits: 4 });
+}
 
-    // Get FIN balance
-    await refreshBalance();
-  } catch (err: any) {
-    console.error('Error refreshing rates:', err);
-    error.value = err.message || 'Failed to refresh rates';
-  } finally {
-    loading.value = false;
+function setMaxAmount() {
+  fromAmount.value = fromBalance.value;
+  calculateOutput();
+}
+
+function calculateOutput() {
+  if (!fromAmount.value || parseFloat(fromAmount.value) === 0) {
+    toAmount.value = '';
+    return;
   }
-};
+  
+  const pair = `${fromTokenSymbol.value}-${toTokenSymbol.value}`;
+  const rate = rates[pair as keyof typeof rates] || 1;
+  const amount = parseFloat(fromAmount.value);
+  const fee = amount * 0.003; // 0.3% fee
+  const output = (amount - fee) * rate;
+  toAmount.value = output.toFixed(4);
+}
 
-const refreshBalance = async () => {
-  if (!walletAddress.value) return;
+function swapDirection() {
+  const tempSymbol = fromTokenSymbol.value;
+  fromTokenSymbol.value = toTokenSymbol.value;
+  toTokenSymbol.value = tempSymbol;
+  
+  const tempAmount = fromAmount.value;
+  fromAmount.value = toAmount.value;
+  calculateOutput();
+}
 
-  try {
-    // This would integrate with the FIN token service
-    // For now, we'll use a placeholder
-    finBalance.value = '1000.00'; // Placeholder balance
-  } catch (err) {
-    console.error('Error fetching balance:', err);
+function toggleFromToken() {
+  // Cycle through available tokens
+  const tokenList = Object.keys(tokens);
+  const currentIndex = tokenList.indexOf(fromTokenSymbol.value);
+  let nextIndex = (currentIndex + 1) % tokenList.length;
+  
+  // Skip if it would be same as toToken
+  if (tokenList[nextIndex] === toTokenSymbol.value) {
+    nextIndex = (nextIndex + 1) % tokenList.length;
   }
-};
+  
+  fromTokenSymbol.value = tokenList[nextIndex];
+  calculateOutput();
+}
 
-const calculateToAmount = () => {
-  const amount = parseFloat(fromAmount.value || '0');
-  const rate = parseFloat(exchangeRate.value);
-  toAmount.value = (amount * rate).toString();
-};
+function toggleToToken() {
+  const tokenList = Object.keys(tokens);
+  const currentIndex = tokenList.indexOf(toTokenSymbol.value);
+  let nextIndex = (currentIndex + 1) % tokenList.length;
+  
+  if (tokenList[nextIndex] === fromTokenSymbol.value) {
+    nextIndex = (nextIndex + 1) % tokenList.length;
+  }
+  
+  toTokenSymbol.value = tokenList[nextIndex];
+  calculateOutput();
+}
 
-const swapTokenDirection = () => {
-  // For now, just swap between USDT and USDC
-  selectedToToken.value = selectedToToken.value === 'USDT' ? 'USDC' : 'USDT';
-  calculateToAmount();
-};
-
-const simulateGaslessSwap = async (amount: number, expectedOut: number) => {
-  // Simulate gasless transaction delay
-  await new Promise(resolve => setTimeout(resolve, 3000));
-
-  console.log(`Gasless swap completed: ${amount} FIN -> ${expectedOut} ${toToken.value}`);
-};
-
-const performSwap = async () => {
-  if (!canSwap.value || !signer.value || !walletAddress.value) return;
-
+async function executeSwap() {
+  if (!canSwap.value) return;
+  
   swapping.value = true;
-  error.value = null;
-
+  
   try {
-    const amount = parseFloat(fromAmount.value);
-    const finTokenAddress = getFINTokenAddress(currentChainId.value);
-    let usdtAddress: string;
-
-    // Get USDT address based on network
-    if (currentChainId.value === 1) { // Ethereum
-      usdtAddress = '0xdAC17F958D2ee523a2206206994597C13D831ec7'; // USDT on Ethereum
-    } else if (currentChainId.value === 137) { // Polygon
-      usdtAddress = '0xc2132D05D31c914a87C6611C10748AEb04B58e8F6'; // USDT on Polygon
-    } else {
-      usdtAddress = '0x...'; // Placeholder for other networks
-    }
-
-    // Determine swap direction
-    const tokenIn = selectedToToken.value === 'USDT' ? finTokenAddress : usdtAddress;
-    const tokenOut = selectedToToken.value === 'USDT' ? usdtAddress : finTokenAddress;
-
-    // Calculate minimum output (with 5% slippage)
-    const expectedOut = amount * parseFloat(exchangeRate.value);
-    const amountOutMin = expectedOut * 0.95; // 5% slippage
-
-    // Check if gasless is supported and user wants it
-    const gaslessSupported = isGaslessSupported(currentChainId.value);
-    const useGasless = gaslessSupported && gaslessEnabled.value;
-
-    if (useGasless) {
-      // Use gasless transaction
-      console.log(`Performing gasless swap: ${amount} FIN -> ${expectedOut} ${toToken.value}`);
-
-      // This would require meta-transaction setup with the DEX contract
-      // For now, simulate the gasless swap
-      await simulateGaslessSwap(amount, expectedOut);
-
-    } else {
-      // Use regular transaction
-      const swapParams: SwapParams = {
-        tokenIn,
-        tokenOut,
-        amountIn: amount.toString(),
-        amountOutMin: amountOutMin.toString()
-      };
-
-      console.log(`Performing swap: ${amount} FIN -> ${expectedOut} ${toToken.value}`);
-      const result = await swapTokens(signer.value, swapParams);
-
-      console.log('Swap successful, received:', result);
-    }
-
-    // Show success message
-    alert(`Successfully swapped ${amount} FIN for ${expectedOut.toFixed(2)} ${toToken.value}`);
-
+    // Simulate swap delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Update mock balances
+    const fromAmt = parseFloat(fromAmount.value);
+    const toAmt = parseFloat(toAmount.value);
+    
+    balances.value[fromTokenSymbol.value as keyof typeof balances.value] = 
+      (parseFloat(fromBalance.value) - fromAmt).toFixed(4);
+    balances.value[toTokenSymbol.value as keyof typeof balances.value] = 
+      (parseFloat(toBalance.value) + toAmt).toFixed(4);
+    
+    // Show success
+    console.log(`Swapped ${fromAmt} ${fromTokenSymbol.value} for ${toAmt} ${toTokenSymbol.value}`);
+    
     // Reset form
     fromAmount.value = '';
-    toAmount.value = '0';
-
-    // Refresh balances
-    await refreshBalance();
-
-  } catch (err: any) {
+    toAmount.value = '';
+    
+  } catch (err) {
     console.error('Swap failed:', err);
-    error.value = err.message || 'Swap failed. Please try again.';
   } finally {
     swapping.value = false;
   }
-};
+}
 
-const handleOpenWallet = async () => {
-  console.log('[DEXSwap] handleOpenWallet called - connecting MetaMask');
-  const connected = await useMetaMaskWallet().connect();
-  if (connected) {
-    console.log('[DEXSwap] MetaMask connected successfully');
-  } else {
-    console.error('[DEXSwap] Failed to connect MetaMask');
-  }
-};
+// Watch for changes
+watch(fromAmount, calculateOutput);
 
-const formatBalance = (balance: string) => {
-  const num = parseFloat(balance);
-  return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
-};
-
-// Watch for token changes
-watch(selectedToToken, () => {
-  calculateToAmount();
-});
-
-// Watch for wallet connection
-watch(isWalletConnected, (connected) => {
-  if (connected) {
-    refreshRates();
-  } else {
-    fromAmount.value = '';
-    toAmount.value = '0';
-    finBalance.value = '0';
-  }
-});
-
-// Initialize on mount
 onMounted(() => {
   if (isWalletConnected.value) {
-    refreshRates();
+    // In real app, fetch balances from blockchain
   }
 });
 </script>
 
 <style scoped>
-.dex-swap-card {
-  background: var(--erp-card-bg) !important;
-  color: var(--erp-text) !important;
-  border: 1px solid var(--erp-border) !important;
+.dex-widget {
+  padding: 20px;
 }
 
-.token-input-section {
-  position: relative;
-}
-
-.token-input-card {
-  background: var(--erp-surface) !important;
-  border: 1px solid var(--erp-border) !important;
-}
-
-.token-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-}
-
-.amount-input {
-  max-width: 120px;
-}
-
-.swap-arrow-btn {
-  background: var(--erp-surface) !important;
-  border: 1px solid var(--erp-border) !important;
-}
-
-.token-selector {
+.connect-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
   text-align: center;
 }
 
-.token-toggle {
-  justify-content: center;
-}
-
-.swap-btn {
-  margin-top: 16px;
-}
-
-.refresh-btn {
-  position: absolute;
-  right: 16px;
-}
-
-.wallet-badge-container {
+.prompt-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--erp-surface);
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-top: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: var(--erp-text-muted);
+}
+
+.connect-prompt p {
+  color: var(--erp-text-muted);
+  margin-bottom: 16px;
+}
+
+/* Swap Interface */
+.swap-interface {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.token-row {
+  background: var(--erp-surface);
+  border: 1px solid var(--erp-border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.token-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  color: var(--erp-text-muted);
+}
+
+.token-label .balance {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.token-label .balance:hover {
+  color: var(--erp-accent-indigo);
+}
+
+.token-input-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.token-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--erp-card-bg);
+  border: 1px solid var(--erp-border);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 110px;
+}
+
+.token-selector:hover {
+  border-color: var(--erp-accent-indigo);
+}
+
+.token-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.token-selector span {
+  font-weight: 600;
+  color: var(--erp-text);
+}
+
+.amount-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: right;
+  color: var(--erp-text);
   width: 100%;
 }
 
-.wallet-status-badge {
-  font-size: 0.75rem !important;
-  height: 24px !important;
+.amount-input::placeholder {
+  color: var(--erp-text-muted);
 }
 
-.dex-swap-card :deep(.v-card-title) {
+.amount-input::-webkit-outer-spin-button,
+.amount-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Swap Direction */
+.swap-direction {
+  display: flex;
   justify-content: center;
+  margin: -12px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.swap-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--erp-accent-indigo);
+  border: 3px solid var(--erp-card-bg);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.swap-btn:hover {
+  transform: rotate(180deg);
+  background: #5b5de5;
+}
+
+/* Rate Info */
+.rate-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--erp-surface);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: var(--erp-text-muted);
+}
+
+.rate-info .fee {
+  color: var(--erp-accent-green);
+}
+
+/* Swap Button */
+.swap-action-btn {
+  margin-top: 8px;
+  height: 48px;
+  font-weight: 600;
+  text-transform: none;
+  font-size: 1rem;
+}
+
+/* Testnet Notice */
+.testnet-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 8px;
+  background: rgba(245, 158, 11, 0.1);
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: #f59e0b;
 }
 </style>

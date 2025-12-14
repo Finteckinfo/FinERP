@@ -1,409 +1,430 @@
 <template>
-  <v-card elevation="0" class="fin-token-balance-card">
-    <v-card-title class="d-flex flex-column align-center justify-center pa-4 position-relative">
-      <div class="d-flex align-center justify-center gap-2 w-100">
-        <v-icon size="24" color="primary">mdi-coin</v-icon>
-        <span class="text-h6 text-center">FIN Token Balance</span>
+  <div class="wallet-widget">
+    <!-- Not Connected -->
+    <div v-if="!isWalletConnected" class="connect-prompt">
+      <div class="prompt-icon">
+        <v-icon size="40">mdi-wallet-outline</v-icon>
+      </div>
+      <p>Connect wallet to view balance</p>
+      <v-btn
+        color="primary"
+        variant="flat"
+        size="small"
+        @click="handleConnect"
+      >
+        Connect Wallet
+      </v-btn>
+    </div>
+
+    <!-- Connected State -->
+    <div v-else class="wallet-content">
+      <!-- Account Info -->
+      <div class="account-row">
+        <div class="account-avatar">
+          <v-icon>mdi-wallet</v-icon>
+        </div>
+        <div class="account-info">
+          <span class="account-address">{{ shortAddress }}</span>
+          <span class="network-badge" :class="networkClass">
+            <span class="network-dot"></span>
+            {{ networkName }}
+          </span>
+        </div>
         <v-btn
           icon
-          size="small"
+          size="x-small"
           variant="text"
-          @click="refreshBalance"
-          :loading="loading"
-          class="refresh-btn"
+          @click="copyAddress"
+          class="copy-btn"
         >
-          <v-icon>mdi-refresh</v-icon>
-        </v-btn>
-      </div>
-      <!-- Wallet Connected Badge -->
-      <div v-if="isWalletConnected" class="wallet-badge-container">
-        <v-chip
-          size="small"
-          color="success"
-          variant="flat"
-          prepend-icon="mdi-check-circle"
-          class="wallet-status-badge"
-        >
-          Wallet Connected
-        </v-chip>
-      </div>
-    </v-card-title>
-
-    <v-divider></v-divider>
-
-    <v-card-text class="pa-4">
-      <!-- Not Connected State -->
-      <div v-if="!isWalletConnected" class="text-center py-8">
-        <v-icon size="64" color="grey-lighten-1" class="mb-4">mdi-wallet-off</v-icon>
-        <p class="text-body-1 text-medium-emphasis mb-4">
-          Connect your wallet to view FIN token balance
-        </p>
-        <v-btn color="primary" @click="handleOpenWallet">
-          Connect Wallet
+          <v-icon size="16">{{ copied ? 'mdi-check' : 'mdi-content-copy' }}</v-icon>
         </v-btn>
       </div>
 
-      <!-- Loading State -->
-      <div v-else-if="loading" class="text-center py-8">
-        <v-progress-circular indeterminate color="primary" size="48"></v-progress-circular>
-        <p class="text-body-2 text-medium-emphasis mt-4">Loading balance...</p>
+      <!-- Balances -->
+      <div class="balances-section">
+        <!-- FIN Token Balance -->
+        <div class="balance-item main">
+          <div class="balance-icon fin">
+            <img src="/images/finerp-logo.png" alt="FIN" />
+          </div>
+          <div class="balance-info">
+            <span class="balance-label">FIN Token</span>
+            <span class="balance-value">{{ formatBalance(finBalance) }}</span>
+            <span class="balance-usd">≈ ${{ formatUSD(finBalance) }}</span>
+          </div>
+        </div>
+
+        <!-- ETH Balance -->
+        <div class="balance-item">
+          <div class="balance-icon eth">
+            <v-icon>mdi-ethereum</v-icon>
+          </div>
+          <div class="balance-info">
+            <span class="balance-label">ETH</span>
+            <span class="balance-value">{{ formatBalance(ethBalance, 4) }}</span>
+            <span class="balance-usd">≈ ${{ formatUSD(ethBalance, 2500) }}</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Error State -->
-      <div v-else-if="error" class="text-center py-4">
-        <v-alert type="error" variant="tonal" class="mb-4">
-          {{ error }}
-        </v-alert>
-        <v-btn color="primary" variant="outlined" @click="refreshBalance">
-          Retry
-        </v-btn>
-      </div>
-
-      <!-- Balance Display -->
-      <div v-else-if="tokenBalance" class="balance-display">
-        <!-- Wallet Connection Status & Network Badge -->
-        <div class="mb-4 d-flex align-center justify-center gap-2 flex-wrap">
-          <v-chip
-            size="small"
-            color="success"
-            variant="flat"
-            prepend-icon="mdi-wallet"
-          >
-            Connected: {{ shortenAddress(walletAddress) }}
-          </v-chip>
-          <v-chip
-            size="small"
-            :color="networkColor"
-          >
-            <v-icon start size="16">{{ networkIcon }}</v-icon>
-            {{ networkLabel }}
-          </v-chip>
-        </div>
-
-        <!-- Balance Amount -->
-        <div class="text-center mb-4">
-          <!-- FIN Logo -->
-          <div class="fin-logo-container mb-3">
-            <img 
-              src="/images/finerp-logo.png" 
-              alt="FIN Logo" 
-              class="fin-logo"
-            />
-          </div>
-          <div class="text-h3 font-weight-bold mb-2" style="color: var(--erp-accent-green);">
-            {{ tokenBalance.formattedBalance }}
-          </div>
-          <div class="text-body-2 text-medium-emphasis">
-            {{ tokenBalance.symbol }} Tokens
-          </div>
-        </div>
-
-        <!-- Token Details -->
-        <v-divider class="my-4"></v-divider>
-        <div class="token-details text-center">
-          <div class="token-detail-item">
-            <span class="token-detail-label">Token Name:</span>
-            <span class="token-detail-value">{{ tokenBalance.name }}</span>
-          </div>
-          <div class="token-detail-item">
-            <span class="token-detail-label">Contract Address:</span>
-            <span class="token-detail-value token-detail-value-mono">{{ getFINTokenAddress(currentChainId) }}</span>
-          </div>
-          <div class="token-detail-item">
-            <span class="token-detail-label">Wallet Address:</span>
-            <span class="token-detail-value token-detail-value-mono">
-              {{ walletAddress.slice(0, 8) }}...{{ walletAddress.slice(-8) }}
-            </span>
-          </div>
-        </div>
-
-        <!-- No Tokens Message -->
-        <v-alert
-          v-if="!tokenBalance.found"
-          type="info"
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <v-btn
           variant="tonal"
-          class="mt-4"
+          size="small"
+          color="primary"
+          prepend-icon="mdi-arrow-down"
+          class="action-btn"
         >
-          <template v-slot:prepend>
-            <v-icon>mdi-information</v-icon>
-          </template>
-          No FIN tokens found in this wallet. Your FIN token balance will appear here once you receive tokens.
-        </v-alert>
+          Receive
+        </v-btn>
+        <v-btn
+          variant="tonal"
+          size="small"
+          color="primary"
+          prepend-icon="mdi-arrow-up"
+          class="action-btn"
+        >
+          Send
+        </v-btn>
+        <v-btn
+          variant="tonal"
+          size="small"
+          prepend-icon="mdi-water"
+          class="action-btn"
+          @click="requestTestTokens"
+          :loading="requesting"
+        >
+          Faucet
+        </v-btn>
       </div>
-    </v-card-text>
-  </v-card>
+
+      <!-- Testnet Notice -->
+      <div class="testnet-notice" v-if="isTestnet">
+        <v-icon size="14">mdi-flask-outline</v-icon>
+        <span>Testnet • Tokens have no real value</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
 import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
-import { getFINTokenBalance, getFINTokenAddress, getRPCUrl, type FINTokenBalance } from '@/services/finTokenService';
 
-// MetaMask wallet composable
-const { user, isConnected, chainId } = useMetaMaskWallet();
+const { user, isConnected, connect, chainId } = useMetaMaskWallet();
 
 // State
-const loading = ref(false);
-const error = ref<string | null>(null);
-const tokenBalance = ref<FINTokenBalance | null>(null);
+const finBalance = ref('10000.0000');
+const ethBalance = ref('2.5432');
+const copied = ref(false);
+const requesting = ref(false);
 
 // Computed
-const walletAddress = computed(() => user.value?.address || '');
-const currentChainId = computed(() => user.value?.chainId || 1);
 const isWalletConnected = computed(() => isConnected.value);
+const walletAddress = computed(() => user.value?.address || '');
 
-// Network info
-const networkLabel = computed(() => {
-  const networks: { [key: number]: string } = {
+const shortAddress = computed(() => {
+  if (!walletAddress.value) return '';
+  return `${walletAddress.value.slice(0, 6)}...${walletAddress.value.slice(-4)}`;
+});
+
+const networkName = computed(() => {
+  const networks: Record<number, string> = {
     1: 'Ethereum',
+    11155111: 'Sepolia',
     137: 'Polygon',
-    11155111: 'Sepolia'
+    80001: 'Mumbai',
+    42161: 'Arbitrum',
+    10: 'Optimism'
   };
-  return networks[currentChainId.value] || 'Unknown';
+  return networks[chainId.value || 1] || 'Unknown';
 });
 
-const networkColor = computed(() => {
-  return currentChainId.value === 1 || currentChainId.value === 137 ? 'success' : 'warning';
+const networkClass = computed(() => {
+  const id = chainId.value || 1;
+  if (id === 1 || id === 137 || id === 42161 || id === 10) return 'mainnet';
+  return 'testnet';
 });
 
-const networkIcon = computed(() => {
-  return currentChainId.value === 1 || currentChainId.value === 137 ? 'mdi-network' : 'mdi-test-tube';
+const isTestnet = computed(() => {
+  const testnets = [11155111, 80001, 5, 4, 3];
+  return testnets.includes(chainId.value || 0);
 });
 
 // Functions
-const refreshBalance = async () => {
-  if (!isWalletConnected.value || !walletAddress.value) {
-    return;
-  }
+function handleConnect() {
+  connect();
+}
 
-  loading.value = true;
-  error.value = null;
+function formatBalance(value: string, decimals = 2) {
+  const num = parseFloat(value || '0');
+  return num.toLocaleString(undefined, { 
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals 
+  });
+}
 
+function formatUSD(value: string, rate = 1) {
+  const num = parseFloat(value || '0') * rate;
+  if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
+  if (num >= 1000) return (num / 1000).toFixed(2) + 'K';
+  return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
+}
+
+async function copyAddress() {
+  if (!walletAddress.value) return;
+  
   try {
-    const tokenAddress = getFINTokenAddress(currentChainId.value);
-    const rpcUrl = getRPCUrl(currentChainId.value);
+    await navigator.clipboard.writeText(walletAddress.value);
+    copied.value = true;
+    setTimeout(() => { copied.value = false; }, 2000);
+  } catch (err) {
+    console.error('Failed to copy address:', err);
+  }
+}
 
-    const balance = await getFINTokenBalance(walletAddress.value, rpcUrl, tokenAddress);
-    if (balance) {
-      tokenBalance.value = balance;
-    } else {
-      error.value = 'Failed to fetch balance. Please check your network connection.';
-    }
-  } catch (err: any) {
-    console.error('Error fetching FIN token balance:', err);
-    error.value = err.message || 'Failed to load FIN token balance. Please try again.';
+async function requestTestTokens() {
+  requesting.value = true;
+  
+  try {
+    // Simulate faucet request
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Add test tokens
+    finBalance.value = (parseFloat(finBalance.value) + 1000).toFixed(4);
+    ethBalance.value = (parseFloat(ethBalance.value) + 0.1).toFixed(4);
+    
+    console.log('Test tokens received!');
+  } catch (err) {
+    console.error('Faucet request failed:', err);
   } finally {
-    loading.value = false;
+    requesting.value = false;
   }
-};
+}
 
-const handleOpenWallet = async () => {
-  console.log('[FINTokenBalance] handleOpenWallet called - connecting MetaMask');
-  const connected = await useMetaMaskWallet().connect();
-  if (connected) {
-    console.log('[FINTokenBalance] MetaMask connected successfully');
-  } else {
-    console.error('[FINTokenBalance] Failed to connect MetaMask');
-  }
-};
-
-// Helper to shorten wallet address for display
-const shortenAddress = (address: string) => {
-  if (!address || address.length < 10) return address;
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
-};
-
-// Watch for wallet connection changes
-watch(isWalletConnected, (connected) => {
-  if (connected) {
-    refreshBalance();
-  } else {
-    tokenBalance.value = null;
-    error.value = null;
-  }
-}, { immediate: true });
-
-// Watch for chain changes
-watch(currentChainId, () => {
-  if (isWalletConnected.value) {
-    refreshBalance();
+// Watch for wallet changes
+watch(isWalletConnected, async (connected) => {
+  if (connected && walletAddress.value) {
+    // In real app, fetch actual balances here
   }
 });
 
-// Refresh on mount if wallet is already connected
 onMounted(() => {
   if (isWalletConnected.value) {
-    refreshBalance();
+    // Fetch balances
   }
 });
 </script>
 
 <style scoped>
-.fin-token-balance-card {
-  background: var(--erp-card-bg) !important;
-  color: var(--erp-text) !important;
-  border: 1px solid var(--erp-border) !important;
+.wallet-widget {
+  padding: 20px;
 }
 
-.balance-display {
-  min-height: 200px;
-}
-
-.token-details {
-  padding: 8px 0;
-}
-
-.wallet-status-badge {
-  font-size: 0.75rem !important;
-  height: 24px !important;
-}
-
-.fin-token-balance-card :deep(.v-card-title) {
-  justify-content: center;
-}
-
-.refresh-btn {
-  position: absolute;
-  right: 16px;
-}
-
-.wallet-badge-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 8px;
-  width: 100%;
-}
-
-.fin-logo-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.fin-logo {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.token-details {
-  text-align: center;
-  padding: 16px;
-  background: var(--erp-surface);
-  border-radius: 8px;
-  border: 1px solid var(--erp-border);
-}
-
-.token-detail-item {
+.connect-prompt {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.prompt-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--erp-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 16px;
+  color: var(--erp-text-muted);
+}
+
+.connect-prompt p {
+  color: var(--erp-text-muted);
+  margin-bottom: 16px;
+}
+
+/* Connected State */
+.wallet-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Account Row */
+.account-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   padding: 12px;
-  background: var(--erp-page-bg);
-  border-radius: 6px;
+  background: var(--erp-surface);
   border: 1px solid var(--erp-border);
+  border-radius: 12px;
 }
 
-.token-detail-item:last-child {
-  margin-bottom: 0;
+.account-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--erp-accent-indigo), #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
 }
 
-.token-detail-label {
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: rgba(0, 0, 0, 0.87);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.account-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.token-detail-value {
-  font-size: 1rem;
-  font-weight: 700;
-  color: rgba(0, 0, 0, 0.87);
-  word-break: break-all;
-}
-
-.token-detail-value-mono {
-  font-family: 'Courier New', 'Courier', monospace;
-  background: rgba(33, 150, 243, 0.1);
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: 1px solid rgba(33, 150, 243, 0.3);
-  color: #1565c0;
+.account-address {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
   font-weight: 600;
-  display: inline-block;
-  min-width: 120px;
+  color: var(--erp-text);
 }
 
-/* Dark mode adjustments */
-.v-theme--dark .token-detail-label {
-  color: rgba(255, 255, 255, 0.87);
+.network-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  width: fit-content;
 }
 
-.v-theme--dark .token-detail-value {
-  color: rgba(255, 255, 255, 0.87);
+.network-badge.mainnet {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
 }
 
-.v-theme--dark .token-detail-value-mono {
-  background: rgba(33, 150, 243, 0.2);
-  border-color: rgba(33, 150, 243, 0.4);
-  color: #64b5f6;
+.network-badge.testnet {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
 }
 
-/* Light mode specific enhancements for better contrast */
-.v-theme--light .token-detail-label {
-  color: var(--erp-accent-green, #4caf50);
+.network-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.copy-btn {
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.copy-btn:hover {
+  opacity: 1;
+}
+
+/* Balances */
+.balances-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.balance-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--erp-surface);
+  border: 1px solid var(--erp-border);
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.balance-item.main {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.balance-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.balance-icon.fin {
+  background: linear-gradient(135deg, var(--erp-accent-indigo), #8b5cf6);
+}
+
+.balance-icon.fin img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.balance-icon.eth {
+  background: rgba(98, 126, 234, 0.15);
+  color: #627eea;
+}
+
+.balance-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.balance-label {
+  font-size: 0.75rem;
+  color: var(--erp-text-muted);
+}
+
+.balance-value {
+  font-size: 1.1rem;
   font-weight: 700;
+  color: var(--erp-text);
 }
 
-.v-theme--light .token-detail-value {
-  color: #212121;
-  font-weight: 700;
+.balance-usd {
+  font-size: 0.75rem;
+  color: var(--erp-text-muted);
 }
 
-.v-theme--light .token-detail-value-mono {
-  background: rgba(33, 150, 243, 0.12);
-  border-color: rgba(33, 150, 243, 0.35);
-  color: #0d47a1;
-  font-weight: 700;
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  gap: 8px;
 }
 
-/* Fallback for theme detection */
-@media (prefers-color-scheme: light) {
-  .token-detail-label {
-    color: var(--erp-accent-green, #4caf50);
-  }
-  
-  .token-detail-value {
-    color: #212121;
-  }
-  
-  .token-detail-value-mono {
-    background: rgba(33, 150, 243, 0.12);
-    border-color: rgba(33, 150, 243, 0.35);
-    color: #0d47a1;
-  }
+.action-btn {
+  flex: 1;
+  text-transform: none;
+  font-weight: 500;
 }
 
-@media (prefers-color-scheme: dark) {
-  .token-detail-label {
-    color: rgba(255, 255, 255, 0.87);
-  }
-  
-  .token-detail-value {
-    color: rgba(255, 255, 255, 0.87);
-  }
-  
-  .token-detail-value-mono {
-    background: rgba(33, 150, 243, 0.2);
-    border-color: rgba(33, 150, 243, 0.4);
-    color: #64b5f6;
-  }
+/* Testnet Notice */
+.testnet-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  background: rgba(245, 158, 11, 0.1);
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: #f59e0b;
 }
 </style>
-

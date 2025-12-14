@@ -43,7 +43,8 @@ const customizer = useCustomizerStore();
             >
               <RouterView />
             </v-card>
-            <v-btn
+            <!-- AI Assistant button - hidden until feature is ready -->
+            <!-- <v-btn
               class="customizer-btn"
               size="large"
               icon
@@ -53,7 +54,7 @@ const customizer = useCustomizerStore();
               style="z-index: 9998;"
             >
               <SettingsIcon class="icon" />
-            </v-btn>
+            </v-btn> -->
           </div>
         </v-container>
        
