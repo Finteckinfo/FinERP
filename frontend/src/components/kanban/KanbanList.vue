@@ -39,16 +39,31 @@
     <div class="add-card-section" v-if="isAddingCard">
       <v-textarea
         v-model="newCardTitle"
-        label="Card title"
+        label="Task title"
         variant="outlined"
         density="comfortable"
-        rows="3"
+        rows="2"
         @keyup.ctrl.enter="confirmAddCard"
         @keyup.escape="cancelAddCard"
         ref="cardInput"
       />
+      <v-text-field
+        v-model="newCardAssignee"
+        label="Assignee (wallet address)"
+        variant="outlined"
+        density="comfortable"
+        placeholder="0x..."
+      />
+      <v-text-field
+        v-model="newCardFinAmount"
+        label="FIN tokens to allocate"
+        variant="outlined"
+        density="comfortable"
+        type="number"
+        placeholder="1000"
+      />
       <div class="card-form-actions">
-        <v-btn variant="text" @click="confirmAddCard">Add card</v-btn>
+        <v-btn variant="text" @click="confirmAddCard">Add task</v-btn>
         <v-btn variant="text" @click="cancelAddCard">
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -74,6 +89,8 @@ interface Card {
   dueDate?: string
   labels?: string[]
   listId: string
+  finAmount?: string
+  taskId?: string
 }
 
 interface List {
@@ -96,6 +113,8 @@ const emit = defineEmits<{
 // Reactive data
 const isAddingCard = ref(false)
 const newCardTitle = ref('')
+const newCardAssignee = ref('')
+const newCardFinAmount = ref('')
 const cardInput = ref()
 
 // Computed
@@ -127,7 +146,9 @@ const confirmAddCard = () => {
 
   emit('addCard', props.list.id, {
     title: newCardTitle.value.trim(),
-    description: ''
+    description: '',
+    assignee: newCardAssignee.value,
+    finAmount: newCardFinAmount.value
   })
 
   cancelAddCard()
@@ -136,6 +157,8 @@ const confirmAddCard = () => {
 const cancelAddCard = () => {
   isAddingCard.value = false
   newCardTitle.value = ''
+  newCardAssignee.value = ''
+  newCardFinAmount.value = ''
 }
 
 const updateCard = (cardId: string, updates: Partial<Card>) => {

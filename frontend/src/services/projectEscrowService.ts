@@ -1,4 +1,6 @@
 import { ethers } from 'ethers';
+import { getEscrowAddress } from '@/lib/finTokenConfig';
+import { getRPCUrl } from './finTokenService';
 
 // ProjectEscrow Contract ABI (simplified)
 const PROJECT_ESCROW_ABI = [
@@ -36,21 +38,22 @@ export interface TaskData {
 }
 
 // Get contract instance
-function getEscrowContract(signer: any): ethers.Contract {
-  const contractAddress = import.meta.env.VITE_ESCROW_CONTRACT_ADDRESS;
+function getEscrowContract(chainId: number, signerOrProvider: any): ethers.Contract {
+  const contractAddress = getEscrowAddress(chainId);
   if (!contractAddress) {
-    throw new Error('ProjectEscrow contract address not configured');
+    throw new Error('ProjectEscrow contract address not configured for this network');
   }
-  return new ethers.Contract(contractAddress, PROJECT_ESCROW_ABI, signer);
+  return new ethers.Contract(contractAddress, PROJECT_ESCROW_ABI, signerOrProvider);
 }
 
 // Fund a new project
 export async function fundProject(
+  chainId: number,
   signer: any,
   amount: string
 ): Promise<string> {
   try {
-    const contract = getEscrowContract(signer);
+    const contract = getEscrowContract(chainId, signer);
     const amountWei = ethers.parseEther(amount);
 
     const tx = await contract.fundProject(amountWei);
@@ -69,13 +72,14 @@ export async function fundProject(
 
 // Allocate a task to a worker
 export async function allocateTask(
+  chainId: number,
   signer: any,
   projectId: string,
   workerAddress: string,
   amount: string
 ): Promise<string> {
   try {
-    const contract = getEscrowContract(signer);
+    const contract = getEscrowContract(chainId, signer);
     const amountWei = ethers.parseEther(amount);
 
     const tx = await contract.allocateTask(projectId, workerAddress, amountWei);
@@ -93,11 +97,12 @@ export async function allocateTask(
 
 // Complete a task
 export async function completeTask(
+  chainId: number,
   signer: any,
   taskId: string
 ): Promise<void> {
   try {
-    const contract = getEscrowContract(signer);
+    const contract = getEscrowContract(chainId, signer);
     const tx = await contract.completeTask(taskId);
     await tx.wait();
   } catch (error) {
@@ -108,11 +113,12 @@ export async function completeTask(
 
 // Approve payment for large amounts
 export async function approvePayment(
+  chainId: number,
   signer: any,
   taskId: string
 ): Promise<void> {
   try {
-    const contract = getEscrowContract(signer);
+    const contract = getEscrowContract(chainId, signer);
     const tx = await contract.approvePayment(taskId);
     await tx.wait();
   } catch (error) {
@@ -178,11 +184,12 @@ export async function getProject(
 
 // Get task details
 export async function getTask(
+  chainId: number,
   provider: any,
   taskId: string
 ): Promise<TaskData> {
   try {
-    const contract = getEscrowContract(provider);
+    const contract = getEscrowContract(chainId, provider);
     const task = await contract.getTask(taskId);
 
     return {
@@ -198,5 +205,43 @@ export async function getTask(
   } catch (error) {
     console.error('Error getting task:', error);
     throw error;
+  }
+}
+
+// Get all tasks for a project
+export async function getTasksForProject(
+  chainId: number,
+  provider: any,
+  projectId: string
+): Promise<TaskData[]> {
+  try {
+    // Since blockchain doesn't have a direct way to get all tasks for a project,
+    // we would need to query events or maintain an off-chain index
+    // For demo, return mock data
+    return [
+      {
+        id: '1',
+        projectId,
+        worker: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e',
+        amount: '1000',
+        status: 'PENDING',
+        createdAt: Date.now() - 86400000,
+        completedAt: 0,
+        approvalCount: 0
+      },
+      {
+        id: '2',
+        projectId,
+        worker: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e',
+        amount: '500',
+        status: 'COMPLETED',
+        createdAt: Date.now() - 172800000,
+        completedAt: Date.now() - 3600000,
+        approvalCount: 0
+      }
+    ];
+  } catch (error) {
+    console.error('Error getting tasks for project:', error);
+    return [];
   }
 }

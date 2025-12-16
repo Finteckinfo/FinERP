@@ -63,6 +63,8 @@ interface Card {
   dueDate?: string
   labels?: string[]
   listId: string
+  finAmount?: string // FIN tokens allocated
+  taskId?: string // Blockchain task ID
 }
 
 interface List {

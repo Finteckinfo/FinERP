@@ -23,6 +23,11 @@
             </v-avatar>
           </div>
 
+          <div class="card-fin-amount" v-if="card.finAmount">
+            <v-icon size="14">mdi-coin</v-icon>
+            <span>{{ card.finAmount }} FIN</span>
+          </div>
+
           <div class="card-due-date" v-if="card.dueDate">
             <v-icon size="14" :color="isOverdue ? 'error' : 'warning'">mdi-calendar</v-icon>
             <span :class="{ 'overdue': isOverdue }">{{ formatDueDate }}</span>
@@ -55,6 +60,8 @@ interface Card {
   dueDate?: string
   labels?: string[]
   listId: string
+  finAmount?: string
+  taskId?: string
 }
 
 const props = defineProps<{
