@@ -1,18 +1,37 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import MainRoutes from './MainRoutes';
 import PublicRoutes from './PublicRoutes';
-import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
-
-// MetaMask Wallet Authentication
-const { isConnected, user } = useMetaMaskWallet();
 
 // Dev bypass (for headless testing / no MetaMask)
 const DEV_BYPASS_AUTH = import.meta.env.VITE_DEV_BYPASS_AUTH === 'true';
 
-// Check for wallet connection
+// Synchronous wallet connection check (no composable reactivity needed)
 function hasWalletConnection(): boolean {
   if (DEV_BYPASS_AUTH) return true;
-  return isConnected.value && !!user.value?.address;
+
+  // Check localStorage for MetaMask connection state
+  try {
+    const mmState = localStorage.getItem('metamask-state');
+    if (mmState) {
+      const state = JSON.parse(mmState);
+      return !!(state?.isConnected && state?.selectedAddress);
+    }
+  } catch (e) {
+    // Ignore storage errors
+  }
+
+  // Check for Ethereum provider (synchronous check)
+  if (typeof window !== 'undefined' && (window as any).ethereum) {
+    try {
+      const ethereum = (window as any).ethereum;
+      // Quick synchronous check for connection
+      return !!(ethereum.selectedAddress || ethereum.isConnected);
+    } catch (e) {
+      // Ignore errors
+    }
+  }
+
+  return false;
 }
 
 // Handle GitHub Pages SPA routing
