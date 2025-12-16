@@ -1,25 +1,87 @@
 <script setup lang="ts">
-import Logo from '@/assets/images/logos/Logo.vue';
+import { ref, computed, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { useTheme } from '@/composables/useTheme';
 import ThemeToggle from '@/components/shared/ThemeToggle.vue';
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { supabase, isSupabaseOnly } from '@/services/supabase';
 
-const { isDark } = useTheme();
+const router = useRouter();
 const route = useRoute();
+const { isDark } = useTheme();
 
 // Determine if we're in login or register mode based on route
 const isLoginMode = ref(route.path === '/login');
 
-// Redirect to main SSO domain for authentication
-onMounted(() => {
+// Form state
+const email = ref('');
+const password = ref('');
+const loading = ref(false);
+const error = ref('');
+const success = ref('');
+
+// Computed
+const formValid = computed(() => email.value && password.value);
+
+// SUPABASE-ONLY MODE: Handle authentication locally
+const handleSupabaseAuth = async () => {
+  if (!isSupabaseOnly || !supabase) {
+    console.error('[LoginPage] Supabase not configured');
+    return;
+  }
+
+  loading.value = true;
+  error.value = '';
+  success.value = '';
+
+  try {
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
+      email: email.value,
+      password: password.value,
+    });
+
+    if (authError) {
+      error.value = authError.message;
+      return;
+    }
+
+    if (data.user) {
+      success.value = 'Login successful! Redirecting...';
+      console.log('[LoginPage] Supabase login successful');
+
+      // Redirect after successful login
+      setTimeout(() => {
+        const redirectPath = sessionStorage.getItem('post_auth_redirect') || '/dashboard/default';
+        sessionStorage.removeItem('post_auth_redirect');
+        router.push(redirectPath);
+      }, 1500);
+    }
+  } catch (err: any) {
+    console.error('[LoginPage] Supabase auth error:', err);
+    error.value = err.message || 'Login failed';
+  } finally {
+    loading.value = false;
+  }
+};
+
+// LEGACY MODE: Redirect to SSO
+const handleSSORedirect = () => {
   const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || 'http://localhost:3000';
   const currentUrl = window.location.href;
   const authPath = isLoginMode.value ? 'login' : 'signup';
   window.location.href = `${ssoUrl}/${authPath}?redirect=${encodeURIComponent(currentUrl)}`;
-});
+};
 
-console.log('🔍 LoginPage redirecting to SSO, route:', route.path);
+onMounted(() => {
+  console.log('[LoginPage] Mounted. isSupabaseOnly:', isSupabaseOnly);
+
+  // If in Supabase-only mode, stay on this page. Otherwise redirect to SSO.
+  if (!isSupabaseOnly) {
+    console.log('[LoginPage] Not Supabase-only, redirecting to SSO');
+    handleSSORedirect();
+  } else {
+    console.log('[LoginPage] Supabase-only mode, staying on login page');
+  }
+});
 </script>
 
 <template>
@@ -28,8 +90,9 @@ console.log('🔍 LoginPage redirecting to SSO, route:', route.path);
     <div class="theme-toggle-container">
       <ThemeToggle :show-label="false" size="small" />
     </div>
-    
-    <div class="login-container">
+
+    <!-- SUPABASE-ONLY MODE: Show login form -->
+    <div v-if="isSupabaseOnly" class="login-container">
       <!-- Left Side - Banner -->
       <div class="banner-column">
         <div class="banner-box">
@@ -46,7 +109,111 @@ console.log('🔍 LoginPage redirecting to SSO, route:', route.path);
         </div>
       </div>
 
-      <!-- Right Side - Authentication Form -->
+      <!-- Right Side - Supabase Authentication Form -->
+      <div class="form-column">
+        <div class="form-container">
+          <div class="form-header">
+            <h1 class="form-title">{{ isLoginMode ? 'Welcome Back' : 'Create Account' }}</h1>
+            <p class="form-subtitle">
+              {{ isLoginMode ? 'Sign in to your FinPro account' : 'Create your FinPro account' }}
+            </p>
+          </div>
+
+          <!-- Success Message -->
+          <v-alert
+            v-if="success"
+            type="success"
+            variant="tonal"
+            class="mb-4"
+            closable
+            @click:close="success = ''"
+          >
+            {{ success }}
+          </v-alert>
+
+          <!-- Error Message -->
+          <v-alert
+            v-if="error"
+            type="error"
+            variant="tonal"
+            class="mb-4"
+            closable
+            @click:close="error = ''"
+          >
+            {{ error }}
+          </v-alert>
+
+          <!-- Login Form -->
+          <v-form @submit.prevent="handleSupabaseAuth" class="auth-form">
+            <v-text-field
+              v-model="email"
+              label="Email"
+              type="email"
+              variant="outlined"
+              density="comfortable"
+              :rules="[v => !!v || 'Email is required', v => /.+@.+\..+/.test(v) || 'Email must be valid']"
+              class="mb-4"
+              :disabled="loading"
+            />
+
+            <v-text-field
+              v-model="password"
+              label="Password"
+              type="password"
+              variant="outlined"
+              density="comfortable"
+              :rules="[v => !!v || 'Password is required']"
+              class="mb-6"
+              :disabled="loading"
+            />
+
+            <v-btn
+              type="submit"
+              size="large"
+              block
+              :loading="loading"
+              :disabled="!formValid || loading"
+              class="auth-button"
+            >
+              {{ isLoginMode ? 'Sign In' : 'Create Account' }}
+            </v-btn>
+          </v-form>
+
+          <!-- Toggle between login/register -->
+          <div class="auth-toggle">
+            <p class="toggle-text">
+              {{ isLoginMode ? "Don't have an account?" : "Already have an account?" }}
+              <router-link
+                :to="isLoginMode ? '/register' : '/login'"
+                class="toggle-link"
+              >
+                {{ isLoginMode ? 'Sign Up' : 'Sign In' }}
+              </router-link>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEGACY MODE: Show loading while redirecting to SSO -->
+    <div v-else class="login-container">
+      <!-- Left Side - Banner -->
+      <div class="banner-column">
+        <div class="banner-box">
+          <div class="banner-overlay">
+            <div class="banner-content">
+              <h2 class="banner-title">
+                Redirecting to Authentication...
+              </h2>
+              <h3 class="banner-subtitle">
+                Please wait while we redirect you to the login page.
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side - Loading -->
       <div class="form-column">
         <div class="form-container">
           <div class="logo-section">

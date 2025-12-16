@@ -1,5 +1,6 @@
 import { ref, computed, onMounted, watch, getCurrentInstance } from 'vue';
 import { getCookie } from '@/utils/cookies';
+import { supabase, isSupabaseOnly } from '@/services/supabase';
 
 export interface NextAuthUser {
   id: string;
@@ -87,6 +88,54 @@ export function useNextAuth() {
     isValidating.value = true;
 
     try {
+      // SUPABASE-ONLY MODE: Check Supabase session first
+      if (isSupabaseOnly && supabase) {
+        console.log('[NextAuth] Supabase-only mode - checking Supabase session');
+
+        const { data: { session }, error } = await supabase.auth.getSession();
+
+        if (error) {
+          console.error('[NextAuth] Supabase session error:', error);
+          sessionCache.value = null;
+          lastValidated.value = Date.now();
+          isLoaded.value = true;
+          return;
+        }
+
+        if (session?.user) {
+          console.log('[NextAuth] Supabase session found');
+
+          // Map Supabase user to NextAuth format for compatibility
+          sessionCache.value = {
+            user: {
+              id: session.user.id,
+              email: session.user.email || '',
+              name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || '',
+              firstName: session.user.user_metadata?.first_name || session.user.email?.split('@')[0] || '',
+              lastName: session.user.user_metadata?.last_name || '',
+              walletAddress: session.user.user_metadata?.wallet_address || '',
+              authMethod: 'supabase'
+            },
+            expires: session.expires_at ? new Date(session.expires_at * 1000).toISOString() : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+          };
+
+          lastValidated.value = Date.now();
+          isLoaded.value = true;
+
+          // Persist session
+          persistSession();
+
+          console.log('[NextAuth] Supabase session validated and cached');
+          return;
+        } else {
+          console.log('[NextAuth] No Supabase session found');
+          sessionCache.value = null;
+          lastValidated.value = Date.now();
+          isLoaded.value = true;
+          return;
+        }
+      }
+
       // DEVELOPMENT MODE: Create mock authentication for local testing
       if (import.meta.env.DEV) {
         console.log('[NextAuth] Development mode - creating mock user session');

@@ -1,5 +1,6 @@
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 import { getCookie } from '@/utils/cookies';
+import { supabase, isSupabaseOnly } from '@/services/supabase';
 
 /**
  * Authentication Guard for FinPro
@@ -11,20 +12,32 @@ import { getCookie } from '@/utils/cookies';
  */
 
 // PERFORMANCE: Synchronous session check - no network latency
-function hasValidSession(): boolean {
-  // Check cookies first (fastest)
-  const sessionToken = getCookie('next-auth.session-token') ||
-    getCookie('__Secure-next-auth.session-token') ||
-    getCookie('FinPro_sso_token');
-  
-  if (sessionToken) return true;
-  
+async function hasValidSession(): Promise<boolean> {
+  // SUPABASE-ONLY MODE: Check Supabase session first
+  if (isSupabaseOnly && supabase) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) return true;
+    } catch (e) {
+      // Ignore Supabase errors, fall back to other checks
+    }
+  }
+
+  // Check cookies first (fastest) - but only if not in Supabase-only mode
+  if (!isSupabaseOnly) {
+    const sessionToken = getCookie('next-auth.session-token') ||
+      getCookie('__Secure-next-auth.session-token') ||
+      getCookie('FinPro_sso_token');
+
+    if (sessionToken) return true;
+  }
+
   // Check sessionStorage (SSO fallback)
   try {
     const user = sessionStorage.getItem('erp_user');
     const token = sessionStorage.getItem('erp_session_token');
     const timestamp = sessionStorage.getItem('erp_auth_timestamp');
-    
+
     if (user && token && timestamp) {
       const age = Date.now() - parseInt(timestamp);
       const maxAge = 24 * 60 * 60 * 1000; // 24 hours
@@ -33,7 +46,7 @@ function hasValidSession(): boolean {
   } catch (e) {
     // Ignore storage errors
   }
-  
+
   // Check localStorage cache
   try {
     const cached = localStorage.getItem('FinPro_session_cache');
@@ -47,7 +60,7 @@ function hasValidSession(): boolean {
   } catch (e) {
     // Ignore storage errors
   }
-  
+
   return false;
 }
 
@@ -65,27 +78,40 @@ export async function authGuard(
     '/login',
     '/register'
   ];
-  
+
   // Check if current route is public
   if (publicRoutes.includes(to.path)) {
     return next();
   }
 
-  // PERFORMANCE: Use synchronous check - no network call
-  if (hasValidSession()) {
+  // PERFORMANCE: Use session check (async for Supabase)
+  const hasSession = await hasValidSession();
+  if (hasSession) {
     return next();
   }
-  
+
+  // SUPABASE-ONLY MODE: Redirect to login page instead of SSO
+  if (isSupabaseOnly) {
+    console.log('[AuthGuard] Supabase-only mode: No session, redirecting to login');
+    // Store intended destination for post-auth redirect
+    try {
+      sessionStorage.setItem('post_auth_redirect', to.fullPath);
+    } catch (error) {
+      // Ignore storage errors
+    }
+    return next('/login');
+  }
+
   // No session found - redirect to SSO login
   console.log('[AuthGuard] No session, redirecting to SSO login');
-  
+
   // Store intended destination for post-auth redirect
   try {
     sessionStorage.setItem('post_auth_redirect', window.location.href);
   } catch (error) {
     // Ignore storage errors
   }
-  
+
   // Redirect to primary domain's login page
   const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || window.location.origin;
   const redirectUrl = encodeURIComponent(window.location.href);
@@ -93,9 +119,21 @@ export async function authGuard(
 }
 
 /**
- * Helper function to check if user has NextAuth session
+ * Helper function to check if user is authenticated (Supabase or NextAuth)
  */
 export async function isAuthenticated(): Promise<boolean> {
+  // SUPABASE-ONLY MODE: Check Supabase session
+  if (isSupabaseOnly && supabase) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      return !!(session?.user);
+    } catch (error) {
+      console.error('[AuthGuard] Error checking Supabase authentication:', error);
+      return false;
+    }
+  }
+
+  // NEXTAUTH MODE: Check backend session
   try {
     const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
     const response = await fetch(`${backendUrl}/api/auth/session`, {
@@ -111,7 +149,7 @@ export async function isAuthenticated(): Promise<boolean> {
       return !!(session && session.user);
     }
   } catch (error) {
-    console.error('[AuthGuard] Error checking authentication:', error);
+    console.error('[AuthGuard] Error checking NextAuth authentication:', error);
   }
   return false;
 }
