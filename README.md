@@ -187,3 +187,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Authored by Llakterian**
 
 **FinPro** - Transforming remote work with blockchain-powered trust and transparency.
+# Database schema updated - deployment refresh

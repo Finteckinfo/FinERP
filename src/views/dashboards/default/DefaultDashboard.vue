@@ -34,11 +34,11 @@ const userDisplayName = computed(() => {
 });
 
 const stats = computed(() => {
-  const activeProjects = projects.value.filter(p => p.status === 'active').length;
+  const activeProjects = projects.value.length; // All projects are considered active
   const totalTasks = tasks.value.length;
   const completedTasks = tasks.value.filter(t => t.status === 'COMPLETED' || t.status === 'APPROVED').length;
   const pendingTasks = tasks.value.filter(t => t.status === 'PENDING' || t.status === 'TODO').length;
-  
+
   return {
     activeProjects,
     totalTasks,
@@ -96,9 +96,13 @@ async function createProject() {
       const { data, error } = await supabase
         .from('projects')
         .insert([{
-          title: newProjectTitle.value.trim(),
+          name: newProjectTitle.value.trim(),
           description: newProjectDescription.value.trim() || null,
-          status: 'active'
+          type: 'PROGRESSIVE',
+          priority: 'MEDIUM',
+          start_date: new Date().toISOString().split('T')[0],
+          end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+          owner_id: (await supabase.auth.getUser()).data.user?.id
         }])
         .select()
         .single();
@@ -294,8 +298,8 @@ onMounted(() => {
                         </div>
               <div class="project-info">
                 <h3>{{ project.title }}</h3>
-                <span class="project-status" :class="project.status">
-                  {{ project.status || 'active' }}
+                <span class="project-status active">
+                  active
                           </span>
                         </div>
             </div>

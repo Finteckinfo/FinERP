@@ -118,7 +118,7 @@ body.dark-theme {
 
 /* CRITICAL: Force banner image to always be visible in dark mode */
 .dark-theme .banner-box {
-  background-image: url('/images/FinPro-logo.svg') !important;
+  background-image: url('/FinERP/images/FinPro-logo.svg') !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
@@ -242,7 +242,7 @@ body.dark-theme {
 
 /* Ensure the banner image is always visible */
 .banner-box {
-  background-image: url('/images/FinPro-logo.svg') !important;
+  background-image: url('/FinERP/images/FinPro-logo.svg') !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
@@ -255,7 +255,7 @@ body.dark-theme {
 .banner-box,
 .dark-theme .banner-box,
 .light-theme .banner-box {
-  background-image: url('/images/FinPro-logo.svg') !important;
+  background-image: url('/FinERP/images/FinPro-logo.svg') !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;

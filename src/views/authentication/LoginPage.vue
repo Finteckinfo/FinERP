@@ -90,7 +90,7 @@ onMounted(() => {
     <div class="theme-toggle-container">
       <ThemeToggle :show-label="false" size="small" />
     </div>
-
+    
     <!-- SUPABASE-ONLY MODE: Show login form -->
     <div v-if="isSupabaseOnly" class="login-container">
       <!-- Left Side - Banner -->
@@ -291,7 +291,7 @@ onMounted(() => {
 .banner-box {
   width: 90%;
   height: 90%;
-  background-image: url('/images/banner3.png');
+  background-image: url('/FinERP/images/banner3.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -387,11 +387,11 @@ onMounted(() => {
 // Dark theme adjustments - enhanced contrast for better readability
 .dark-theme {
   background: #0f172a !important; /* Better background contrast */
-
+  
   .banner-overlay {
     background: rgba(0, 0, 0, 0.7);
   }
-
+  
   .form-title {
     color: var(--v-theme-on-surface);
   }
