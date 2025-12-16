@@ -14,7 +14,7 @@ dotenv.config();
  */
 
 async function main() {
-  console.log("🎱 FinERP Batch Test Token Minting");
+  console.log("🎱 FinPro Batch Test Token Minting");
   console.log("===================================\n");
 
   const FIN_TOKEN_ADDRESS = process.env.FIN_TOKEN_ADDRESS;

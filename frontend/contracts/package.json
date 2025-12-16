@@ -1,7 +1,7 @@
 {
-    "name": "finerp-contracts",
+    "name": "FinPro-contracts",
     "version": "1.0.0",
-    "description": "Production-grade smart contracts for FinERP",
+    "description": "Production-grade smart contracts for FinPro",
     "scripts": {
         "compile": "hardhat compile",
         "test": "hardhat test",

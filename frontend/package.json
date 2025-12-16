@@ -1,8 +1,8 @@
 {
-  "name": "finerp-frontend",
+  "name": "FinPro-frontend",
   "version": "1.0.0",
   "private": true,
-  "author": "FINERP Team",
+  "author": "FinPro Team",
   "type": "module",
   "scripts": {
     "dev": "vite",

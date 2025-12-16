@@ -936,7 +936,7 @@ const checklistProgressLocal = computed(() =>
 
 const canEditTask = computed(() => !!props.task && (props.userPermissions.canEditAllTasks || !!props.task.canEdit));
 
-const localKeyForTask = (taskId: string) => `finerp.taskDetails.${taskId}`;
+const localKeyForTask = (taskId: string) => `FinPro.taskDetails.${taskId}`;
 
 const loadLocalDetails = (taskId: string) => {
   try {

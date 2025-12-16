@@ -3,7 +3,7 @@ import { ethers, upgrades } from "hardhat";
 import { FINToken, FINSwap, MultiSigWallet } from "../typechain-types";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 
-describe("FinERP Phase 2 - DEX & MultiSig", function () {
+describe("FinPro Phase 2 - DEX & MultiSig", function () {
     let finToken: FINToken;
     let usdtToken: FINToken; // Mock USDT using FINToken contract for simplicity
     let finSwap: FINSwap;

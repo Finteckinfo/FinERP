@@ -11,7 +11,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 /**
  * @title FINToken
- * @notice Production-grade ERC20 token for FinERP ecosystem
+ * @notice Production-grade ERC20 token for FinPro ecosystem
  * @dev Security features:
  *      - Upgradeable via UUPS proxy pattern
  *      - Pausable for emergency situations

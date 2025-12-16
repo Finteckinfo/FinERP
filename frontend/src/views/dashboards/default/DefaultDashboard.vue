@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * FinERP Modern Dashboard
+ * FinPro Modern Dashboard
  * Clean, essential widgets only - inspired by modern ERPs like Linear, Notion, Asana
  */
 import { ref, computed, onMounted, watch } from 'vue';

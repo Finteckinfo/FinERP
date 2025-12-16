@@ -2,9 +2,9 @@
   <router-link
     to="/dashboard"
     class="flex items-center no-underline hover:no-underline focus:no-underline active:no-underline logo-link"
-    aria-label="FinERP Logo">
+    aria-label="FinPro Logo">
     <div class="logo-text-container">
-      <span class="logo-text">FinERP</span>
+      <span class="logo-text">FinPro</span>
     </div>
   </router-link>
 </template>

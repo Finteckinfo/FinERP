@@ -2,7 +2,7 @@ import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 import { getCookie } from '@/utils/cookies';
 
 /**
- * Authentication Guard for FinERP
+ * Authentication Guard for FinPro
  * 
  * PERFORMANCE OPTIMIZED:
  * - Uses synchronous cookie/storage checks (no network calls)

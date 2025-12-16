@@ -64,7 +64,7 @@
               <div v-else-if="walletBalance && walletBalance.found" class="wallet-balance-display">
                 <img 
                   src="/images/banner3.png" 
-                  alt="FinERP Logo" 
+                  alt="FinPro Logo" 
                   class="token-logo-small"
                 />
                 <span class="earning-value">
@@ -77,7 +77,7 @@
               <div v-else class="wallet-balance-display">
                 <img 
                   src="/images/banner3.png" 
-                  alt="FinERP Logo" 
+                  alt="FinPro Logo" 
                   class="token-logo-small"
                 />
                 <span class="earning-value">

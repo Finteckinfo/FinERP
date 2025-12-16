@@ -88,7 +88,7 @@
         <v-card-title class="text-h5">Select a project board</v-card-title>
         <v-card-text>
           <p class="text-body-2 text-medium-emphasis mb-4">
-            Each FinERP project has its own board. Choose a project to continue.
+            Each FinPro project has its own board. Choose a project to continue.
           </p>
 
           <v-alert v-if="projectPickerError" type="error" variant="tonal" class="mb-3">

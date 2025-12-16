@@ -21,7 +21,7 @@
 
         <div v-else class="wallet-options">
           <p class="text-body-2 text-medium-emphasis mb-4 text-center">
-            Choose a wallet to connect to FinERP
+            Choose a wallet to connect to FinPro
           </p>
 
           <!-- MetaMask -->

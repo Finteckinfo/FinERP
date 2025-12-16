@@ -3,7 +3,7 @@ import { ethers, upgrades } from "hardhat";
 import { FINToken, ProjectEscrow } from "../typechain-types";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 
-describe("FinERP Smart Contracts - Security Tests", function () {
+describe("FinPro Smart Contracts - Security Tests", function () {
     let finToken: FINToken;
     let projectEscrow: ProjectEscrow;
     let admin: SignerWithAddress;

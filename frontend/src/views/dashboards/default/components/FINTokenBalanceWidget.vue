@@ -86,7 +86,7 @@
           <div class="token-logo-container mb-3">
             <img 
               src="/images/banner3.png" 
-              alt="FinERP Logo" 
+              alt="FinPro Logo" 
               class="token-logo"
             />
           </div>

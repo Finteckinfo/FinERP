@@ -490,7 +490,7 @@ const shortenAddress = (address: string) => {
   <v-dialog v-model="showCreateWallet" max-width="500" z-index="2001">
     <v-card class="rounded-xl">
       <v-card-title class="headline text-center">
-        🎉 Create Your FinERP Wallet
+        🎉 Create Your FinPro Wallet
       </v-card-title>
       <v-card-text>
         <p class="text-body-1 text-center text-medium-emphasis mb-4">

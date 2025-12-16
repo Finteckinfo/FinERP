@@ -95,9 +95,9 @@ export function useMetaMaskWallet() {
       walletState.value.chainId = Number(network.chainId);
 
       // Store in sessionStorage for persistence
-      sessionStorage.setItem('finerp_wallet_connected', 'true');
-      sessionStorage.setItem('finerp_wallet_address', address);
-      sessionStorage.setItem('finerp_wallet_chainId', network.chainId.toString());
+      sessionStorage.setItem('FinPro_wallet_connected', 'true');
+      sessionStorage.setItem('FinPro_wallet_address', address);
+      sessionStorage.setItem('FinPro_wallet_chainId', network.chainId.toString());
 
       return true;
     } catch (err: any) {
@@ -118,9 +118,9 @@ export function useMetaMaskWallet() {
     walletState.value.error = null;
 
     // Clear session storage
-    sessionStorage.removeItem('finerp_wallet_connected');
-    sessionStorage.removeItem('finerp_wallet_address');
-    sessionStorage.removeItem('finerp_wallet_chainId');
+    sessionStorage.removeItem('FinPro_wallet_connected');
+    sessionStorage.removeItem('FinPro_wallet_address');
+    sessionStorage.removeItem('FinPro_wallet_chainId');
   };
 
   // Switch network
@@ -170,8 +170,8 @@ export function useMetaMaskWallet() {
     if (typeof window === 'undefined') return;
 
     // Check if previously connected
-    const wasConnected = sessionStorage.getItem('finerp_wallet_connected') === 'true';
-    const storedAddress = sessionStorage.getItem('finerp_wallet_address');
+    const wasConnected = sessionStorage.getItem('FinPro_wallet_connected') === 'true';
+    const storedAddress = sessionStorage.getItem('FinPro_wallet_address');
 
     if (wasConnected && storedAddress) {
       // Try to reconnect
@@ -201,9 +201,9 @@ export function useMetaMaskWallet() {
         } catch (err) {
           console.warn('Failed to reconnect wallet:', err);
           // Clear stored data if reconnection fails
-          sessionStorage.removeItem('finerp_wallet_connected');
-          sessionStorage.removeItem('finerp_wallet_address');
-          sessionStorage.removeItem('finerp_wallet_chainId');
+          sessionStorage.removeItem('FinPro_wallet_connected');
+          sessionStorage.removeItem('FinPro_wallet_address');
+          sessionStorage.removeItem('FinPro_wallet_chainId');
         }
       }
     }

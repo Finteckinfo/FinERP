@@ -2,35 +2,35 @@
 
 Please continue reading below to explore the features of the Pro version:
 
-# SIZLAND Admin Panel - Unlock Premium Features with the Pro Version
+# FinPro Admin Panel - Unlock Premium Features with the Pro Version
 
-Elevate your project with the Pro Version of the <b>SIZLAND Admin Panel!</b> Built to cater to modern web applications, the Pro version is loaded with advanced features, intuitive design elements, and dynamic tools that ensure seamless functionality.
+Elevate your project with the Pro Version of the <b>FinPro Admin Panel!</b> Built to cater to modern web applications, the Pro version is loaded with advanced features, intuitive design elements, and dynamic tools that ensure seamless functionality.
 
 This page (folder) is a sneak peek into the premium features available in <b>version 1.5.0</b>. Upgrade to the Pro version to unlock exclusive pages and components that will take your project to the next level.
 
 ## Included in the Pro Version:
 
-[🚀 Dashboards](https://SIZLANDdashboard.io/vue/dashboard/default) : Advanced dashboards with real-time insights and data visualizations for actionable metrics.
+[🚀 Dashboards](https://FinProdashboard.io/vue/dashboard/default) : Advanced dashboards with real-time insights and data visualizations for actionable metrics.
 
-[📦 Widgets](https://SIZLANDdashboard.io/vue/widget/statistics) : A curated library of pre-built widgets for enhanced functionality and faster development.
+[📦 Widgets](https://FinProdashboard.io/vue/widget/statistics) : A curated library of pre-built widgets for enhanced functionality and faster development.
 
-[🔧 Components](https://SIZLANDdashboard.io/vue/components/buttons) : A rich collection of reusable and customizable UI components.
+[🔧 Components](https://FinProdashboard.io/vue/components/buttons) : A rich collection of reusable and customizable UI components.
 
-[🚀 Advanced Components](https://SIZLANDdashboard.io/vue/advance/snackbar) : Customizable and dynamic Snackbar components for delivering seamless notifications and user feedback in your application.
+[🚀 Advanced Components](https://FinProdashboard.io/vue/advance/snackbar) : Customizable and dynamic Snackbar components for delivering seamless notifications and user feedback in your application.
 
-[📝 Forms](https://SIZLANDdashboard.io/vue/forms/formvalidation) : Dynamic and customizable forms with advanced validation features for a smooth user experience.
+[📝 Forms](https://FinProdashboard.io/vue/forms/formvalidation) : Dynamic and customizable forms with advanced validation features for a smooth user experience.
 
-[📊 Tables](https://SIZLANDdashboard.io/vue/tables/tbl-basic) :  Simple and clean tables for displaying structured data effectively.
+[📊 Tables](https://FinProdashboard.io/vue/tables/tbl-basic) :  Simple and clean tables for displaying structured data effectively.
 
-[📈 Charts](https://SIZLANDdashboard.io/vue/forms/charts/apexchart) : Beautifully designed charts powered by modern data visualization libraries.
+[📈 Charts](https://FinProdashboard.io/vue/forms/charts/apexchart) : Beautifully designed charts powered by modern data visualization libraries.
 
-[🔒 Authentication](https://SIZLANDdashboard.io/vue/register1) : Secure pages for login, registration, and password recovery, ensuring robust user management.
+[🔒 Authentication](https://FinProdashboard.io/vue/register1) : Secure pages for login, registration, and password recovery, ensuring robust user management.
 
-[🛒 E-commerce App](https://SIZLANDdashboard.io/vue/ecommerce/products) : A streamlined system for managing products and inventory in your e-commerce platform.
+[🛒 E-commerce App](https://FinProdashboard.io/vue/ecommerce/products) : A streamlined system for managing products and inventory in your e-commerce platform.
 
-[💬 Chat Messages](https://SIZLANDdashboard.io/vue/app/chats) : An integrated chat system to enhance communication within your application.
+[💬 Chat Messages](https://FinProdashboard.io/vue/app/chats) : An integrated chat system to enhance communication within your application.
 
-[👤 Account Profile](https://SIZLANDdashboard.io/vue/app/user/account-profile/profile1) : A sleek and customizable account profile page for managing user details and settings.
+[👤 Account Profile](https://FinProdashboard.io/vue/app/user/account-profile/profile1) : A sleek and customizable account profile page for managing user details and settings.
 
 ## Why Upgrade to the Pro Version?
 
@@ -42,4 +42,4 @@ This page (folder) is a sneak peek into the premium features available in <b>ver
 
 ## Get Started with the Pro Version!
 
-👉 [Explore the Pro version now](https://codedthemes.com/item/SIZLAND-vue-admin-dashboard/) - and supercharge your development experience!
+👉 [Explore the Pro version now](https://codedthemes.com/item/FinPro-vue-admin-dashboard/) - and supercharge your development experience!

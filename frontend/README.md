@@ -1,6 +1,6 @@
-# FinERP Frontend
+# FinPro Frontend
 
-This is the frontend application for FinERP, a blockchain-based ERP system.
+This is the frontend application for FinPro, a blockchain-based ERP system.
 
 For complete project documentation, see the main [README.md](../README.md) in the project root.
 

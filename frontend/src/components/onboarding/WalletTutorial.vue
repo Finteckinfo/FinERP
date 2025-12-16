@@ -128,7 +128,7 @@
                   <v-icon class="mr-2" size="24">mdi-alert</v-icon>
                   <div>
                     <h4 class="font-weight-bold mb-2">⚠️ Never Share Your Recovery Phrase!</h4>
-                    <p class="mb-0">Your 25-word recovery phrase is like the master key to your wallet. FinERP support will NEVER ask for it. Anyone with this phrase can access all your funds.</p>
+                    <p class="mb-0">Your 25-word recovery phrase is like the master key to your wallet. FinPro support will NEVER ask for it. Anyone with this phrase can access all your funds.</p>
                   </div>
                 </div>
               </v-alert>
@@ -229,7 +229,7 @@
               <v-icon size="100" color="success" class="mb-4">mdi-check-circle</v-icon>
               <h3 class="text-h4 font-weight-bold mb-4">You're Ready to Go!</h3>
               <p class="text-body-1 mb-6 mx-auto" style="max-width: 700px;">
-                You now understand how crypto wallets work and how payments are processed in FinERP.
+                You now understand how crypto wallets work and how payments are processed in FinPro.
               </p>
 
               <v-card variant="outlined" class="pa-6 mx-auto" style="max-width: 600px;">
@@ -348,7 +348,7 @@ const securityTips = [
     icon: 'mdi-shield-alert',
     color: 'error',
     title: 'Beware of Phishing',
-    description: 'Always verify URLs. FinERP will never ask for your recovery phrase or password.'
+    description: 'Always verify URLs. FinPro will never ask for your recovery phrase or password.'
   },
   {
     icon: 'mdi-backup-restore',

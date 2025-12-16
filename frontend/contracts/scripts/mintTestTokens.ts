@@ -18,7 +18,7 @@ dotenv.config();
  */
 
 async function main() {
-  console.log("🎱 FinERP Test Token Minting - Pool Game Style");
+  console.log("🎱 FinPro Test Token Minting - Pool Game Style");
   console.log("==============================================\n");
 
   // Configuration

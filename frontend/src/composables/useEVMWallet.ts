@@ -132,7 +132,7 @@ export function useEVMWallet() {
         optionalChains: [1, 137, 11155111],
         showQrModal: true,
         metadata: {
-          name: 'FinERP',
+          name: 'FinPro',
           description: 'Enterprise Resource Planning on EVM',
           url: window.location.origin,
           icons: [`${window.location.origin}/favicon.ico`]
@@ -169,10 +169,10 @@ export function useEVMWallet() {
       walletState.value.chainId = Number(network.chainId);
       walletState.value.walletType = 'walletconnect';
 
-      sessionStorage.setItem('finerp_wallet_connected', 'true');
-      sessionStorage.setItem('finerp_wallet_address', accounts[0]);
-      sessionStorage.setItem('finerp_wallet_chainId', network.chainId.toString());
-      sessionStorage.setItem('finerp_wallet_type', 'walletconnect');
+      sessionStorage.setItem('FinPro_wallet_connected', 'true');
+      sessionStorage.setItem('FinPro_wallet_address', accounts[0]);
+      sessionStorage.setItem('FinPro_wallet_chainId', network.chainId.toString());
+      sessionStorage.setItem('FinPro_wallet_type', 'walletconnect');
 
       return true;
     } catch (err: any) {
@@ -260,10 +260,10 @@ export function useEVMWallet() {
       walletState.value.chainId = Number(network.chainId);
       walletState.value.walletType = type;
 
-      sessionStorage.setItem('finerp_wallet_connected', 'true');
-      sessionStorage.setItem('finerp_wallet_address', address);
-      sessionStorage.setItem('finerp_wallet_chainId', network.chainId.toString());
-      sessionStorage.setItem('finerp_wallet_type', type);
+      sessionStorage.setItem('FinPro_wallet_connected', 'true');
+      sessionStorage.setItem('FinPro_wallet_address', address);
+      sessionStorage.setItem('FinPro_wallet_chainId', network.chainId.toString());
+      sessionStorage.setItem('FinPro_wallet_type', type);
 
       return true;
     } catch (err: any) {
@@ -330,10 +330,10 @@ export function useEVMWallet() {
     walletState.value.error = null;
     walletState.value.walletType = null;
 
-    sessionStorage.removeItem('finerp_wallet_connected');
-    sessionStorage.removeItem('finerp_wallet_address');
-    sessionStorage.removeItem('finerp_wallet_chainId');
-    sessionStorage.removeItem('finerp_wallet_type');
+    sessionStorage.removeItem('FinPro_wallet_connected');
+    sessionStorage.removeItem('FinPro_wallet_address');
+    sessionStorage.removeItem('FinPro_wallet_chainId');
+    sessionStorage.removeItem('FinPro_wallet_type');
   };
 
   // Switch network
@@ -434,9 +434,9 @@ export function useEVMWallet() {
   const initialize = async () => {
     if (typeof window === 'undefined') return;
 
-    const wasConnected = sessionStorage.getItem('finerp_wallet_connected') === 'true';
-    const storedAddress = sessionStorage.getItem('finerp_wallet_address');
-    const storedType = sessionStorage.getItem('finerp_wallet_type') as WalletType | null;
+    const wasConnected = sessionStorage.getItem('FinPro_wallet_connected') === 'true';
+    const storedAddress = sessionStorage.getItem('FinPro_wallet_address');
+    const storedType = sessionStorage.getItem('FinPro_wallet_type') as WalletType | null;
 
     if (wasConnected && storedAddress) {
       try {
@@ -449,7 +449,7 @@ export function useEVMWallet() {
               chains: [1, 137, 11155111],
               showQrModal: false, // Don't show modal on reconnect
               metadata: {
-                name: 'FinERP',
+                name: 'FinPro',
                 description: 'Enterprise Resource Planning on EVM',
                 url: window.location.origin,
                 icons: [`${window.location.origin}/favicon.ico`]

@@ -4,7 +4,7 @@
     :class="{ 'dark-theme': isDark }"
   >
     <RouterLink to="/dashboard" class="logo-link">
-      <span class="logo-text">FinERP</span>
+      <span class="logo-text">FinPro</span>
     </RouterLink>
   </div>
 </template>

@@ -1,7 +1,7 @@
 import { ethers, upgrades } from "hardhat";
 
 async function main() {
-    console.log("Deploying FinERP Smart Contracts...\n");
+    console.log("Deploying FinPro Smart Contracts...\n");
 
     const [deployer] = await ethers.getSigners();
     console.log("Deploying contracts with account:", deployer.address);
