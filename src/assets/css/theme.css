@@ -28,9 +28,12 @@
   --erp-heading: #0f172a;
   --erp-card-bg: #ffffff;
   --erp-border: #e2e8f0;
-  --erp-accent-green: #5BC85B;
+  --erp-accent-green: #006400;
   --erp-hover-bg: #f7fafc;
   --erp-accent-light: rgba(91, 200, 91, 0.1);
+  --erp-page-bg: #ffffff;
+  --erp-surface: #f8fafc;
+  --erp-header-bg: #ffffff;
 }
 
 /* Dark Mode - using non-conflicting variable names */
@@ -56,9 +59,12 @@
   --erp-heading: #ffffff;
   --erp-card-bg: #1a2332;
   --erp-border: #2d3748;
-  --erp-accent-green: #5BC85B;
+  --erp-accent-green: #90EE90;
   --erp-hover-bg: #1e293b;
   --erp-accent-light: rgba(91, 200, 91, 0.15);
+  --erp-page-bg: #101828;
+  --erp-surface: #1e293b;
+  --erp-header-bg: #1a2332;
 }
 
 /* Apply theme to body and html */
@@ -385,9 +391,190 @@ div {
   color: inherit;
 }
 
+/* Dropdown and select component legibility improvements */
+.v-select,
+.v-autocomplete,
+.v-combobox {
+  color: var(--erp-text-primary) !important;
+}
+
+.v-select .v-field__input,
+.v-autocomplete .v-field__input,
+.v-combobox .v-field__input {
+  color: var(--erp-text-primary) !important;
+}
+
+.v-select .v-field__label,
+.v-autocomplete .v-field__label,
+.v-combobox .v-field__label {
+  color: var(--erp-text-secondary) !important;
+}
+
+.v-select .v-field__outline,
+.v-autocomplete .v-field__outline,
+.v-combobox .v-field__outline {
+  color: var(--erp-border) !important;
+}
+
+/* Dropdown menu items */
+.v-list-item {
+  color: var(--erp-text-primary) !important;
+}
+
+.v-list-item:hover {
+  background-color: var(--erp-hover-bg) !important;
+}
+
+.v-list-item--active {
+  background-color: var(--erp-accent-light) !important;
+  color: var(--erp-accent-green) !important;
+}
+
+/* Menu dropdowns */
+.v-menu .v-list-item-title {
+  color: var(--erp-text-primary) !important;
+}
+
+.v-menu .v-list-item-subtitle {
+  color: var(--erp-text-secondary) !important;
+}
+
+/* Form inputs and textareas */
+.v-text-field .v-field__input,
+.v-textarea .v-field__input {
+  color: var(--erp-text-primary) !important;
+}
+
+.v-text-field .v-field__label,
+.v-textarea .v-field__label {
+  color: var(--erp-text-secondary) !important;
+}
+
+.v-text-field .v-field__outline,
+.v-textarea .v-field__outline {
+  color: var(--erp-border) !important;
+}
+
+/* Data tables */
+.v-data-table {
+  color: var(--erp-text-primary) !important;
+}
+
+.v-data-table th {
+  color: var(--erp-heading) !important;
+  background-color: var(--erp-hover-bg) !important;
+}
+
+.v-data-table td {
+  color: var(--erp-text-primary) !important;
+}
+
+.v-data-table tr:hover {
+  background-color: var(--erp-hover-bg) !important;
+}
+
+/* Cards and panels */
+.v-card,
+.v-sheet {
+  background-color: var(--erp-card-bg) !important;
+  color: var(--erp-text-primary) !important;
+}
+
+.v-card .v-card-title,
+.v-sheet .v-card-title {
+  color: var(--erp-heading) !important;
+}
+
+.v-card .v-card-subtitle,
+.v-sheet .v-card-subtitle {
+  color: var(--erp-text-secondary) !important;
+}
+
+.v-card .v-card-text,
+.v-sheet .v-card-text {
+  color: var(--erp-text-primary) !important;
+}
+
+/* Navigation and sidebar */
+.v-navigation-drawer {
+  background-color: var(--erp-card-bg) !important;
+}
+
+.v-navigation-drawer .v-list-item-title {
+  color: var(--erp-text-primary) !important;
+}
+
+.v-navigation-drawer .v-list-item-subtitle {
+  color: var(--erp-text-secondary) !important;
+}
+
+.v-navigation-drawer .v-list-item:hover {
+  background-color: var(--erp-hover-bg) !important;
+}
+
+/* Tooltips */
+.v-tooltip .v-overlay__content {
+  background-color: var(--erp-card-bg) !important;
+  color: var(--erp-text-primary) !important;
+  border: 1px solid var(--erp-border) !important;
+}
+
+/* Snackbars and alerts */
+.v-snackbar {
+  background-color: var(--erp-card-bg) !important;
+  color: var(--erp-text-primary) !important;
+}
+
+.v-alert {
+  background-color: var(--erp-card-bg) !important;
+  color: var(--erp-text-primary) !important;
+  border: 1px solid var(--erp-border) !important;
+}
+
+/* Buttons with proper contrast */
+.v-btn {
+  color: var(--erp-text-primary) !important;
+}
+
+.v-btn--variant-outlined {
+  border-color: var(--erp-border) !important;
+}
+
+.v-btn--variant-text {
+  color: var(--erp-accent-green) !important;
+}
+
+/* Chips and tags */
+.v-chip {
+  background-color: var(--erp-accent-light) !important;
+  color: var(--erp-accent-green) !important;
+}
+
+.v-chip--variant-outlined {
+  background-color: transparent !important;
+  border-color: var(--erp-accent-green) !important;
+  color: var(--erp-accent-green) !important;
+}
+
+/* Progress bars and indicators */
+.v-progress-linear {
+  background-color: var(--erp-hover-bg) !important;
+}
+
+.v-progress-linear .v-progress-linear__background {
+  background-color: var(--erp-hover-bg) !important;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .dark-theme {
     background-color: #101828 !important;
+  }
+  
+  /* Ensure mobile dropdowns are legible */
+  .v-select.mobile,
+  .v-autocomplete.mobile,
+  .v-combobox.mobile {
+    color: var(--erp-text-primary) !important;
   }
 }
