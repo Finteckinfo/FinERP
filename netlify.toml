@@ -10,6 +10,9 @@
   # Node version
   NODE_VERSION = "18"
 
+  # Disable secrets scanning for legitimate frontend environment variables
+  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY,VITE_API_URL,VITE_ETHEREUM_RPC_URL,VITE_POLYGON_RPC_URL,VITE_SEPOLIA_RPC_URL,VITE_WALLETCONNECT_PROJECT_ID,VITE_ETHERSCAN_API_KEY,VITE_BACKEND_URL"
+
 # Redirect rules for SPA
 [[redirects]]
   from = "/*"
