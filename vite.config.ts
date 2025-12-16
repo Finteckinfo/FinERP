@@ -30,7 +30,7 @@ export default defineConfig({
       protocolImports: true,
     })
   ],
-  base: '/',
+  base: process.env.NODE_ENV === 'production' ? '/FinERP/' : '/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
