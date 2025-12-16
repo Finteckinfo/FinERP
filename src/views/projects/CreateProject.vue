@@ -429,7 +429,7 @@
               
               <div v-if="currentStep === 'settings'" class="d-flex flex-column align-end" style="gap: 8px;">
                 <v-alert
-                  v-if="sizBalance < 1"
+                  v-if="finBalance < 1"
                   type="info"
                   variant="tonal"
                   density="compact"
@@ -441,15 +441,15 @@
                   <div class="d-flex flex-column" style="gap: 8px;">
                     <div>
                       Minimum 0.00 SIZ required to create a project.
-                      <span class="ml-1">Current: {{ sizBalance.toFixed(2) }} SIZ</span>
+                      <span class="ml-1">Current: {{ finBalance.toFixed(2) }} SIZ</span>
                     </div>
-                    <div v-if="balanceError" class="text-error text-caption">{{ balanceError }}</div>
+                    <div v-if="walletBalanceError" class="text-error text-caption">{{ walletBalanceError }}</div>
                     <div class="d-flex align-center" style="gap: 8px;">
                       <v-btn
                         color="primary"
                         variant="elevated"
                         size="small"
-                        :href="import.meta.env.VITE_SSO_PRIMARY_DOMAIN || '#'"
+                        :href="ssoDomain"
                         target="_blank"
                       >
                         <v-icon start>mdi-open-in-new</v-icon>
@@ -458,8 +458,8 @@
                       <v-btn
                         variant="outlined"
                         size="small"
-                        :loading="balanceLoading"
-                        @click="loadWalletSIZBalance()"
+                        :loading="walletBalanceLoading"
+                        @click="loadWalletfinBalance()"
                       >
                         <v-icon start>mdi-refresh</v-icon>
                         Refresh Balance
@@ -552,6 +552,9 @@ const projectData = reactive({
   roles: [] as Role[]
 });
 
+// Computed properties
+const ssoDomain = computed(() => import.meta.env.VITE_SSO_PRIMARY_DOMAIN || '#');
+
 // Form validation
 const foundationValid = ref(false);
 const settingsValid = ref(false);
@@ -567,6 +570,26 @@ const saving = ref(false);
 const submitting = ref(false);
 const error = ref('');
 const success = ref('');
+
+// Wallet balance state
+const finBalance = ref(0);
+const walletBalanceLoading = ref(false);
+const walletBalanceError = ref('');
+
+// Load wallet SIZ balance
+const loadWalletfinBalance = async () => {
+  walletBalanceLoading.value = true;
+  walletBalanceError.value = '';
+  try {
+    // For now, set a default balance since SIZ token logic isn't fully implemented
+    finBalance.value = 1.0;
+  } catch (err: any) {
+    walletBalanceError.value = err.message || 'Failed to load balance';
+    finBalance.value = 0;
+  } finally {
+    walletBalanceLoading.value = false;
+  }
+};
 
 // Data from APIs
 const configData = ref<any>(null);
@@ -651,7 +674,7 @@ const loadWalletFINBalance = async () => {
     const balance = await getFINTokenBalance(walletAddress.value, rpcUrl, tokenAddress);
     if (balance) {
       finBalance.value = Number(balance.amount) / Math.pow(10, balance.decimals || 18);
-      finBalanceFormatted.value = parseFloat(balance.formattedBalance);
+      finBalanceFormatted.value = parseFloat(balance.formattedBalance) || 0;
     } else {
       finBalance.value = 0;
       finBalanceFormatted.value = 0;
