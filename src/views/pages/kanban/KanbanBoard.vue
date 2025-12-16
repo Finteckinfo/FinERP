@@ -614,22 +614,15 @@ const handleBulkActionsCompleted = () => {
 
 const { isDark } = useTheme();
 
-// PERFORMANCE: Delay heavy data loading to prevent blocking initial render
 onMounted(() => {
   console.log('[KanbanBoard] Mounted. isSupabaseOnly:', isSupabaseOnly);
   console.log('[KanbanBoard] supabase client:', supabase ? 'initialized' : 'NULL');
   console.log('[KanbanBoard] VITE_SUPABASE_URL:', (import.meta as any).env?.VITE_SUPABASE_URL ? 'set' : 'MISSING');
   console.log('[KanbanBoard] VITE_SUPABASE_ANON_KEY:', (import.meta as any).env?.VITE_SUPABASE_ANON_KEY ? 'set' : 'MISSING');
   console.log('[KanbanBoard] VITE_BACKEND_URL:', (import.meta as any).env?.VITE_BACKEND_URL || 'not set (Supabase-only mode)');
-
-  // Load context immediately for UI responsiveness
   loadBoardContext();
-
-  // Delay project picker loading to allow page to render first
   if (!boardProjectId.value) {
-    setTimeout(() => {
-      loadProjectPicker();
-    }, 100);
+    loadProjectPicker();
   }
 });
 </script>

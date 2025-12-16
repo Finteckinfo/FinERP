@@ -126,7 +126,7 @@ export async function authGuard(
     if (isSupabaseOnly && supabase) {
       setTimeout(async () => {
         try {
-          const { data: { session }, error } = await supabase.auth.getSession();
+          const { data: { session }, error } = await supabase!.auth.getSession();
           if (error || !session?.user) {
             console.log('[AuthGuard] Background validation: No valid Supabase session, redirecting to login');
             // Clear invalid session data
@@ -181,7 +181,8 @@ export async function isAuthenticated(): Promise<boolean> {
   // SUPABASE-ONLY MODE: Check Supabase session
   if (isSupabaseOnly && supabase) {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) throw error;
       return !!(session?.user);
     } catch (error) {
       console.error('[AuthGuard] Error checking Supabase authentication:', error);
