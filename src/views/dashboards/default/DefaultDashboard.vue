@@ -95,6 +95,12 @@ async function createProject() {
   creatingProject.value = true;
   try {
     if (isSupabaseOnly && supabase) {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('You must be logged in to create a project');
+      }
+
       const { data, error } = await supabase
         .from('projects')
         .insert([{
@@ -104,7 +110,7 @@ async function createProject() {
           priority: 'MEDIUM',
           start_date: new Date().toISOString().split('T')[0],
           end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
-          owner_id: (await supabase.auth.getUser()).data.user?.id
+          owner_id: user.id
         }])
         .select()
         .single();

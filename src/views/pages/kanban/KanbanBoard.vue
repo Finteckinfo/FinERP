@@ -456,9 +456,17 @@ const createProjectInSupabase = async () => {
   console.log('[KanbanBoard] Inserting project:', payload);
   
   try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      throw new Error('You must be logged in to create a project');
+    }
+
     const { data, error } = await supabase
       .from('projects')
-      .insert([payload])
+      .insert([{
+        ...payload,
+        owner_id: user.id
+      }])
       .select()
       .single();
     
