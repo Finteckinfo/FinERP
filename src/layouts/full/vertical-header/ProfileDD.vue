@@ -1,146 +1,136 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useEVMWallet } from '@/composables/useEVMWallet';
-import { isWalletModalOpen } from '@/stores/walletStore';
-import { useTheme } from '@/composables/useTheme';
-
-// Icons
+import { ref, computed, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/authStore';
 import { 
   UserIcon, 
-  CopyIcon, 
   LogoutIcon, 
   SettingsIcon,
-  ChevronRightIcon
+  CopyIcon
 } from 'vue-tabler-icons';
 
-// Theme
-const { isDark } = useTheme();
-
-// Wallet Hook
-const { user: walletUser, isConnected, disconnect } = useEVMWallet();
-
-// Utils
+const authStore = useAuthStore();
 const copied = ref(false);
 
+onMounted(() => {
+  // Ensure auth store is initialized
+  authStore.initialize();
+});
+
 const shortenedAddress = computed(() => {
-  if (!walletUser.value?.address) return '';
-  const addr = walletUser.value.address;
+  const addr = authStore.profile.walletAddress;
+  if (!addr) return '';
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 });
 
 const walletBalance = computed(() => {
-  if (!walletUser.value?.balance) return '0.00';
-  return parseFloat(walletUser.value.balance).toFixed(4);
+  const bal = authStore.profile.walletBalance;
+  if (!bal) return '0.00';
+  return parseFloat(bal).toFixed(4);
 });
 
-async function handleCopy() {
-  if (walletUser.value?.address) {
-    await navigator.clipboard.writeText(walletUser.value.address);
+async function handleCopyAddress() {
+  if (authStore.profile.walletAddress) {
+    await navigator.clipboard.writeText(authStore.profile.walletAddress);
     copied.value = true;
     setTimeout(() => { copied.value = false; }, 2000);
   }
 }
 
-function openWalletConnect() {
-  isWalletModalOpen.value = true;
+async function handleSignOut() {
+  await authStore.signOut();
 }
-
-async function handleDisconnect() {
-  await disconnect();
-}
-
-// Generate a deterministic gradient based on address
-const avatarGradient = computed(() => {
-  if (!walletUser.value?.address) return 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)';
-  const addr = walletUser.value.address;
-  // Simple hash for hue
-  const hash = addr.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const hue1 = hash % 360;
-  const hue2 = (hue1 + 40) % 360;
-  return `linear-gradient(135deg, hsl(${hue1}, 70%, 50%) 0%, hsl(${hue2}, 70%, 50%) 100%)`;
-});
-
 </script>
 
 <template>
   <div class="pa-4 profile-dd">
-    <!-- CONNECTED STATE -->
-    <div v-if="isConnected && walletUser">
-      <div class="d-flex align-center mb-4">
-        <div class="wallet-avatar mr-3" :style="{ background: avatarGradient }">
-          <UserIcon size="24" color="white" />
+    <!-- AUTHENTICATED OR WALLET CONNECTED STATE -->
+    <div v-if="authStore.isAuthenticated || authStore.profile.walletConnected">
+      
+      <!-- User Profile Section -->
+      <div v-if="authStore.isAuthenticated" class="d-flex align-center mb-4">
+        <div class="user-avatar mr-3">
+          <v-img 
+            v-if="authStore.profile.avatar" 
+            :src="authStore.profile.avatar" 
+            alt="Avatar"
+            cover
+          />
+          <UserIcon v-else size="24" class="text-primary" />
         </div>
-        <div>
-          <h4 class="text-h6 font-weight-bold mb-0">My Wallet</h4>
-          <span class="text-caption text-medium-emphasis">{{ shortenedAddress }}</span>
+        <div class="overflow-hidden">
+          <h4 class="text-h6 font-weight-bold mb-0 text-truncate">{{ authStore.profile.name }}</h4>
+          <span class="text-caption text-medium-emphasis text-truncate d-block">{{ authStore.profile.email }}</span>
         </div>
       </div>
 
-      <div class="balance-card pa-4 mb-4 rounded-lg">
-        <span class="text-caption text-medium-emphasis d-block mb-1">Total Balance</span>
-        <div class="d-flex align-end">
-          <h3 class="text-h4 font-weight-bold mr-2">{{ walletBalance }}</h3>
-          <span class="text-subtitle-1 mb-1 font-weight-medium">ETH</span>
+      <!-- Wallet Section -->
+      <div v-if="authStore.profile.walletConnected" class="wallet-section mb-4">
+        <div class="d-flex align-center justify-space-between mb-2">
+          <span class="text-caption font-weight-bold text-medium-emphasis">WALLET CONNECTED</span>
+          <span class="text-caption text-primary cursor-pointer" @click="handleCopyAddress">
+            {{ copied ? 'Copied!' : shortenedAddress }}
+          </span>
         </div>
+        
+        <div class="balance-card pa-3 rounded-lg">
+          <div class="d-flex align-baseline">
+            <h3 class="text-h5 font-weight-bold mr-1">{{ walletBalance }}</h3>
+            <span class="text-caption font-weight-medium text-medium-emphasis">ETH</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connect Wallet Call-to-Action (if logged in but not connected) -->
+      <div v-else class="mb-4">
+        <v-btn
+          block
+          variant="tonal"
+          color="primary"
+          class="rounded-lg"
+          @click="authStore.connectWallet()"
+        >
+          <v-icon start icon="mdi-wallet" />
+          Connect Wallet
+        </v-btn>
       </div>
 
       <v-divider class="mb-3"></v-divider>
 
       <v-list class="pa-0" density="compact">
-        <!-- Copy Address -->
-        <v-list-item 
-          rounded="md" 
-          class="mb-1 ActionItem" 
-          @click="handleCopy"
-          ripple
-        >
-          <template v-slot:prepend>
-            <CopyIcon size="20" class="mr-2 text-medium-emphasis" />
-          </template>
-          <v-list-item-title class="text-body-2">
-            {{ copied ? 'Copied!' : 'Copy Address' }}
-          </v-list-item-title>
-        </v-list-item>
-
-        <!-- Account Settings (Placeholder for future) -->
-        <v-list-item 
-          rounded="md" 
-          class="mb-1 ActionItem"
-          ripple
-        >
+        <!-- Settings -->
+        <v-list-item rounded="md" class="mb-1 ActionItem" ripple to="/settings">
           <template v-slot:prepend>
             <SettingsIcon size="20" class="mr-2 text-medium-emphasis" />
           </template>
           <v-list-item-title class="text-body-2">Settings</v-list-item-title>
-          <template v-slot:append>
-             <ChevronRightIcon size="16" class="text-medium-emphasis" />
-          </template>
         </v-list-item>
 
-        <!-- Disconnect -->
+        <!-- Sign Out (Unified) -->
         <v-list-item 
           rounded="md" 
-          class="ActionItem mt-2 text-error" 
-          @click="handleDisconnect"
+          class="ActionItem mt-2" 
+          @click="handleSignOut"
           ripple
         >
           <template v-slot:prepend>
             <LogoutIcon size="20" class="mr-2 text-error" />
           </template>
-          <v-list-item-title class="text-body-2 font-weight-medium">Disconnect</v-list-item-title>
+          <v-list-item-title class="text-body-2 font-weight-medium text-error">
+            Sign Out
+          </v-list-item-title>
         </v-list-item>
       </v-list>
     </div>
 
-    <!-- NOT CONNECTED STATE -->
+    <!-- GUEST STATE (Should generally not be visible if protected, but good fallback) -->
     <div v-else class="text-center py-6">
-      <div class="wallet-avatar mb-4 mx-auto" style="background: var(--er-surface-variant)">
+      <div class="user-avatar mb-4 mx-auto bg-surface-variant">
         <UserIcon size="32" class="text-medium-emphasis" />
       </div>
       
-      <h3 class="text-h6 font-weight-bold mb-2">Connect Wallet</h3>
+      <h3 class="text-h6 font-weight-bold mb-2">Welcome</h3>
       <p class="text-body-2 text-medium-emphasis mb-6 px-4">
-        Connect your wallet to access your profile, assets, and more.
+        Sign in to access your projects and assets.
       </p>
 
       <v-btn 
@@ -148,29 +138,36 @@ const avatarGradient = computed(() => {
         color="primary" 
         size="large" 
         class="rounded-lg font-weight-bold"
-        elevation="0"
-        @click="openWalletConnect"
+        to="/login"
       >
-        Connect Wallet
+        Sign In
       </v-btn>
     </div>
   </div>
 </template>
 
 <style scoped>
-.wallet-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 16px;
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--v-theme-primary), 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background: rgba(var(--v-theme-primary), 0.05);
+  overflow: hidden;
+}
+
+.wallet-section {
+  background: rgba(var(--v-theme-surface-variant), 0.3);
+  border-radius: 12px;
+  padding: 12px;
 }
 
 .balance-card {
-  background: rgba(var(--v-theme-primary), 0.05);
-  border: 1px solid rgba(var(--v-theme-primary), 0.1);
+  background: var(--v-theme-surface);
+  border: 1px solid rgba(var(--v-theme-border), 0.5);
 }
 
 .ActionItem {
@@ -180,14 +177,13 @@ const avatarGradient = computed(() => {
 
 .ActionItem:hover {
   background: rgba(var(--v-theme-surface-variant), 0.5);
-  color: rgb(var(--v-theme-primary));
-}
-
-.ActionItem:hover :deep(.text-medium-emphasis) {
-    color: rgb(var(--v-theme-primary)) !important;
 }
 
 .text-error {
   color: rgb(var(--v-theme-error)) !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>
