@@ -43,10 +43,32 @@ export const useAuthStore = defineStore('auth', () => {
         loading.value = true;
         try {
             const success = await connectWallet();
-            if (success) {
+            if (success && walletUser.value?.address) {
                 // Determine redirect path
                 const redirectPath = sessionStorage.getItem('post_auth_redirect') || '/dashboard/default';
                 sessionStorage.removeItem('post_auth_redirect');
+
+                // Sync user to Supabase (Upsert)
+                // This ensures the user exists in the DB for Foreign Key constraints
+                try {
+                    const { error } = await import('@/services/supabase').then(async ({ supabase }) => {
+                        if (!supabase) return { error: null };
+                        return await supabase
+                            .from('users')
+                            .upsert({
+                                id: walletUser.value!.address,
+                                wallet_address: walletUser.value!.address,
+                                updated_at: new Date().toISOString()
+                            }, { onConflict: 'id' });
+                    });
+
+                    if (error) {
+                        console.warn('[AuthStore] Failed to sync user to DB:', error);
+                        // We don't block login, but backend actions might fail if user missing
+                    }
+                } catch (dbError) {
+                    console.warn('[AuthStore] DB Sync error:', dbError);
+                }
 
                 if (router) {
                     router.push(redirectPath);
