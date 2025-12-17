@@ -65,7 +65,7 @@ cd FinPro
 cd contracts
 npm install
 cp .env.example .env
-# Configure your RPC URLs and private keys
+# Configure your RPC URLs and p.k's
 npm run compile
 npm test
 ```
