@@ -4,6 +4,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { useTheme } from '@/composables/useTheme';
 import ThemeToggle from '@/components/shared/ThemeToggle.vue';
 import { supabase, isSupabaseOnly } from '@/services/supabase';
+import Logo from '@/assets/images/logos/Logo.vue';
 
 const router = useRouter();
 const route = useRoute();

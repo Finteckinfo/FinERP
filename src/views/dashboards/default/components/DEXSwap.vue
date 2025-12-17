@@ -106,24 +106,45 @@ import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
 const { user, isConnected, connect } = useMetaMaskWallet();
 
 // Token definitions
-const tokens = {
-  FIN: {
+// Image Import
+import finLogo from '@/assets/images/logos/FinPro-logo.png'; // Assuming it exists here or use a known one like banner3.png or just /FinERP/ prefix
+
+// Actually, the user logs showed: GET https://finteckinfo.github.io/FinERPimages/FinPro-logo.png 404
+// The file might be in public/images/FinPro-logo.png
+// The correct path should be `${import.meta.env.BASE_URL}images/FinPro-logo.png`
+
+const baseUrl = import.meta.env.BASE_URL;
+
+const tokens = ref([
+  {
     symbol: 'FIN',
     name: 'FinPro Token',
-    icon: '/images/FinPro-logo.png',
+    balance: 0,
+    icon: `${baseUrl}images/FinPro-logo.png`, // Use baseUrl
+    isNative: false,
     decimals: 18
   },
-  USDT: {
+  {
+    symbol: 'ETH',
+    name: 'Ethereum',
+    balance: 0,
+    icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
+    isNative: true,
+    decimals: 18
+  },
+  {
     symbol: 'USDT',
     name: 'Tether USD',
+    balance: 0,
     icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png?v=029',
+    isNative: false,
     decimals: 6
   },
-  USDC: {
+  {
     symbol: 'USDC', 
     name: 'USD Coin',
+    balance: 0,
     icon: 'https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=029',
-    decimals: 6
   },
   ETH: {
     symbol: 'ETH',
