@@ -6,14 +6,14 @@ const PublicRoutes = {
   },
   children: [
     {
-      name: 'Landing',
+      name: 'Login',
       path: '/',
-      component: () => import('@/views/pages/LandingPage.vue')
+      component: () => import('@/views/authentication/LoginPage.vue')
     },
     {
-      name: 'Login',
+      name: 'LoginRedirect',
       path: '/login',
-      component: () => import('@/views/authentication/LoginPage.vue')
+      redirect: '/'
     },
     {
       name: 'Register',
