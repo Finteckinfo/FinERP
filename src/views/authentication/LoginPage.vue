@@ -66,7 +66,7 @@ const handleSupabaseAuth = async () => {
 
 // LEGACY MODE: Redirect to SSO
 const handleSSORedirect = () => {
-  const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || 'http://localhost:3000';
+  const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || window.location.origin;
   const currentUrl = window.location.href;
   const authPath = isLoginMode.value ? 'login' : 'signup';
   window.location.href = `${ssoUrl}/${authPath}?redirect=${encodeURIComponent(currentUrl)}`;

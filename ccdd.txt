@@ -1,0 +1,124 @@
+{
+    "title": "Recording 12/17/2025 at 3:30:27 PM",
+    "steps": [
+        {
+            "type": "setViewport",
+            "width": 811,
+            "height": 550,
+            "deviceScaleFactor": 1,
+            "isMobile": false,
+            "hasTouch": false,
+            "isLandscape": false
+        },
+        {
+            "type": "navigate",
+            "url": "http://localhost:3000/login?redirect=https%3A%2F%2Ffin-pro-p.vercel.app%2FFinERP%2Flogin",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "http://localhost:3000/login?redirect=https%3A%2F%2Ffin-pro-p.vercel.app%2FFinERP%2Flogin",
+                    "title": "localhost"
+                }
+            ]
+        },
+        {
+            "type": "navigate",
+            "url": "https://fin-pro-p.vercel.app/FinERP/login",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://fin-pro-p.vercel.app/FinERP/login",
+                    "title": "FinPro"
+                }
+            ]
+        },
+        {
+            "type": "navigate",
+            "url": "https://fin-pro-p.vercel.app/FinERP/projects/create",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://fin-pro-p.vercel.app/FinERP/projects/create",
+                    "title": "FinPro"
+                }
+            ]
+        },
+        {
+            "type": "navigate",
+            "url": "https://fin-erp.netlify.app/",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://fin-erp.netlify.app/",
+                    "title": ""
+                }
+            ]
+        },
+        {
+            "type": "navigate",
+            "url": "https://fin-pro-p.vercel.app/FinERP/login",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://fin-pro-p.vercel.app/FinERP/login",
+                    "title": ""
+                }
+            ]
+        },
+        {
+            "type": "navigate",
+            "url": "https://fin-pro-p.vercel.app/FinERP/dashboard/default",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://fin-pro-p.vercel.app/FinERP/dashboard/default",
+                    "title": ""
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#v-list-group--id-Symbol\\(4\\) > div.v-list-item__content > div"
+                ],
+                [
+                    "xpath///*[@id=\"v-list-group--id-Symbol(4)\"]/div[2]/div"
+                ],
+                [
+                    "pierce/#v-list-group--id-Symbol\\(4\\) > div.v-list-item__content > div"
+                ]
+            ],
+            "offsetY": 13.5,
+            "offsetX": 45
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div.v-list-group a:nth-of-type(1) > div.v-list-item__content > div"
+                ],
+                [
+                    "xpath///*[@id=\"app\"]/div/div/main/div/div/div/nav[2]/div/div[2]/div[1]/div[3]/div[2]/a[1]/div[2]/div"
+                ],
+                [
+                    "pierce/div.v-list-group a:nth-of-type(1) > div.v-list-item__content > div"
+                ],
+                [
+                    "text/Create Project"
+                ]
+            ],
+            "offsetY": 18.5,
+            "offsetX": 79,
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "http://localhost:3000/login?redirect=https%3A%2F%2Ffin-pro-p.vercel.app%2FFinERP%2Flogin",
+                    "title": "localhost"
+                }
+            ]
+        }
+    ]
+}

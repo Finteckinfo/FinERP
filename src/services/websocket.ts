@@ -19,7 +19,7 @@ const authStore = useAuthStore();
 
 // WebSocket URL
 const getWebSocketURL = () => {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || window.location.origin;
   const url = new URL(backendUrl);
   const protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
   return `${protocol}//${url.host}/ws`;
@@ -53,7 +53,7 @@ export const connectWebSocket = () => {
       try {
         const data = JSON.parse(event.data);
         emit('message', data);
-        
+
         // Handle specific message types
         if (data.type) {
           emit(data.type, data);
@@ -66,12 +66,12 @@ export const connectWebSocket = () => {
     ws.onclose = (event) => {
       console.log('WebSocket disconnected:', event.code, event.reason);
       isConnected.value = false;
-      
+
       if (event.code !== 1000) { // Not a normal closure
         connectionError.value = `Connection closed: ${event.reason || 'Unknown error'}`;
         attemptReconnect();
       }
-      
+
       emit('disconnected');
     };
 
@@ -93,12 +93,12 @@ export const disconnectWebSocket = () => {
     clearTimeout(reconnectTimeout);
     reconnectTimeout = null;
   }
-  
+
   if (ws) {
     ws.close(1000, 'User disconnected');
     ws = null;
   }
-  
+
   isConnected.value = false;
 };
 
@@ -111,9 +111,9 @@ const attemptReconnect = () => {
 
   reconnectAttempts++;
   const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000); // Exponential backoff, max 30s
-  
+
   console.log(`Attempting to reconnect in ${delay}ms (attempt ${reconnectAttempts}/${maxReconnectAttempts})`);
-  
+
   reconnectTimeout = setTimeout(() => {
     connectWebSocket();
   }, delay);

@@ -192,7 +192,7 @@ export async function isAuthenticated(): Promise<boolean> {
 
   // NEXTAUTH MODE: Check backend session
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || window.location.origin;
     const response = await fetch(`${backendUrl}/api/auth/session`, {
       method: 'GET',
       credentials: 'include',

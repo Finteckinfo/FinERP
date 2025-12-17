@@ -4,7 +4,7 @@ import Logo from '@/assets/images/logos/Logo.vue';
 
 // Redirect to main SSO domain for authentication
 onMounted(() => {
-  const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || 'http://localhost:3000';
+  const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || window.location.origin;
   const currentUrl = window.location.href;
   window.location.href = `${ssoUrl}/login?redirect=${encodeURIComponent(currentUrl)}`;
 });

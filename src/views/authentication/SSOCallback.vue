@@ -42,11 +42,9 @@ onMounted(async () => {
     // Use environment variable with fallback to current origin
     let backendUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || window.location.origin;
     
-    // If we're on localhost or a dev environment, use localhost
+    // If we're on localhost or a dev environment, use localhost backend
     if (window.location.hostname === 'localhost' || 
-        window.location.hostname === '127.0.0.1' ||
-        window.location.hostname.includes('vercel-preview') ||
-        window.location.hostname.includes('vercel-stage')) {
+        window.location.hostname === '127.0.0.1') {
         backendUrl = 'http://localhost:3000';
         console.log('[SSO Callback] Using localhost backend for development');
     }
