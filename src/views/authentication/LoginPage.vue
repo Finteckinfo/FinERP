@@ -64,24 +64,8 @@ const handleSupabaseAuth = async () => {
   }
 };
 
-// LEGACY MODE: Redirect to SSO
-const handleSSORedirect = () => {
-  const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || window.location.origin;
-  const currentUrl = window.location.href;
-  const authPath = isLoginMode.value ? 'login' : 'signup';
-  window.location.href = `${ssoUrl}/${authPath}?redirect=${encodeURIComponent(currentUrl)}`;
-};
-
 onMounted(() => {
-  console.log('[LoginPage] Mounted. isSupabaseOnly:', isSupabaseOnly);
-
-  // If in Supabase-only mode, stay on this page. Otherwise redirect to SSO.
-  if (!isSupabaseOnly) {
-    console.log('[LoginPage] Not Supabase-only, redirecting to SSO');
-    handleSSORedirect();
-  } else {
-    console.log('[LoginPage] Supabase-only mode, staying on login page');
-  }
+  console.log('[LoginPage] Mounted');
 });
 </script>
 

@@ -109,7 +109,6 @@ export async function authGuard(
     '/auth-loading',
     '/unauthorized',
     '/error',
-    '/sso-callback',
     '/login',
     '/register'
   ];
@@ -122,13 +121,13 @@ export async function authGuard(
   // PERFORMANCE: Use synchronous session check - no network latency
   const hasSession = hasValidSession();
   if (hasSession) {
-    // BACKGROUND VALIDATION: For Supabase-only mode, validate session in background
-    if (isSupabaseOnly && supabase) {
+    // BACKGROUND VALIDATION: Validate Supabase session in background
+    if (supabase) {
       setTimeout(async () => {
         try {
           const { data: { session }, error } = await supabase!.auth.getSession();
           if (error || !session?.user) {
-            console.log('[AuthGuard] Background validation: No valid Supabase session, redirecting to login');
+            console.log('[AuthGuard] Background validation: No valid session, redirecting to login');
             // Clear invalid session data
             localStorage.removeItem('FinPro_session_cache');
             sessionStorage.removeItem('erp_user');
@@ -140,75 +139,39 @@ export async function authGuard(
         } catch (e) {
           console.error('[AuthGuard] Background validation error:', e);
         }
-      }, 100); // Small delay to not block initial navigation
+      }, 100);
     }
 
     return next();
   }
 
-  // SUPABASE-ONLY MODE: Redirect to login page instead of SSO
-  if (isSupabaseOnly) {
-    console.log('[AuthGuard] Supabase-only mode: No session, redirecting to login');
-    // Store intended destination for post-auth redirect
-    try {
-      sessionStorage.setItem('post_auth_redirect', to.fullPath);
-    } catch (error) {
-      // Ignore storage errors
-    }
-    return next('/login');
-  }
-
-  // No session found - redirect to SSO login
-  console.log('[AuthGuard] No session, redirecting to SSO login');
+  // No session found - redirect to login
+  console.log('[AuthGuard] No session, redirecting to login');
 
   // Store intended destination for post-auth redirect
   try {
-    sessionStorage.setItem('post_auth_redirect', window.location.href);
+    sessionStorage.setItem('post_auth_redirect', to.fullPath);
   } catch (error) {
     // Ignore storage errors
   }
 
-  // Redirect to primary domain's login page
-  const ssoUrl = import.meta.env.VITE_SSO_PRIMARY_DOMAIN || window.location.origin;
-  const redirectUrl = encodeURIComponent(window.location.href);
-  window.location.href = `${ssoUrl}/login?redirect=${redirectUrl}`;
+  return next('/login');
 }
 
 /**
- * Helper function to check if user is authenticated (Supabase or NextAuth)
+ * Helper function to check if user is authenticated
  */
 export async function isAuthenticated(): Promise<boolean> {
-  // SUPABASE-ONLY MODE: Check Supabase session
-  if (isSupabaseOnly && supabase) {
-    try {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error) throw error;
-      return !!(session?.user);
-    } catch (error) {
-      console.error('[AuthGuard] Error checking Supabase authentication:', error);
-      return false;
-    }
-  }
+  if (!supabase) return false;
 
-  // NEXTAUTH MODE: Check backend session
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || window.location.origin;
-    const response = await fetch(`${backendUrl}/api/auth/session`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (response.ok) {
-      const session = await response.json();
-      return !!(session && session.user);
-    }
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error) throw error;
+    return !!(session?.user);
   } catch (error) {
-    console.error('[AuthGuard] Error checking NextAuth authentication:', error);
+    console.error('[AuthGuard] Error checking authentication:', error);
+    return false;
   }
-  return false;
 }
 
 /**

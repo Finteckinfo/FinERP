@@ -1,6 +1,9 @@
 /**
  * Supabase Database Service
  * Provides database access using Supabase client
+ * 
+ * NOTE: This app uses Supabase-only authentication.
+ * No external SSO providers are used.
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
@@ -10,12 +13,15 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.V_SUPABASE_ANON_K || import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 let supabase: SupabaseClient | null = null;
-const isSupabaseOnly = !!(supabaseUrl && supabaseAnonKey);
 
-if (isSupabaseOnly) {
+// Always use Supabase-only mode when configured
+const isSupabaseOnly = true;
+
+if (supabaseUrl && supabaseAnonKey) {
   supabase = createClient(supabaseUrl, supabaseAnonKey);
+  console.log('[Supabase] Client initialized successfully');
 } else {
-  console.warn('Supabase environment variables not set. Database features will be disabled.');
+  console.warn('[Supabase] Environment variables not set. Please configure VITE_SUPABASE_URL and V_SUPABASE_ANON_K');
 }
 
 export { supabase, isSupabaseOnly, isSupabaseOnly as isSupabaseConfigured };

@@ -40,7 +40,6 @@ const router = createRouter({
   history: createWebHistory('/FinERP/'), // Explicitly set base path for GitHub Pages
   routes: [
     { path: '/:pathMatch(.*)*', component: () => import('@/views/pages/maintenance/error/Error404Page.vue') },
-    { path: '/sso-callback', component: () => import('@/views/authentication/SSOCallback.vue') },
     { path: '/auth-loading', component: () => import('@/views/pages/maintenance/AuthLoadingPage.vue') },
     MainRoutes,
     PublicRoutes
