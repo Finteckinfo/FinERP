@@ -136,7 +136,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
-import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import { useEVMWallet } from '@/composables/useEVMWallet';
 import { getFINTokenBalance, getFINTokenAddress, getRPCUrl, type FINTokenBalance } from '@/services/finTokenService';
 
 // State
@@ -145,7 +145,7 @@ const error = ref<string | null>(null);
 const tokenBalance = ref<FINTokenBalance | null>(null);
 
 // EVM Wallet
-const { user: walletUser, isConnected, chainId, provider } = useMetaMaskWallet();
+const { user: walletUser, isConnected, chainId, provider } = useEVMWallet();
 
 // Computed
 const walletAddress = computed(() => walletUser.value?.address || '');

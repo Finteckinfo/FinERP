@@ -111,9 +111,9 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
-import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import { useEVMWallet } from '@/composables/useEVMWallet';
 
-const { user, isConnected, connect, chainId } = useMetaMaskWallet();
+const { user, isConnected, connect, chainId } = useEVMWallet();
 
 // State
 const finBalance = ref('10000.0000');

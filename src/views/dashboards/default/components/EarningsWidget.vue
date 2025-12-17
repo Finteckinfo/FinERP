@@ -182,7 +182,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
 import { useNextAuth } from '@/composables/useNextAuth';
-import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import { useEVMWallet } from '@/composables/useEVMWallet';
 import { getUserEarnings, type BlockchainTransaction } from '@/services/paymentService';
 import { getFINTokenBalance, getFINTokenAddress, getRPCUrl, type FINTokenBalance } from '@/services/finTokenService';
 
@@ -202,7 +202,7 @@ const walletBalanceLoading = ref(false);
 const walletBalanceError = ref<string | null>(null);
 
 // Get wallet from MetaMask
-const { user: walletUser, isConnected, chainId } = useMetaMaskWallet();
+const { user: walletUser, isConnected, chainId } = useEVMWallet();
 const walletAddress = computed(() => walletUser.value?.address || '');
 const isWalletConnected = computed(() => isConnected.value && !!walletAddress.value);
 

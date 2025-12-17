@@ -1,8 +1,8 @@
 // EVM Network utility functions
-import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import { useEVMWallet } from '@/composables/useEVMWallet';
 
 export function getCurrentNetwork(): number {
-  const { chainId } = useMetaMaskWallet();
+  const { chainId } = useEVMWallet();
   return chainId.value || 1; // Default to Ethereum mainnet
 }
 
@@ -16,7 +16,7 @@ export function isTestnet(): boolean {
 }
 
 export function setNetwork(chainId: number): Promise<boolean> {
-  const { switchNetwork } = useMetaMaskWallet();
+  const { switchNetwork } = useEVMWallet();
   return switchNetwork(chainId);
 }
 

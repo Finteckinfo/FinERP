@@ -4,7 +4,7 @@
  * Clean, essential widgets only - inspired by modern ERPs like Linear, Notion, Asana
  */
 import { ref, computed, onMounted, watch } from 'vue';
-import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import { useEVMWallet } from '@/composables/useEVMWallet';
 import { useRouter } from 'vue-router';
 import { supabase, isSupabaseOnly } from '@/services/supabase';
 import { useMobile } from '@/composables/useMobile';
@@ -14,7 +14,7 @@ import FINTokenBalance from './components/FINTokenBalance.vue';
 import DEXSwap from './components/DEXSwap.vue';
 
 const router = useRouter();
-const { user: walletUser, isConnected, connect } = useMetaMaskWallet();
+const { user: walletUser, isConnected, connect } = useEVMWallet();
 const { isMobile, isDesktop } = useMobile();
 
 // State

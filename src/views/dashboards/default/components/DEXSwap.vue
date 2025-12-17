@@ -101,9 +101,9 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
-import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import { useEVMWallet } from '@/composables/useEVMWallet';
 
-const { user, isConnected, connect } = useMetaMaskWallet();
+const { user, isConnected, connect } = useEVMWallet();
 
 // Token definitions
 const baseUrl = import.meta.env.BASE_URL;

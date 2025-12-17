@@ -278,7 +278,7 @@ import { useRouter } from 'vue-router';
 import { useNextAuth } from '@/composables/useNextAuth';
 import { projectApi } from '@/services/projectApi';
 import { RetroGrid } from '@/components/ui/retro-grid';
-import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import { useEVMWallet } from '@/composables/useEVMWallet';
 
 const router = useRouter();
 const { user } = useNextAuth();
@@ -389,7 +389,7 @@ const balanceLoading = ref(false);
 const balanceError = ref('');
 
 // Use MetaMask wallet
-const { user: walletUser, isConnected, chainId } = useMetaMaskWallet();
+const { user: walletUser, isConnected, chainId } = useEVMWallet();
 const walletAddress = computed(() => walletUser.value?.address || '');
 const walletConnected = computed(() => isConnected.value && !!walletAddress.value);
 

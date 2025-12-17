@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import { useEVMWallet } from '@/composables/useEVMWallet';
 import { getFinTokenAddress } from '@/lib/finTokenConfig';
 
 interface Props {
@@ -66,7 +66,7 @@ const props = withDefaults(defineProps<Props>(), {
   showLink: false
 });
 
-const { chainId } = useMetaMaskWallet();
+const { chainId } = useEVMWallet();
 
 // Get current network info
 const networkName = computed(() => {

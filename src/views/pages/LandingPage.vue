@@ -85,14 +85,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet'
+import { useEVMWallet } from '@/composables/useEVMWallet'
 import LandingBackground from '@/components/ui/LandingBackground.vue'
 import ThemeToggle from '@/components/shared/ThemeToggle.vue'
 import FeatureBentoGrid from '@/views/pages/landing/components/FeatureBentoGrid.vue'
 
 const router = useRouter()
 const featuresSection = ref<HTMLElement | null>(null)
-const { isConnected, connect } = useMetaMaskWallet()
+const { isConnected, connect } = useEVMWallet()
 
 const goToCreateProject = async () => {
   const isWalletConnected = isConnected.value;

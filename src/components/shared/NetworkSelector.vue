@@ -35,9 +35,9 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useMetaMaskWallet } from '@/composables/useMetaMaskWallet';
+import { useEVMWallet } from '@/composables/useEVMWallet';
 
-const { chainId, switchNetwork, SUPPORTED_CHAINS } = useMetaMaskWallet();
+const { chainId, switchNetwork, SUPPORTED_CHAINS } = useEVMWallet();
 
 // Current network based on EVM chainId
 const currentNetwork = computed(() => {
