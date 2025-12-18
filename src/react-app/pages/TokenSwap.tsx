@@ -27,7 +27,7 @@ export function TokenSwap() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const amountNum = parseFloat(amount);
     if (isNaN(amountNum) || amountNum <= 0) {
       return;
@@ -43,7 +43,7 @@ export function TokenSwap() {
       setAmount('');
       await refetch();
       await refetchSwaps();
-      
+
       setTimeout(() => setSuccess(false), 3000);
     } catch (error) {
       // Error is handled by useSwap hook
@@ -235,7 +235,7 @@ export function TokenSwap() {
                             </div>
                             <div>
                               <div className="font-medium text-white">
-                                {swap.from_amount} {swap.from_token} → {swap.to_amount} {swap.to_token}
+                                {swap.from_amount} {swap.from_token} to {swap.to_amount} {swap.to_token}
                               </div>
                               <div className="text-sm text-gray-500">
                                 {formatDate(swap.created_at)}

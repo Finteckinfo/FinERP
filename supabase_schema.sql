@@ -1,33 +1,75 @@
--- Aligning with frontend uses 'subtasks' and 'task_attachments'
--- and ensuring all columns support EVM wallet addresses
+-- FinPro Supabase Schema
+-- Supporting EVM Wallet Addresses and Full RLS
 
--- 1. Correct any naming discrepancies and drop conflicting constraints
-ALTER TABLE IF EXISTS tasks RENAME TO subtasks;
-ALTER TABLE IF EXISTS projects DROP COLUMN IF EXISTS user_id; -- owner_id is our main identifier
+-- 1. Users Table (Stores user profiles linked to wallet addresses)
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY, -- EVM Wallet Address (lower-cased)
+  email TEXT UNIQUE,
+  full_name TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
--- 2. Drop foreign key constraints that reference users.id (using cascades and IF EXISTS)
-ALTER TABLE IF EXISTS user_roles DROP CONSTRAINT IF EXISTS user_roles_user_id_fkey;
-ALTER TABLE IF EXISTS subtasks DROP CONSTRAINT IF EXISTS tasks_assigned_to_fkey;
-ALTER TABLE IF EXISTS subtasks DROP CONSTRAINT IF EXISTS subtasks_assigned_to_fkey;
-ALTER TABLE IF EXISTS task_attachments DROP CONSTRAINT IF EXISTS task_attachments_uploaded_by_fkey;
-
--- 3. Alter users table id to TEXT (to store wallet addresses like '0x123...')
-ALTER TABLE users ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE users ALTER COLUMN id TYPE TEXT USING id::text;
+-- Ensure email is nullable for wallet-only auth
 ALTER TABLE users ALTER COLUMN email DROP NOT NULL;
 
--- 4. Alter referencing columns to TEXT in projects and subtasks
-ALTER TABLE projects ALTER COLUMN owner_id TYPE TEXT USING owner_id::text;
-ALTER TABLE user_roles ALTER COLUMN user_id TYPE TEXT USING user_id::text;
-ALTER TABLE IF EXISTS subtasks ALTER COLUMN assigned_to TYPE TEXT USING assigned_to::text;
-ALTER TABLE IF EXISTS task_attachments ALTER COLUMN uploaded_by TYPE TEXT USING uploaded_by::text;
+-- 2. Projects Table
+CREATE TABLE IF NOT EXISTS projects (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name TEXT NOT NULL,
+  description TEXT,
+  owner_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  total_funds DOUBLE PRECISION NOT NULL DEFAULT 0,
+  allocated_funds DOUBLE PRECISION NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'active',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
--- 5. Re-add Foreign Key constraints
-ALTER TABLE user_roles ADD CONSTRAINT user_roles_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
-ALTER TABLE subtasks ADD CONSTRAINT subtasks_assigned_to_fkey FOREIGN KEY (assigned_to) REFERENCES users(id) ON DELETE SET NULL;
-ALTER TABLE task_attachments ADD CONSTRAINT task_attachments_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE SET NULL;
+-- 3. Subtasks Table
+CREATE TABLE IF NOT EXISTS subtasks (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  project_id BIGINT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  assigned_to TEXT REFERENCES users(id) ON DELETE SET NULL,
+  allocated_amount DOUBLE PRECISION NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
--- 6. Additional Tables for FinPro (Migrated from D1)
+-- 4. Subtask Reviews Table
+CREATE TABLE IF NOT EXISTS subtask_reviews (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  subtask_id BIGINT NOT NULL REFERENCES subtasks(id) ON DELETE CASCADE,
+  reviewer_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  status TEXT NOT NULL, -- 'approved' | 'rejected'
+  comments TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 5. User Roles Table
+CREATE TABLE IF NOT EXISTS user_roles (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  role TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 6. Task Attachments Table
+CREATE TABLE IF NOT EXISTS task_attachments (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  subtask_id BIGINT NOT NULL REFERENCES subtasks(id) ON DELETE CASCADE,
+  uploaded_by TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  file_name TEXT NOT NULL,
+  file_url TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 7. Token Balances
 CREATE TABLE IF NOT EXISTS token_balances (
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -39,6 +81,7 @@ CREATE TABLE IF NOT EXISTS token_balances (
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_token_balances_user_token ON token_balances(user_id, token_type);
 
+-- 8. Swap Transactions
 CREATE TABLE IF NOT EXISTS swap_transactions (
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -52,8 +95,7 @@ CREATE TABLE IF NOT EXISTS swap_transactions (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS idx_swap_transactions_user ON swap_transactions(user_id);
-
+-- 9. Token Transactions
 CREATE TABLE IF NOT EXISTS token_transactions (
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -66,9 +108,7 @@ CREATE TABLE IF NOT EXISTS token_transactions (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS idx_token_transactions_user ON token_transactions(user_id);
-
--- Atomic increment function for project funds
+-- 10. Atomic increment function for project funds
 CREATE OR REPLACE FUNCTION allocate_project_funds(p_project_id BIGINT, p_amount DOUBLE PRECISION)
 RETURNS void AS $$
 BEGIN
@@ -79,17 +119,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- RLS Policies
+-- 11. Enable Row Level Security (RLS)
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE subtasks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE subtask_reviews ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_roles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE task_attachments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE token_balances ENABLE ROW LEVEL SECURITY;
 ALTER TABLE swap_transactions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE token_transactions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE user_roles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE task_attachments ENABLE ROW LEVEL SECURITY;
 
--- Allow anonymous users to sync their own wallet addresses
+-- 12. RLS Policies (Providing public access for wallet-based operations)
+-- In a production app, these would be restricted by auth.uid() if using Supabase Auth,
+-- but since we are using custom wallet-based auth logic (anon role with manual checks/profiles),
+-- we allow public (anon) access consistent with the project requirements.
+
 DROP POLICY IF EXISTS "Public Users Access" ON users;
 CREATE POLICY "Public Users Access" ON users FOR ALL TO anon USING (true) WITH CHECK (true);
 
@@ -99,6 +144,15 @@ CREATE POLICY "Public Projects Access" ON projects FOR ALL TO anon USING (true) 
 DROP POLICY IF EXISTS "Public Tasks Access" ON subtasks;
 CREATE POLICY "Public Tasks Access" ON subtasks FOR ALL TO anon USING (true) WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Public Reviews Access" ON subtask_reviews;
+CREATE POLICY "Public Reviews Access" ON subtask_reviews FOR ALL TO anon USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public User Roles Access" ON user_roles;
+CREATE POLICY "Public User Roles Access" ON user_roles FOR ALL TO anon USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Task Attachments Access" ON task_attachments;
+CREATE POLICY "Public Task Attachments Access" ON task_attachments FOR ALL TO anon USING (true) WITH CHECK (true);
+
 DROP POLICY IF EXISTS "Public Token Balances Access" ON token_balances;
 CREATE POLICY "Public Token Balances Access" ON token_balances FOR ALL TO anon USING (true) WITH CHECK (true);
 
@@ -107,9 +161,3 @@ CREATE POLICY "Public Swap Transactions Access" ON swap_transactions FOR ALL TO 
 
 DROP POLICY IF EXISTS "Public Token Transactions Access" ON token_transactions;
 CREATE POLICY "Public Token Transactions Access" ON token_transactions FOR ALL TO anon USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Public User Roles Access" ON user_roles;
-CREATE POLICY "Public User Roles Access" ON user_roles FOR ALL TO anon USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Public Task Attachments Access" ON task_attachments;
-CREATE POLICY "Public Task Attachments Access" ON task_attachments FOR ALL TO anon USING (true) WITH CHECK (true);
