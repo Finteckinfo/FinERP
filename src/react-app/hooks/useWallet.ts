@@ -19,11 +19,14 @@ export function useWallet() {
     if (typeof window.ethereum !== 'undefined') {
       checkConnection();
 
+      const handleChainChanged = () => window.location.reload();
+
       window.ethereum.on('accountsChanged', handleAccountsChanged);
-      window.ethereum.on('chainChanged', () => window.location.reload());
+      window.ethereum.on('chainChanged', handleChainChanged);
 
       return () => {
         window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+        window.ethereum.removeListener('chainChanged', handleChainChanged);
       };
     }
   }, []);

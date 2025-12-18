@@ -81,6 +81,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- RLS Policies (Basic examples, need refinement based on exact requirements)
+-- RLS Policies (Providing full access for the anon role centered around wallet addresses)
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
@@ -88,6 +89,10 @@ ALTER TABLE token_balances ENABLE ROW LEVEL SECURITY;
 ALTER TABLE swap_transactions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE token_transactions ENABLE ROW LEVEL SECURITY;
 
--- Note: Policies using auth.uid() need custom logic if not using Supabase Auth.
--- If using EVM wallet auth via custom backend or signed messages, 
--- you might use request headers or JWT claims to verify identity.
+-- Allow anonymous users to sync their own wallet addresses
+CREATE POLICY "Public Users Access" ON users FOR ALL TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "Public Projects Access" ON projects FOR ALL TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "Public Tasks Access" ON tasks FOR ALL TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "Public Token Balances Access" ON token_balances FOR ALL TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "Public Swap Transactions Access" ON swap_transactions FOR ALL TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "Public Token Transactions Access" ON token_transactions FOR ALL TO anon USING (true) WITH CHECK (true);
