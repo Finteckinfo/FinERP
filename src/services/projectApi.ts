@@ -9,7 +9,7 @@ if (!API_BASE_URL) {
 }
 
 // Ensure the URL is correct and accessible
-console.log('🌐 API Base URL configured:', API_BASE_URL || '(missing)');
+console.log(' API Base URL configured:', API_BASE_URL || '(missing)');
 
 // Centralized axios instance with proper JWT authentication interceptor
 export const api = axios.create({ 
@@ -36,7 +36,7 @@ api.interceptors.request.use(async (config) => {
     if (authHeader) {
       const token = authHeader.replace('Bearer ', '');
       const payload = authService['decodeJWTPayload'](token);
-      console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`, {
+      console.log(` API Request: ${config.method?.toUpperCase()} ${config.url}`, {
         hasAuth: true,
         userId: payload?.user_id || payload?.sub,
         email: payload?.email,
@@ -44,13 +44,13 @@ api.interceptors.request.use(async (config) => {
         tokenPreview: token.substring(0, 30) + '...'
       });
     } else {
-      console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`, {
+      console.log(` API Request: ${config.method?.toUpperCase()} ${config.url}`, {
         hasAuth: false,
         error: 'No Authorization header'
       });
     }
   } catch (error) {
-    console.error('❌ Failed to get auth headers:', error);
+    console.error(' Failed to get auth headers:', error);
     throw new Error('Authentication required');
   }
   return config;
@@ -59,11 +59,11 @@ api.interceptors.request.use(async (config) => {
 // Response interceptor - handles authentication errors globally
 api.interceptors.response.use(
   (response) => {
-    console.log(`✅ API Response: ${response.config.method?.toUpperCase()} ${response.config.url} - ${response.status}`);
+    console.log(` API Response: ${response.config.method?.toUpperCase()} ${response.config.url} - ${response.status}`);
     return response;
   },
   (error) => {
-    console.error('🚨 API ERROR - FULL DETAILS FOR DEBUGGING:', {
+    console.error(' API ERROR - FULL DETAILS FOR DEBUGGING:', {
       url: error.config?.url,
       method: error.config?.method,
       status: error.response?.status,
@@ -78,7 +78,7 @@ api.interceptors.response.use(
 
     // Handle authentication errors globally
     if (error.response?.status === 401) {
-      console.error('🔥 401 ERROR - CALLING AUTH ERROR HANDLER');
+      console.error(' 401 ERROR - CALLING AUTH ERROR HANDLER');
       authService.handleAuthError(error);
     }
     
@@ -454,7 +454,7 @@ export const userRoleApi = {
     } catch (error: any) {
       // If 404, fallback to getting all roles and filtering
       if (error.response?.status === 404) {
-        console.log(`⚠️ Endpoint not found, falling back to filtering all project roles`);
+        console.log(` Endpoint not found, falling back to filtering all project roles`);
         const response = await api.get(`/user-roles/project/${projectId}`);
         const roles = response.data;
         
@@ -835,11 +835,11 @@ export const authApi = {
     firstName?: string;
     lastName?: string;
   }) => {
-    console.log('🔄 Calling sync endpoint with data:', userData);
-    console.log('🌐 Full URL:', `${API_BASE_URL}/api/auth/sync-user`);
+    console.log(' Calling sync endpoint with data:', userData);
+    console.log(' Full URL:', `${API_BASE_URL}/api/auth/sync-user`);
     
     const response = await api.post('/auth/sync-user', userData);
-    console.log('✅ Sync response:', response.data);
+    console.log(' Sync response:', response.data);
     return response.data;
   },
   
@@ -851,22 +851,22 @@ export const authApi = {
 
   // Health check for auth system
   healthCheck: async () => {
-    console.log('🏥 Testing backend health...');
+    console.log(' Testing backend health...');
     const response = await api.get('/auth/health');
-    console.log('✅ Health check response:', response.data);
+    console.log(' Health check response:', response.data);
     return response.data;
   },
 
   // Test backend connectivity
   testBackendConnection: async () => {
     try {
-      console.log('🔍 Testing backend connectivity...');
+      console.log(' Testing backend connectivity...');
       const response = await fetch(`${API_BASE_URL}/api/auth/health`);
       const data = await response.json();
-      console.log('✅ Backend connectivity test:', data);
+      console.log(' Backend connectivity test:', data);
       return data;
     } catch (error) {
-      console.error('❌ Backend connectivity test failed:', error);
+      console.error(' Backend connectivity test failed:', error);
       throw error;
     }
   }

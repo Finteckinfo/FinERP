@@ -32,7 +32,7 @@
             :class="{ 'dark-theme': isDark }"
           >
             <v-avatar size="80" color="warning" class="mb-6">
-              <span class="text-h3">🔒</span>
+              <span class="text-h3"></span>
             </v-avatar>
             
             <h2 class="text-h4 font-weight-bold mb-4">

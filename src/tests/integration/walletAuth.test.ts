@@ -93,7 +93,7 @@ describe('Wallet Encryption Service', () => {
     it('should encrypt and decrypt data with special characters', async () => {
       const specialWalletData = {
         ...mockWalletData,
-        mnemonic: 'test 测试 тест テスト 🔐 special-chars_123'
+        mnemonic: 'test 测试 тест テスト  special-chars_123'
       };
 
       const encrypted = await encryptWallet(specialWalletData, testPassword);
@@ -475,7 +475,7 @@ describe('Edge Cases and Error Handling', () => {
   });
 
   it('should handle password with unicode characters', async () => {
-    const unicodePassword = 'Test密码🔐Password';
+    const unicodePassword = 'Test密码Password';
     const walletData = {
       mnemonic: 'test mnemonic',
       address: 'TEST',

@@ -241,7 +241,7 @@ export async function decryptWallet(
 export function storeEncryptedWallet(encryptedWallet: EncryptedWallet): void {
   try {
     localStorage.setItem('encrypted_wallet', JSON.stringify(encryptedWallet));
-    console.log('✅ Encrypted wallet stored successfully');
+    console.log(' Encrypted wallet stored successfully');
   } catch (error) {
     console.error('Failed to store encrypted wallet:', error);
     throw new Error('Failed to save encrypted wallet to storage');
@@ -270,7 +270,7 @@ export function getEncryptedWallet(): EncryptedWallet | null {
 export function clearEncryptedWallet(): void {
   try {
     localStorage.removeItem('encrypted_wallet');
-    console.log('✅ Encrypted wallet cleared');
+    console.log(' Encrypted wallet cleared');
   } catch (error) {
     console.error('Failed to clear encrypted wallet:', error);
   }

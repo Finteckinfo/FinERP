@@ -104,7 +104,7 @@
           <!-- Step 3: Security Tips -->
           <v-window-item :value="3">
             <div class="tutorial-step">
-              <h3 class="text-h4 font-weight-bold mb-4 text-center">🔒 Security Best Practices</h3>
+              <h3 class="text-h4 font-weight-bold mb-4 text-center"> Security Best Practices</h3>
               <p class="text-body-1 mb-6 text-center mx-auto" style="max-width: 700px;">
                 Follow these essential security tips to keep your wallet safe
               </p>
@@ -127,7 +127,7 @@
                 <div class="d-flex align-items-start">
                   <v-icon class="mr-2" size="24">mdi-alert</v-icon>
                   <div>
-                    <h4 class="font-weight-bold mb-2">⚠️ Never Share Your Recovery Phrase!</h4>
+                    <h4 class="font-weight-bold mb-2"> Never Share Your Recovery Phrase!</h4>
                     <p class="mb-0">Your 25-word recovery phrase is like the master key to your wallet. FinPro support will NEVER ask for it. Anyone with this phrase can access all your funds.</p>
                   </div>
                 </div>
@@ -138,7 +138,7 @@
           <!-- Step 4: How Payments Work -->
           <v-window-item :value="4">
             <div class="tutorial-step">
-              <h3 class="text-h4 font-weight-bold mb-4 text-center">💰 How Payments Work</h3>
+              <h3 class="text-h4 font-weight-bold mb-4 text-center"> How Payments Work</h3>
               <p class="text-body-1 mb-6 text-center mx-auto" style="max-width: 700px;">
                 Understanding the payment flow with FIN token escrow system
               </p>
@@ -181,7 +181,7 @@
           <!-- Step 5: Getting FIN -->
           <v-window-item :value="5">
             <div class="tutorial-step">
-              <h3 class="text-h4 font-weight-bold mb-4 text-center">🪙 Getting FIN</h3>
+              <h3 class="text-h4 font-weight-bold mb-4 text-center"> Getting FIN</h3>
               <p class="text-body-1 mb-6 text-center mx-auto" style="max-width: 700px;">
                 Learn how to obtain FIN for payments and transactions
               </p>
@@ -387,10 +387,10 @@ const paymentStages = [
 
 const recap = [
   ' Wallets give you control and enable global payments',
-  '🔒 Keep your recovery phrase secret and secure',
-  '💰 Get paid in FIN when tasks are approved',
-  '🚀 Payments are instant and transparent on blockchain',
-  '🛡️ Escrow system protects both owners and workers'
+  ' Keep your recovery phrase secret and secure',
+  ' Get paid in FIN when tasks are approved',
+  ' Payments are instant and transparent on blockchain',
+  ' Escrow system protects both owners and workers'
 ]
 
 const nextStep = () => {

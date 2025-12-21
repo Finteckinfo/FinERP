@@ -24,7 +24,7 @@ export function useTokenBalances(userId: string) {
       if (error) throw error;
 
       const balanceMap: TokenBalances = { FINe: 0, USDT: 0 };
-      data?.forEach((balance: any) => {
+      data?.forEach((balance: { token_type: string; balance: number }) => {
         balanceMap[balance.token_type as TokenType] = balance.balance;
       });
 

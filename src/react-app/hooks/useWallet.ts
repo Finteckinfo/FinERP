@@ -3,7 +3,11 @@ import { Contract, formatEther, parseEther } from 'ethers';
 
 declare global {
   interface Window {
-    ethereum?: any;
+    ethereum?: {
+      on: (event: string, callback: (...args: any[]) => void) => void;
+      removeListener: (event: string, callback: (...args: any[]) => void) => void;
+      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
+    };
   }
 }
 
@@ -11,6 +15,7 @@ import { useWallet as useWalletFromContext } from '@/react-app/context/WalletCon
 
 export const useWallet = useWalletFromContext;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useContract(contractAddress: string, abi: any[]) {
   const { provider, account } = useWallet();
   const [contract, setContract] = useState<Contract | null>(null);

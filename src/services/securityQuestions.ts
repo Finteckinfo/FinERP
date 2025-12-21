@@ -81,7 +81,7 @@ export async function storeSecurityAnswers(
 
   // Store in localStorage
   localStorage.setItem('security_answers', JSON.stringify(hashedAnswers));
-  console.log('✅ Security answers stored successfully');
+  console.log(' Security answers stored successfully');
 }
 
 /**
@@ -157,7 +157,7 @@ export function hasSecurityQuestions(): boolean {
  */
 export function clearSecurityQuestions(): void {
   localStorage.removeItem('security_answers');
-  console.log('✅ Security questions cleared');
+  console.log(' Security questions cleared');
 }
 
 /**

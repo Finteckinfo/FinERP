@@ -451,7 +451,7 @@ export const kanbanApi = {
       
       ws.onopen = () => {
         clearTimeout(connectionTimeout);
-        console.log('[kanbanApi] ✅ WebSocket connected successfully for project:', projectId);
+        console.log('[kanbanApi]  WebSocket connected successfully for project:', projectId);
       };
       
       ws.onmessage = (event) => {

@@ -640,7 +640,7 @@ const sendFromWallet = async () => {
       // Reload balance
       await loadEscrowData();
     } else {
-      alert('❌ Transaction submitted but could not be verified. Please contact support.');
+      alert(' Transaction submitted but could not be verified. Please contact support.');
     }
 
   } catch (err: any) {
@@ -675,7 +675,7 @@ const confirmManualDeposit = async () => {
       // Reload balance
       await loadEscrowData();
     } else {
-      alert('❌ Transaction could not be verified. Please check the hash and try again.');
+      alert(' Transaction could not be verified. Please check the hash and try again.');
     }
 
   } catch (err: any) {

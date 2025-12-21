@@ -19,7 +19,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract FINeToken is ERC20, ERC20Burnable, Pausable, Ownable {
@@ -44,7 +44,7 @@ contract FINeToken is ERC20, ERC20Burnable, Pausable, Ownable {
         _;
     }
     
-    constructor(address _treasury) ERC20("FINe Token", "FINe") {
+    constructor(address _treasury) ERC20("FINe Token", "FINe") Ownable(msg.sender) {
         require(_treasury != address(0), "Treasury cannot be zero address");
         treasury = _treasury;
         
@@ -134,15 +134,12 @@ contract FINeToken is ERC20, ERC20Burnable, Pausable, Ownable {
     }
     
     /**
-     * @dev Hook that is called before any transfer of tokens
+     * @dev Internal function used for token transfers (overridden for Pausable)
      */
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal override whenNotPaused {
-        super._beforeTokenTransfer(from, to, amount);
+    function _update(address from, address to, uint256 value) internal override whenNotPaused {
+        super._update(from, to, value);
     }
+
     
     /**
      * @dev Returns the number of decimals used (18, same as USDT)

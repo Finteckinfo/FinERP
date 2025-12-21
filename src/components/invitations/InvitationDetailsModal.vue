@@ -103,7 +103,7 @@
             <!-- Payment Details -->
             <div v-if="invitation.paymentConfig" class="payment-details mt-4">
               <v-divider class="mb-3"></v-divider>
-              <h4 class="text-subtitle-2 font-weight-medium mb-2">💰 Payment Structure</h4>
+              <h4 class="text-subtitle-2 font-weight-medium mb-2"> Payment Structure</h4>
               
               <div v-if="invitation.paymentConfig.paymentType === 'PER_TASK'" class="payment-info">
                 <v-icon size="18" class="mr-2" color="success">mdi-cash-check</v-icon>

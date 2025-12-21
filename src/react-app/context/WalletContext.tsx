@@ -93,12 +93,12 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 
             const handleChainChanged = () => window.location.reload();
 
-            window.ethereum.on('accountsChanged', handleAccountsChanged);
-            window.ethereum.on('chainChanged', handleChainChanged);
+            window.ethereum?.on('accountsChanged', handleAccountsChanged);
+            window.ethereum?.on('chainChanged', handleChainChanged);
 
             return () => {
-                window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-                window.ethereum.removeListener('chainChanged', handleChainChanged);
+                window.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
+                window.ethereum?.removeListener('chainChanged', handleChainChanged);
             };
         } else {
             // Even if not initially detected, check after a small delay on mobile
@@ -135,11 +135,11 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 
                 await syncUserWithSupabase(addr);
             }
-        } catch (err: any) {
-            if (err.code === 4001) {
+        } catch (err: unknown) {
+            if (err instanceof Error && 'code' in err && err.code === 4001) {
                 setError('Connection rejected by user');
             } else {
-                setError(err.message || 'Failed to connect wallet');
+                setError(err instanceof Error ? err.message : 'Failed to connect wallet');
             }
         } finally {
             setLoading(false);
@@ -160,8 +160,8 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
                 method: 'wallet_switchEthereumChain',
                 params: [{ chainId: `0x${targetChainId.toString(16)}` }],
             });
-        } catch (err: any) {
-            setError(err.message || 'Failed to switch network');
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Failed to switch network');
             throw err;
         }
     };

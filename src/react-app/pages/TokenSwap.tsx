@@ -45,7 +45,7 @@ export function TokenSwap() {
       await refetchSwaps();
 
       setTimeout(() => setSuccess(false), 3000);
-    } catch (error) {
+    } catch (_error) {
       // Error is handled by useSwap hook
     }
   };

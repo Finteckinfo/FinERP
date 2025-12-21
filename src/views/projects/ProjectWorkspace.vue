@@ -977,14 +977,14 @@ const submitInvite = async () => {
     if (inviteData.paymentType && inviteData.paymentType !== 'PER_TASK') {
       let paymentInfo = '';
       if (inviteData.paymentType === 'SALARY') {
-        paymentInfo = `\n💰 Salary: ${inviteData.salaryAmount} FIN ${inviteData.salaryFrequency.toLowerCase()}`;
+        paymentInfo = `\n Salary: ${inviteData.salaryAmount} FIN ${inviteData.salaryFrequency.toLowerCase()}`;
       } else if (inviteData.paymentType === 'OVERSIGHT') {
-        paymentInfo = `\n👥 Oversight: ${(inviteData.oversightRate * 100).toFixed(1)}% of task payments`;
+        paymentInfo = `\n Oversight: ${(inviteData.oversightRate * 100).toFixed(1)}% of task payments`;
       } else if (inviteData.paymentType === 'MILESTONE') {
-        paymentInfo = `\n🎯 Milestone: ${inviteData.milestoneAmount} FIN per milestone`;
+        paymentInfo = `\n Milestone: ${inviteData.milestoneAmount} FIN per milestone`;
       }
       
-      console.log(`✅ Invite sent successfully!${paymentInfo}\n\n⚠️ Project owner needs to fund escrow for this team member.`);
+      console.log(` Invite sent successfully!${paymentInfo}\n\n Project owner needs to fund escrow for this team member.`);
     }
   } catch (e: any) {
     console.error('Failed to send invite', e);

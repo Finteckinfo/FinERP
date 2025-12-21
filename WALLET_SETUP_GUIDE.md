@@ -34,7 +34,7 @@ Complete step-by-step guide to set up MetaMask and connect to FinPro.
 
 ### Verify Installation:
 
-- Look for the 🦊 fox icon in your browser toolbar
+- Look for the  fox icon in your browser toolbar
 - Click it to open MetaMask
 
 ---
@@ -166,9 +166,9 @@ You need test ETH to pay for transaction fees (gas). Here are working faucets:
 ## Step 5: Connect Wallet to FinPro
 
 ### Prerequisites:
-- ✅ MetaMask installed
-- ✅ Connected to Sepolia network
-- ✅ Have some test ETH (at least 0.01 ETH)
+-  MetaMask installed
+-  Connected to Sepolia network
+-  Have some test ETH (at least 0.01 ETH)
 
 ### Connection Steps:
 

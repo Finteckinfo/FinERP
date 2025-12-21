@@ -382,7 +382,7 @@ const handleDrop = (event: DragEvent) => {
       console.warn('[KanbanColumn] Only project owner can approve tasks - ignoring drop');
       // Show a visual feedback that the action was denied
       const toast = document.createElement('div');
-      toast.textContent = '⚠️ Only the project owner can approve tasks';
+      toast.textContent = ' Only the project owner can approve tasks';
       toast.style.cssText = `
         position: fixed;
         top: 80px;

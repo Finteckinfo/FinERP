@@ -35,7 +35,7 @@ const customizer = useCustomizerStore();
     <div class="pa-6">
       <div class="text-center mb-6">
         <v-avatar size="72" :style="{ background: 'var(--erp-accent-indigo)' }">
-          <span class="text-h4" style="color: #fff">🤖</span>
+          <span class="text-h4" style="color: #fff"></span>
         </v-avatar>
       </div>
       <h3 class="text-h5 text-center mb-2">Coming Soon</h3>

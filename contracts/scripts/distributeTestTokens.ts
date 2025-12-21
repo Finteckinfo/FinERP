@@ -15,7 +15,7 @@ dotenv.config();
  */
 
 async function main() {
-  console.log("🎱 Distributing Test FIN Tokens (Pool Game Style)");
+  console.log(" Distributing Test FIN Tokens (Pool Game Style)");
   console.log("==================================================\n");
 
   const FIN_TOKEN_ADDRESS = process.env.FIN_TOKEN_ADDRESS;
@@ -87,14 +87,14 @@ async function main() {
       await tx.wait();
       
       const newBalance = await finToken.balanceOf(account);
-      console.log(`  ✅ Success! Balance: ${ethers.formatEther(newBalance)} FIN`);
+      console.log(`   Success! Balance: ${ethers.formatEther(newBalance)} FIN`);
     } catch (error: any) {
-      console.error(`  ❌ Failed: ${error.message}`);
+      console.error(`   Failed: ${error.message}`);
     }
   }
 
   // Check final balances
-  console.log("\n📊 Final Balances:");
+  console.log("\n Final Balances:");
   for (const account of testAccounts) {
     const balance = await finToken.balanceOf(account);
     console.log(`  ${account}: ${ethers.formatEther(balance)} FIN`);
@@ -102,7 +102,7 @@ async function main() {
 
   const remainingAdminBalance = await finToken.balanceOf(signer.address);
   console.log(`\nAdmin Remaining: ${ethers.formatEther(remainingAdminBalance)} FIN`);
-  console.log("\n🎉 Token distribution complete!");
+  console.log("\n Token distribution complete!");
 }
 
 main()

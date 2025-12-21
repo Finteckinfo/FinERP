@@ -16,7 +16,7 @@ A comprehensive guide to understanding and testing the FinPro blockchain-powered
 8. [Environment Configuration](#environment-configuration)
 9. [Troubleshooting](#troubleshooting)
 
-> 📘 **For detailed wallet setup instructions, see [WALLET_SETUP_GUIDE.md](./WALLET_SETUP_GUIDE.md)**
+>  **For detailed wallet setup instructions, see [WALLET_SETUP_GUIDE.md](./WALLET_SETUP_GUIDE.md)**
 
 ---
 
@@ -227,7 +227,7 @@ The application will be available at `http://localhost:5173`
 
 ## Wallet Setup
 
-> 📘 **Complete guide available at [WALLET_SETUP_GUIDE.md](./WALLET_SETUP_GUIDE.md)**
+>  **Complete guide available at [WALLET_SETUP_GUIDE.md](./WALLET_SETUP_GUIDE.md)**
 
 ### Quick Setup Steps:
 
@@ -260,7 +260,7 @@ Choose one of these faucets:
 1. Open `http://localhost:5174` (or your deployed URL)
 2. Click "Get Started" or "Create a Project"
 3. Approve MetaMask connection popup
-4. You're connected! 🎉
+4. You're connected! 
 
 ---
 
@@ -300,7 +300,7 @@ Choose one of these faucets:
            ▼                ▼                ▼
     ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
     │    FUND      │ │   PROJECT    │ │  SWAP FIN    │
-    │   ESCROW     │ │  WORKSPACE   │ │  ↔ USDT      │
+    │   ESCROW     │ │  WORKSPACE   │ │   USDT      │
     └──────┬───────┘ └──────┬───────┘ └──────────────┘
            │                │
            ▼                ▼
@@ -465,7 +465,7 @@ ProjectEscrow.approvePayment(taskId)
 
 **Workflow:**
 1. Enter amount to swap
-2. Select tokens (FIN ↔ USDT)
+2. Select tokens (FIN  USDT)
 3. Review exchange rate (0.3% fee)
 4. Approve token spending
 5. Execute swap

@@ -18,7 +18,7 @@ dotenv.config();
  */
 
 async function main() {
-  console.log("🎱 FinPro Test Token Minting - Pool Game Style");
+  console.log(" FinPro Test Token Minting - Pool Game Style");
   console.log("==============================================\n");
 
   // Configuration
@@ -91,14 +91,14 @@ async function main() {
   console.log("Waiting for confirmation...");
 
   const receipt = await tx.wait();
-  console.log(`✅ Tokens minted! Block: ${receipt?.blockNumber}`);
+  console.log(` Tokens minted! Block: ${receipt?.blockNumber}`);
 
   // Check new balance
   const newBalance = await finToken.balanceOf(RECIPIENT_ADDRESS);
   console.log(`New balance: ${ethers.formatEther(newBalance)} FIN`);
   console.log(`Minted: ${ethers.formatEther(amount)} FIN\n`);
 
-  console.log("🎉 Test tokens successfully minted!");
+  console.log(" Test tokens successfully minted!");
   console.log("You can now use these tokens to test the ERP system.");
 }
 

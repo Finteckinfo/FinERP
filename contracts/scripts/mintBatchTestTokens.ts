@@ -14,7 +14,7 @@ dotenv.config();
  */
 
 async function main() {
-  console.log("🎱 FinPro Batch Test Token Minting");
+  console.log(" FinPro Batch Test Token Minting");
   console.log("===================================\n");
 
   const FIN_TOKEN_ADDRESS = process.env.FIN_TOKEN_ADDRESS;
@@ -53,13 +53,13 @@ async function main() {
     try {
       const tx = await finToken.mint(account, amountPerAccount);
       await tx.wait();
-      console.log(`  ✅ Success!`);
+      console.log(`   Success!`);
     } catch (error: any) {
-      console.error(`  ❌ Failed: ${error.message}`);
+      console.error(`   Failed: ${error.message}`);
     }
   }
 
-  console.log("\n🎉 Batch minting complete!");
+  console.log("\n Batch minting complete!");
 }
 
 main()

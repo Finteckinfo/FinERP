@@ -12,7 +12,7 @@ dotenv.config();
  */
 
 async function main() {
-  console.log("🚰 Deploying Test Token Faucet...\n");
+  console.log(" Deploying Test Token Faucet...\n");
 
   const FIN_TOKEN_ADDRESS = process.env.FIN_TOKEN_ADDRESS;
   const RPC_URL = process.env.SEPOLIA_RPC_URL || process.env.MAINNET_RPC_URL || process.env.POLYGON_RPC_URL;
@@ -52,7 +52,7 @@ async function main() {
   await faucet.waitForDeployment();
   const faucetAddress = await faucet.getAddress();
 
-  console.log(`✅ Faucet deployed to: ${faucetAddress}`);
+  console.log(` Faucet deployed to: ${faucetAddress}`);
   console.log(`Transaction hash: ${faucet.deploymentTransaction()?.hash}\n`);
 
   // Fund the faucet with tokens
@@ -64,7 +64,7 @@ async function main() {
   const mintTx = await finToken.mint(faucetAddress, faucetFunding);
   await mintTx.wait();
   
-  console.log(`✅ Funded faucet with ${ethers.formatEther(faucetFunding)} FIN\n`);
+  console.log(` Funded faucet with ${ethers.formatEther(faucetFunding)} FIN\n`);
 
   // Grant RELAYER_ROLE if Gelato address is provided
   const GELATO_RELAYER = process.env.GELATO_RELAYER_ADDRESS;
@@ -73,10 +73,10 @@ async function main() {
     const RELAYER_ROLE = await faucet.RELAYER_ROLE();
     const grantTx = await faucet.grantRole(RELAYER_ROLE, GELATO_RELAYER);
     await grantTx.wait();
-    console.log("✅ RELAYER_ROLE granted\n");
+    console.log(" RELAYER_ROLE granted\n");
   }
 
-  console.log("🎉 Faucet deployment complete!");
+  console.log(" Faucet deployment complete!");
   console.log("\nNext steps:");
   console.log(`1. Add to .env: VITE_FAUCET_CONTRACT_ADDRESS=${faucetAddress}`);
   console.log("2. Verify contract on block explorer");

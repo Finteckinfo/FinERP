@@ -1551,7 +1551,7 @@ const approveAndPayTask = async () => {
     if (result.success) {
       // Check if employee was opted in
       if (result.employeeOptedIn === false) {
-        console.warn('⚠️ Employee wallet not opted into token. Backend will handle opt-in.');
+        console.warn(' Employee wallet not opted into token. Backend will handle opt-in.');
       }
       
       // Update task status to APPROVED and payment status
@@ -1566,12 +1566,12 @@ const approveAndPayTask = async () => {
       
       // Show success message with asset info and oversight payments
       let message = result.txHash 
-        ? `✅ ${result.message}\n\n🪙 FIN (Token ${FIN_TOKEN_CONFIG.ASSET_ID})\n📝 TX: ${result.txHash.substring(0, 10)}...`
-        : `✅ ${result.message}`;
+        ? ` ${result.message}\n\n FIN (Token ${FIN_TOKEN_CONFIG.ASSET_ID})\n TX: ${result.txHash.substring(0, 10)}...`
+        : ` ${result.message}`;
       
       // Add oversight payment info if present
       if (result.oversightPayments && result.oversightPayments.length > 0) {
-        message += '\n\n💼 Manager Oversight Fees:';
+        message += '\n\n Manager Oversight Fees:';
         result.oversightPayments.forEach((oversight: any) => {
           message += `\n  - ${oversight.managerName}: ${oversight.amount.toFixed(2)} FIN (${(oversight.rate * 100).toFixed(1)}%)`;
         });
@@ -1599,8 +1599,8 @@ const approveAndPayTask = async () => {
     const isOptInError = errorMsg.toLowerCase().includes('opt') || errorMsg.toLowerCase().includes('asset');
     
     const errorMessage = isOptInError
-      ? `❌ Payment Failed: Employee wallet must be opted into token (Token ${FIN_TOKEN_CONFIG.ASSET_ID}).\n\n${errorMsg}`
-      : `❌ Failed to approve task: ${errorMsg}`;
+      ? ` Payment Failed: Employee wallet must be opted into token (Token ${FIN_TOKEN_CONFIG.ASSET_ID}).\n\n${errorMsg}`
+      : ` Failed to approve task: ${errorMsg}`;
     
     alert(errorMessage);
   } finally {

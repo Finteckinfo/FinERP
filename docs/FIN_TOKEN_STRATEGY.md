@@ -192,7 +192,7 @@ function batchTransfer(
 
 | Chain | Gas Cost | TPS | Security | Ecosystem |
 |-------|----------|-----|----------|-----------|
-| **Base** ⭐ | ~$0.001 | 2000+ | Ethereum L2 | Coinbase |
+| **Base**  | ~$0.001 | 2000+ | Ethereum L2 | Coinbase |
 | Arbitrum | ~$0.01 | 4000+ | Ethereum L2 | DeFi native |
 | Polygon | ~$0.001 | 7000+ | PoS sidechain | Massive |
 | Optimism | ~$0.01 | 2000+ | Ethereum L2 | OP Stack |
