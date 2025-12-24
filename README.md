@@ -1,5 +1,7 @@
 # FinPro - Decentralized Project Management
 
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-blue?style=flat-square&logo=vercel)](https://finpro-finteckinfo.vercel.app)
+
 Secure remote team payments with blockchain escrow technology.
 
 ## Overview
@@ -166,6 +168,8 @@ All tables have Row Level Security (RLS) enabled with public access policies for
 ## Deployment
 
 ### Vercel (Current)
+
+**Live Application**: https://finpro-finteckinfo.vercel.app
 
 If you are seeing a "Log in to Vercel" wall or hydration errors:
 1.  Go to your **Vercel Dashboard** > **Settings** > **Deployment Protection**.
