@@ -1,6 +1,6 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { config } from '../config';
+import { config } from '../config.js';
 
 /**
  * Handle /start command
@@ -132,8 +132,9 @@ export async function handleProjects(
             // Extract unique projects
             const projectsMap = new Map();
             data?.forEach(item => {
-                if (item.projects) {
-                    projectsMap.set(item.projects.id, item.projects);
+                if (item.projects && Array.isArray(item.projects) && item.projects.length > 0) {
+                    const project = item.projects[0];
+                    projectsMap.set(project.id, project);
                 }
             });
             projects = Array.from(projectsMap.values());

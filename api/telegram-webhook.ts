@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import TelegramBot from 'node-telegram-bot-api';
 import { createClient } from '@supabase/supabase-js';
-import { handleStart, handleProjects, handleHelp } from '../telegram-bot/handlers/commands';
-import { handleMessage } from '../telegram-bot/handlers/messages';
+import { handleStart, handleProjects, handleHelp } from '../telegram-bot/handlers/commands.js';
+import { handleMessage } from '../telegram-bot/handlers/messages.js';
 
 // Initialize bot (without polling for serverless)
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, { polling: false });
