@@ -64,8 +64,9 @@ export function useAssignedProjects(userId: string | null) {
             // Extract unique projects
             const projectsMap = new Map<number, Project>();
             data?.forEach(item => {
-                if (item.projects) {
-                    projectsMap.set(item.projects.id, item.projects as Project);
+                if (item.projects && Array.isArray(item.projects) && item.projects.length > 0) {
+                    const project = item.projects[0] as Project;
+                    projectsMap.set(project.id, project);
                 }
             });
 
