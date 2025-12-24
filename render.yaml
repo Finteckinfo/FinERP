@@ -1,0 +1,32 @@
+services:
+  # Frontend Web App
+  - type: web
+    name: finpro-web
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run preview
+    envVars:
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_ANON_KEY
+        sync: false
+
+  # Telegram Bot Server
+  - type: web
+    name: finpro-telegram-bot
+    env: node
+    buildCommand: npm install
+    startCommand: npm run bot:start
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_WEBHOOK_URL
+        sync: false
+      - key: TELEGRAM_MINI_APP_URL
+        sync: false
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: BOT_PORT
+        value: 3001
