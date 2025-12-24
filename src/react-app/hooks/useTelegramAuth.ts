@@ -1,6 +1,15 @@
 import { useEffect, useState } from 'react';
 import WebApp from '@twa-dev/sdk';
 
+// Extend Window interface for Telegram WebApp
+declare global {
+    interface Window {
+        Telegram?: {
+            WebApp: any;
+        };
+    }
+}
+
 export interface TelegramUser {
     id: number;
     first_name: string;
