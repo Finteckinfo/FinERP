@@ -11,7 +11,7 @@ This guide will help you set up the Telegram Mini App integration for FinPro.
 
 ## Step 1: Create Telegram Bot
 
-1. Open Telegram and search for [@BotFather](https://t.me/botfather)
+1. Open Telegram and search for @BotFather
 2. Send `/newbot` command
 3. Follow the prompts to:
    - Choose a name for your bot (e.g., "FinPro Bot")
@@ -71,7 +71,7 @@ BOT_PORT=3001
 SUPABASE_SERVICE_KEY=your_supabase_service_role_key
 ```
 
-**Important**: The `SUPABASE_SERVICE_KEY` is different from the anon key. Find it in Supabase Dashboard → Settings → API → service_role key.
+**Important**: The `SUPABASE_SERVICE_KEY` is different from the anon key. Find it in Supabase Dashboard -> Settings -> API -> service_role key.
 
 ## Step 4: Run Database Migration
 
@@ -83,7 +83,7 @@ psql -h <your-supabase-host> -U postgres -d postgres -f migrations/add_telegram_
 ```
 
 Or run it directly in the Supabase SQL Editor:
-1. Go to Supabase Dashboard → SQL Editor
+1. Go to Supabase Dashboard -> SQL Editor
 2. Copy the contents of `migrations/add_telegram_messaging.sql`
 3. Paste and execute
 
@@ -182,7 +182,7 @@ VALUES (
 ## Step 9: Test the Integration
 
 1. Open Telegram and find your bot
-2. Send `/start` - you should see a welcome message with a button to open the app
+2. Send `/start`. It should reply with a welcome message.
 3. Click "Open FinPro App" - the Mini App should load within Telegram
 4. Connect your wallet - your Telegram account will be linked
 5. Create a project - other admins should receive a notification
