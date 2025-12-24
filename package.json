@@ -47,7 +47,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "bot:dev": "tsx watch telegram-bot/bot.ts",
-    "bot:start": "tsx telegram-bot/bot.ts"
+    "bot:dev": "node --loader tsx --no-warnings telegram-bot/bot.ts",
+    "bot:start": "node --loader tsx --no-warnings telegram-bot/bot.ts"
   }
 }
