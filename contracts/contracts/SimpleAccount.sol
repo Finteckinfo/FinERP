@@ -28,6 +28,9 @@ contract SimpleAccount is Initializable {
     address public entryPoint;
     uint256 public nonce;
 
+    error InvalidAddress();
+    error InvalidTarget();
+
     event ExecutionSuccess(bytes32 indexed txHash);
     event ExecutionFailure(bytes32 indexed txHash);
 
@@ -42,6 +45,7 @@ contract SimpleAccount is Initializable {
     }
 
     function initialize(address _owner, address _entryPoint) public initializer {
+        if (_owner == address(0) || _entryPoint == address(0)) revert InvalidAddress();
         owner = _owner;
         entryPoint = _entryPoint;
         nonce = 0;
@@ -59,6 +63,7 @@ contract SimpleAccount is Initializable {
         uint256 value,
         bytes calldata data
     ) external onlyOwner returns (bool success, bytes memory result) {
+        if (target == address(0)) revert InvalidTarget();
         (success, result) = target.call{value: value}(data);
         require(success, "Execution failed");
     }
@@ -74,6 +79,7 @@ contract SimpleAccount is Initializable {
         );
 
         for (uint256 i = 0; i < targets.length; i++) {
+            if (targets[i] == address(0)) revert InvalidTarget();
             (bool success, ) = targets[i].call{value: values[i]}(datas[i]);
             require(success, "Batch execution failed");
         }

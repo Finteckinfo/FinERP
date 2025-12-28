@@ -1,0 +1,279 @@
+'npx hardhat clean' running (wd: /home/c0bw3b/FinPro/contracts)
+'npx hardhat clean --global' running (wd: /home/c0bw3b/FinPro/contracts)
+'npx hardhat compile --force' running (wd: /home/c0bw3b/FinPro/contracts)
+INFO:Detectors:
+TokenPaymaster.postOp(bytes,uint256) (contracts/TokenPaymaster.sol#74-89) uses arbitrary from in transferFrom: require(bool,string)(acceptedToken.transferFrom(account,address(this),chargedAmount),Token transfer failed) (contracts/TokenPaymaster.sol#83-86)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#arbitrary-from-in-transferfrom
+INFO:Detectors:
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) has bitwise-xor operator ^ instead of the exponentiation operator **: 
+	 - inverse = (3 * denominator) ^ 2 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#257)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-exponentiation
+INFO:Detectors:
+TokenPaymaster.usedNonces (contracts/TokenPaymaster.sol#19) is never initialized. It is used in:
+	- TokenPaymaster.validatePaymasterUserOp(address,bytes32,uint256,bytes) (contracts/TokenPaymaster.sol#59-72)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#uninitialized-state-variables
+INFO:Detectors:
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse = (3 * denominator) ^ 2 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#257)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#261)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#262)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#263)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#264)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#265)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#266)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) performs a multiplication on the result of a division:
+	- low = low / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#245)
+	- result = low * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#272)
+Math.invMod(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#315-361) performs a multiplication on the result of a division:
+	- quotient = gcd / remainder (node_modules/@openzeppelin/contracts/utils/math/Math.sol#337)
+	- (gcd,remainder) = (remainder,gcd - remainder * quotient) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#339-346)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#divide-before-multiply
+INFO:Detectors:
+TestTokenFaucet.canRequest(address) (contracts/TestTokenFaucet.sol#94-114) uses a dangerous strict equality:
+	- lastRequest[user] == 0 (contracts/TestTokenFaucet.sol#95)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#dangerous-strict-equalities
+INFO:Detectors:
+ERC1967Utils.upgradeToAndCall(address,bytes) (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol#67-76) ignores return value by Address.functionDelegateCall(newImplementation,data) (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol#72)
+ERC1967Utils.upgradeBeaconToAndCall(address,bytes) (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol#157-166) ignores return value by Address.functionDelegateCall(IBeacon(newBeacon).implementation(),data) (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol#162)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-return
+INFO:Detectors:
+ERC20PermitUpgradeable.__ERC20Permit_init(string).name (node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20PermitUpgradeable.sol#40) shadows:
+	- ERC20Upgradeable.name() (node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol#70-73) (function)
+	- IERC20Metadata.name() (node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol#15) (function)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#local-variable-shadowing
+INFO:Detectors:
+SimpleAccount.initialize(address,address)._owner (contracts/SimpleAccount.sol#44) lacks a zero-check on :
+		- owner = _owner (contracts/SimpleAccount.sol#45)
+SimpleAccount.initialize(address,address)._entryPoint (contracts/SimpleAccount.sol#44) lacks a zero-check on :
+		- entryPoint = _entryPoint (contracts/SimpleAccount.sol#46)
+SimpleAccount.executeCall(address,uint256,bytes).target (contracts/SimpleAccount.sol#58) lacks a zero-check on :
+		- (success,result) = target.call{value: value}(data) (contracts/SimpleAccount.sol#62)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+INFO:Detectors:
+SimpleAccount.executeBatch(address[],uint256[],bytes[]) (contracts/SimpleAccount.sol#66-80) has external calls inside a loop: (success,None) = targets[i].call{value: values[i]}(datas[i]) (contracts/SimpleAccount.sol#77)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation/#calls-inside-a-loop
+INFO:Detectors:
+Reentrancy in TokenPaymaster.postOp(bytes,uint256) (contracts/TokenPaymaster.sol#74-89):
+	External calls:
+	- require(bool,string)(acceptedToken.transferFrom(account,address(this),chargedAmount),Token transfer failed) (contracts/TokenPaymaster.sol#83-86)
+	Event emitted after the call(s):
+	- PaymasterCharged(account,chargedAmount,actualGasCost) (contracts/TokenPaymaster.sol#88)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-3
+INFO:Detectors:
+ERC20PermitUpgradeable.permit(address,address,uint256,uint256,uint8,bytes32,bytes32) (node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20PermitUpgradeable.sol#47-70) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp > deadline (node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20PermitUpgradeable.sol#56)
+ProjectEscrow.allocateTask(uint256,address,uint256) (contracts/ProjectEscrow.sol#172-200) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(project.status == ProjectStatus.ACTIVE,ProjectEscrow: project not active) (contracts/ProjectEscrow.sol#180)
+	- require(bool,string)(project.totalAllocated + amount <= project.totalFunded,ProjectEscrow: insufficient project funds) (contracts/ProjectEscrow.sol#183-186)
+ProjectEscrow.completeTask(uint256) (contracts/ProjectEscrow.sol#206-220) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(task.worker == msg.sender,ProjectEscrow: only worker can complete task) (contracts/ProjectEscrow.sol#208)
+	- require(bool,string)(task.status == TaskStatus.PENDING || task.status == TaskStatus.IN_PROGRESS,ProjectEscrow: invalid task status) (contracts/ProjectEscrow.sol#209)
+	- task.amount < APPROVAL_THRESHOLD (contracts/ProjectEscrow.sol#217)
+ProjectEscrow.approvePayment(uint256) (contracts/ProjectEscrow.sol#226-241) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(task.status == TaskStatus.COMPLETED,ProjectEscrow: task not completed) (contracts/ProjectEscrow.sol#228)
+	- require(bool,string)(! task.approvals[msg.sender],ProjectEscrow: already approved) (contracts/ProjectEscrow.sol#229)
+	- require(bool,string)(task.amount >= APPROVAL_THRESHOLD,ProjectEscrow: approval not required) (contracts/ProjectEscrow.sol#230)
+ProjectEscrow._releasePayment(uint256) (contracts/ProjectEscrow.sol#247-265) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(task.status == TaskStatus.COMPLETED,ProjectEscrow: task not completed) (contracts/ProjectEscrow.sol#249)
+	- require(bool,string)(task.approvalCount >= REQUIRED_APPROVALS,ProjectEscrow: insufficient approvals) (contracts/ProjectEscrow.sol#253)
+ProjectEscrow.requestRefund(uint256) (contracts/ProjectEscrow.sol#271-280) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(project.employer == msg.sender,ProjectEscrow: only employer can request refund) (contracts/ProjectEscrow.sol#273)
+	- require(bool,string)(project.status == ProjectStatus.ACTIVE,ProjectEscrow: project not active) (contracts/ProjectEscrow.sol#274)
+	- require(bool,string)(project.refundRequestedAt == 0,ProjectEscrow: refund already requested) (contracts/ProjectEscrow.sol#275)
+ProjectEscrow.processRefund(uint256) (contracts/ProjectEscrow.sol#286-305) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(project.employer == msg.sender,ProjectEscrow: only employer can process refund) (contracts/ProjectEscrow.sol#288)
+	- require(bool,string)(project.refundRequestedAt > 0,ProjectEscrow: refund not requested) (contracts/ProjectEscrow.sol#289)
+	- require(bool,string)(block.timestamp >= project.refundRequestedAt + REFUND_TIMELOCK,ProjectEscrow: timelock not expired) (contracts/ProjectEscrow.sol#290-293)
+ProjectEscrow.cancelProject(uint256) (contracts/ProjectEscrow.sol#311-323) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(project.status == ProjectStatus.ACTIVE,ProjectEscrow: project not active) (contracts/ProjectEscrow.sol#313)
+TestTokenFaucet.canRequest(address) (contracts/TestTokenFaucet.sol#94-114) uses timestamp for comparisons
+	Dangerous comparisons:
+	- lastRequest[user] == 0 (contracts/TestTokenFaucet.sol#95)
+	- block.timestamp < lastRequest[user] + cooldownPeriod (contracts/TestTokenFaucet.sol#100)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+INFO:Detectors:
+AccessControlUpgradeable._getAccessControlStorage() (node_modules/@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol#68-72) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol#69-71)
+Initializable._getInitializableStorage() (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol#232-237) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol#234-236)
+ERC20Upgradeable._getERC20Storage() (node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol#46-50) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol#47-49)
+NoncesUpgradeable._getNoncesStorage() (node_modules/@openzeppelin/contracts-upgradeable/utils/NoncesUpgradeable.sol#23-27) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/utils/NoncesUpgradeable.sol#24-26)
+PausableUpgradeable._getPausableStorage() (node_modules/@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol#27-31) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol#28-30)
+ReentrancyGuardUpgradeable._getReentrancyGuardStorage() (node_modules/@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol#49-53) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol#50-52)
+EIP712Upgradeable._getEIP712Storage() (node_modules/@openzeppelin/contracts-upgradeable/utils/cryptography/EIP712Upgradeable.sol#49-53) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/utils/cryptography/EIP712Upgradeable.sol#50-52)
+Initializable._getInitializableStorage() (node_modules/@openzeppelin/contracts/proxy/utils/Initializable.sol#232-237) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/proxy/utils/Initializable.sol#234-236)
+SafeERC20._callOptionalReturn(IERC20,bytes) (node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol#173-191) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol#176-186)
+SafeERC20._callOptionalReturnBool(IERC20,bytes) (node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol#201-211) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol#205-209)
+Address._revert(bytes) (node_modules/@openzeppelin/contracts/utils/Address.sol#138-148) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Address.sol#142-144)
+Panic.panic(uint256) (node_modules/@openzeppelin/contracts/utils/Panic.sol#50-56) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Panic.sol#51-55)
+StorageSlot.getAddressSlot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#66-70) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#67-69)
+StorageSlot.getBooleanSlot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#75-79) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#76-78)
+StorageSlot.getBytes32Slot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#84-88) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#85-87)
+StorageSlot.getUint256Slot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#93-97) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#94-96)
+StorageSlot.getInt256Slot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#102-106) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#103-105)
+StorageSlot.getStringSlot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#111-115) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#112-114)
+StorageSlot.getStringSlot(string) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#120-124) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#121-123)
+StorageSlot.getBytesSlot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#129-133) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#130-132)
+StorageSlot.getBytesSlot(bytes) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#138-142) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#139-141)
+Strings.toString(uint256) (node_modules/@openzeppelin/contracts/utils/Strings.sol#45-63) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#50-52)
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#55-57)
+Strings.toChecksumHexString(address) (node_modules/@openzeppelin/contracts/utils/Strings.sol#111-129) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#116-118)
+Strings.escapeJSON(string) (node_modules/@openzeppelin/contracts/utils/Strings.sol#446-476) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#470-473)
+Strings._unsafeReadBytesOffset(bytes,uint256) (node_modules/@openzeppelin/contracts/utils/Strings.sol#484-489) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#486-488)
+ECDSA.tryRecover(bytes32,bytes) (node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol#56-75) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol#66-70)
+MessageHashUtils.toEthSignedMessageHash(bytes32) (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#30-36) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#31-35)
+MessageHashUtils.toDataWithIntendedValidatorHash(address,bytes32) (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#69-79) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#73-78)
+MessageHashUtils.toTypedDataHash(bytes32,bytes32) (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#90-98) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#91-97)
+Math.add512(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#25-30) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#26-29)
+Math.mul512(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#37-46) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#41-45)
+Math.tryMul(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#73-84) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#76-80)
+Math.tryDiv(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#89-97) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#92-95)
+Math.tryMod(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#102-110) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#105-108)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#204-275) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#227-234)
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#240-249)
+Math.tryModExp(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#409-433) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#411-432)
+Math.tryModExp(bytes,bytes,bytes) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#449-471) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#461-470)
+Math.log2(uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#612-651) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#648-650)
+SafeCast.toUint(bool) (node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#1157-1161) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#1158-1160)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#assembly-usage
+INFO:Detectors:
+8 different versions of Solidity are used:
+	- Version constraint ^0.8.20 is used by:
+		-^0.8.20 (node_modules/@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20BurnableUpgradeable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20PausableUpgradeable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20PermitUpgradeable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts-upgradeable/utils/NoncesUpgradeable.sol#3)
+		-^0.8.20 (node_modules/@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts-upgradeable/utils/cryptography/EIP712Upgradeable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/access/AccessControl.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/access/Ownable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/proxy/utils/Initializable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Address.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Context.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Errors.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Panic.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/ReentrancyGuard.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#5)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Strings.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#5)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol#4)
+		-^0.8.20 (contracts/FINSwap.sol#2)
+		-^0.8.20 (contracts/FINToken.sol#2)
+		-^0.8.20 (contracts/MultiSigWallet.sol#2)
+		-^0.8.20 (contracts/ProjectEscrow.sol#2)
+		-^0.8.20 (contracts/SimpleAccount.sol#2)
+		-^0.8.20 (contracts/TokenPaymaster.sol#2)
+	- Version constraint ^0.8.22 is used by:
+		-^0.8.22 (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#4)
+	- Version constraint >=0.8.4 is used by:
+		->=0.8.4 (node_modules/@openzeppelin/contracts/access/IAccessControl.sol#4)
+		->=0.8.4 (node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol#3)
+	- Version constraint >=0.6.2 is used by:
+		->=0.6.2 (node_modules/@openzeppelin/contracts/interfaces/IERC1363.sol#4)
+		->=0.6.2 (node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol#4)
+	- Version constraint >=0.4.16 is used by:
+		->=0.4.16 (node_modules/@openzeppelin/contracts/interfaces/IERC165.sol#4)
+		->=0.4.16 (node_modules/@openzeppelin/contracts/interfaces/IERC20.sol#4)
+		->=0.4.16 (node_modules/@openzeppelin/contracts/interfaces/IERC5267.sol#4)
+		->=0.4.16 (node_modules/@openzeppelin/contracts/interfaces/draft-IERC1822.sol#4)
+		->=0.4.16 (node_modules/@openzeppelin/contracts/proxy/beacon/IBeacon.sol#4)
+		->=0.4.16 (node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol#4)
+		->=0.4.16 (node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol#4)
+		->=0.4.16 (node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol#4)
+	- Version constraint >=0.4.11 is used by:
+		->=0.4.11 (node_modules/@openzeppelin/contracts/interfaces/IERC1967.sol#4)
+	- Version constraint ^0.8.21 is used by:
+		-^0.8.21 (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol#4)
+	- Version constraint ^0.8.24 is used by:
+		-^0.8.24 (contracts/TestTokenFaucet.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#different-pragma-directives-are-used
+INFO:Detectors:
+Low level call in Address.sendValue(address,uint256) (node_modules/@openzeppelin/contracts/utils/Address.sol#33-42):
+	- (success,returndata) = recipient.call{value: amount}() (node_modules/@openzeppelin/contracts/utils/Address.sol#38)
+Low level call in Address.functionCallWithValue(address,bytes,uint256) (node_modules/@openzeppelin/contracts/utils/Address.sol#75-81):
+	- (success,returndata) = target.call{value: value}(data) (node_modules/@openzeppelin/contracts/utils/Address.sol#79)
+Low level call in Address.functionStaticCall(address,bytes) (node_modules/@openzeppelin/contracts/utils/Address.sol#87-90):
+	- (success,returndata) = target.staticcall(data) (node_modules/@openzeppelin/contracts/utils/Address.sol#88)
+Low level call in Address.functionDelegateCall(address,bytes) (node_modules/@openzeppelin/contracts/utils/Address.sol#96-99):
+	- (success,returndata) = target.delegatecall(data) (node_modules/@openzeppelin/contracts/utils/Address.sol#97)
+Low level call in MultiSigWallet.executeTransaction(uint256) (contracts/MultiSigWallet.sol#153-176):
+	- (success,None) = transaction.to.call{value: transaction.value}(transaction.data) (contracts/MultiSigWallet.sol#170-172)
+Low level call in SimpleAccount.executeCall(address,uint256,bytes) (contracts/SimpleAccount.sol#57-64):
+	- (success,result) = target.call{value: value}(data) (contracts/SimpleAccount.sol#62)
+Low level call in SimpleAccount.executeBatch(address[],uint256[],bytes[]) (contracts/SimpleAccount.sol#66-80):
+	- (success,None) = targets[i].call{value: values[i]}(datas[i]) (contracts/SimpleAccount.sol#77)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
+INFO:Detectors:
+TokenPaymaster.acceptedToken (contracts/TokenPaymaster.sol#13) should be immutable 
+TokenPaymaster.entryPoint (contracts/TokenPaymaster.sol#14) should be immutable 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variables-that-could-be-declared-immutable
+INFO:Slither:. analyzed (52 contracts with 97 detectors), 79 result(s) found

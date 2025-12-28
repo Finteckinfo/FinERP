@@ -10,8 +10,8 @@ contract TokenPaymaster is Ownable {
     using ECDSA for bytes32;
     using MessageHashUtils for bytes32;
 
-    IERC20 public acceptedToken;
-    address public entryPoint;
+    IERC20 public immutable acceptedToken;
+    address public immutable entryPoint;
     
     uint256 public exchangeRate = 1e18;
     
@@ -80,10 +80,8 @@ contract TokenPaymaster is Ownable {
         uint256 chargedAmount = (actualGasCost * exchangeRate) / 1e18;
         require(chargedAmount <= maxCost, "Gas cost exceeded");
 
-        require(
-            acceptedToken.transferFrom(account, address(this), chargedAmount),
-            "Token transfer failed"
-        );
+        bool success = acceptedToken.transferFrom(account, address(this), chargedAmount);
+        require(success, "Token transfer failed");
 
         emit PaymasterCharged(account, chargedAmount, actualGasCost);
     }
