@@ -6,7 +6,13 @@ export const config = {
     webhookUrl: process.env.TELEGRAM_WEBHOOK_URL || '',
 
     // Mini App URL (deployed React app)
-    miniAppUrl: process.env.TELEGRAM_MINI_APP_URL || 'https://fin1pro.vercel.app',
+    miniAppUrl: (() => {
+        let url = process.env.TELEGRAM_MINI_APP_URL || 'https://fin1pro.vercel.app';
+        if (!url.startsWith('http')) {
+            url = `https://${url}`;
+        }
+        return url;
+    })(),
 
     // Server port
     port: parseInt(process.env.BOT_PORT || '3001', 10),

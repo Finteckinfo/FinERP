@@ -350,7 +350,12 @@ Total Locked Value: $${totalValue.toLocaleString()}
  * Handle /ping command
  */
 export async function handlePing(bot: TelegramBot, message: TelegramBot.Message) {
-    await bot.sendMessage(message.chat.id, 'Pong! The bot is active.');
+    try {
+        await registerCommands(bot);
+        await bot.sendMessage(message.chat.id, 'Pong! Bot is active and commands have been re-registered.');
+    } catch (e) {
+        await bot.sendMessage(message.chat.id, 'Pong! Bot is active (Command registration failed).');
+    }
 }
 
 /**
