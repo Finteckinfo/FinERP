@@ -13,6 +13,13 @@ export async function handleStart(
 ) {
     const chatId = message.chat.id;
     const telegramId = message.from?.id;
+
+    console.log('handleStart debugging:', {
+        chatId,
+        telegramId,
+        miniAppUrl: config.miniAppUrl
+    });
+
     const username = message.from?.username || '';
     const firstName = message.from?.first_name || '';
     const lastName = message.from?.last_name || '';
@@ -344,4 +351,26 @@ Total Locked Value: $${totalValue.toLocaleString()}
  */
 export async function handlePing(bot: TelegramBot, message: TelegramBot.Message) {
     await bot.sendMessage(message.chat.id, 'Pong! The bot is active.');
+}
+
+/**
+ * Register bot commands with Telegram
+ */
+export async function registerCommands(bot: TelegramBot) {
+    const commands = [
+        { command: 'start', description: 'Initialize and link account' },
+        { command: 'projects', description: 'View your projects' },
+        { command: 'tasks', description: 'View your assigned tasks' },
+        { command: 'profile', description: 'View your profile' },
+        { command: 'stats', description: 'Platform statistics' },
+        { command: 'help', description: 'Show help message' },
+        { command: 'ping', description: 'Check bot status' }
+    ];
+
+    try {
+        await bot.setMyCommands(commands);
+        console.log('Bot commands registered successfully');
+    } catch (error) {
+        console.error('Failed to register bot commands:', error);
+    }
 }

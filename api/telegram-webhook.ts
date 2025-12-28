@@ -7,7 +7,8 @@ import {
     handleTasks,
     handleProfile,
     handleStats,
-    handlePing
+    handlePing,
+    registerCommands
 } from '../telegram-bot/handlers/commands.js';
 import { handleSupabaseWebhook as sharedHandleSupabaseWebhook } from '../telegram-bot/handlers/webhooks.js';
 
@@ -62,6 +63,7 @@ export default async function handler(req: any, res: any) {
 
                 switch (command) {
                     case '/start':
+                        await registerCommands(bot);
                         await handleStart(bot, message, supabase);
                         break;
                     case '/projects':

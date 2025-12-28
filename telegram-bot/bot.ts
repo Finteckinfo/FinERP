@@ -3,7 +3,7 @@ import TelegramBot from 'node-telegram-bot-api';
 import express from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { config, validateConfig } from './config.js';
-import { handleStart, handleProjects, handleHelp, handleTasks, handleProfile, handleStats, handlePing } from './handlers/commands.js';
+import { handleStart, handleProjects, handleHelp, handleTasks, handleProfile, handleStats, handlePing, registerCommands } from './handlers/commands.js';
 import { handleMessage } from './handlers/messages.js';
 
 // Validate configuration on startup
@@ -87,6 +87,9 @@ app.get('/health', (req: express.Request, res: express.Response) => {
 // Start server
 app.listen(config.port, async () => {
     console.log(`Telegram bot server running on port ${config.port}`);
+
+    // Register commands with Telegram
+    await registerCommands(bot);
 
     // Set webhook
     try {
