@@ -65,7 +65,7 @@ export async function handleStart(
                 `Welcome to FinPro, ${firstName}!\n\n` +
                 `To get started, please open the app and connect your wallet.\n` +
                 `Your Telegram account will be automatically linked.\n\n` +
-                `如果你不能打开上面的按钮，请尝试这个链接:\n` +
+                `If the button above doesn't work, try this link:\n` +
                 `${config.miniAppUrl}`,
                 {
                     reply_markup: {
