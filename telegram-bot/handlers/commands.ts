@@ -339,3 +339,9 @@ Total Locked Value: $${totalValue.toLocaleString()}
         console.error('Error in /stats:', error);
     }
 }
+/**
+ * Handle /ping command
+ */
+export async function handlePing(bot: TelegramBot, message: TelegramBot.Message) {
+    await bot.sendMessage(message.chat.id, 'Pong! The bot is active.');
+}

@@ -1,9 +1,10 @@
+import 'dotenv/config';
 import TelegramBot from 'node-telegram-bot-api';
 import express from 'express';
 import { createClient } from '@supabase/supabase-js';
-import { config, validateConfig } from './config';
-import { handleStart, handleProjects, handleHelp, handleTasks, handleProfile, handleStats } from './handlers/commands';
-import { handleMessage } from './handlers/messages';
+import { config, validateConfig } from './config.js';
+import { handleStart, handleProjects, handleHelp, handleTasks, handleProfile, handleStats, handlePing } from './handlers/commands.js';
+import { handleMessage } from './handlers/messages.js';
 
 // Validate configuration on startup
 validateConfig();
@@ -18,7 +19,7 @@ const supabase = createClient(config.supabase.url, config.supabase.serviceKey);
 const app = express();
 app.use(express.json());
 
-import { handleSupabaseWebhook } from './handlers/webhooks';
+import { handleSupabaseWebhook } from './handlers/webhooks.js';
 
 // Webhook endpoint
 app.post('/webhook', async (req: express.Request, res: express.Response) => {
@@ -55,6 +56,9 @@ app.post('/webhook', async (req: express.Request, res: express.Response) => {
                         break;
                     case '/stats':
                         await handleStats(bot, message, supabase);
+                        break;
+                    case '/ping':
+                        await handlePing(bot, message);
                         break;
                     case '/help':
                         await handleHelp(bot, message);

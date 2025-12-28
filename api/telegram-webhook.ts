@@ -10,7 +10,16 @@ const supabase = createClient(
     process.env.SUPABASE_SERVICE_KEY || ''
 );
 
-import { handleSupabaseWebhook as sharedHandleSupabaseWebhook } from '../telegram-bot/handlers/webhooks';
+import {
+    handleStart,
+    handleProjects,
+    handleHelp,
+    handleTasks,
+    handleProfile,
+    handleStats,
+    handlePing
+} from '../telegram-bot/handlers/commands.js';
+import { handleSupabaseWebhook as sharedHandleSupabaseWebhook } from '../telegram-bot/handlers/webhooks.js';
 
 export default async function handler(req: any, res: any) {
     console.log('Webhook received:', JSON.stringify(req.body, null, 2));
@@ -35,18 +44,31 @@ export default async function handler(req: any, res: any) {
 
             // Handle commands
             if (message.text && message.text.startsWith('/')) {
-                const command = message.text.split(' ')[0].substring(1);
+                const text = message.text;
+                const command = text.split(' ')[0];
                 console.log('Command received:', command);
 
                 switch (command) {
-                    case 'start':
-                        await bot.sendMessage(message.chat.id, 'Welcome to FinPro.\n\nFinPro allows you to manage decentralized project funding and tracking. Use the commands below to interact with your projects:\n\n/projects - List all projects associated with your linked wallet.\n/help - View detailed command instructions.');
+                    case '/start':
+                        await handleStart(bot, message, supabase);
                         break;
-                    case 'projects':
-                        await handleProjectsCommand(message);
+                    case '/projects':
+                        await handleProjects(bot, message, supabase);
                         break;
-                    case 'help':
-                        await bot.sendMessage(message.chat.id, 'FinPro Bot Commands:\n\n/start - Initialize the bot and view the welcome message.\n/projects - Retrieve a list of projects linked to your wallet address. Requires your Telegram account to be linked via the Mini App.\n/help - Display this help message with usage instructions.');
+                    case '/tasks':
+                        await handleTasks(bot, message, supabase);
+                        break;
+                    case '/profile':
+                        await handleProfile(bot, message, supabase);
+                        break;
+                    case '/stats':
+                        await handleStats(bot, message, supabase);
+                        break;
+                    case '/ping':
+                        await handlePing(bot, message);
+                        break;
+                    case '/help':
+                        await handleHelp(bot, message);
                         break;
                     default:
                         await bot.sendMessage(message.chat.id, 'Unknown command. Use /help to see available commands.');
@@ -61,58 +83,4 @@ export default async function handler(req: any, res: any) {
     }
 }
 
-async function handleProjectsCommand(message: any) {
-    try {
-        // 1. Find the wallet linked to this Telegram user
-        const { data: linkedUser, error: userError } = await supabase
-            .from('telegram_users')
-            .select('user_id')
-            .eq('telegram_id', message.from.id)
-            .single();
-
-        if (userError || !linkedUser) {
-            await bot.sendMessage(message.chat.id, `Account Not Linked\n\nPlease open the Mini App to link your wallet first. This connects your Telegram account to your blockchain identity:\n${process.env.TELEGRAM_MINI_APP_URL || 'https://fin1pro.vercel.app'}`);
-            return;
-        }
-
-        // 2. Fetch projects for this wallet
-        const { data: projects, error: projectsError } = await supabase
-            .from('projects')
-            .select('id, name, status, total_funds')
-            .eq('owner_id', linkedUser.user_id)
-            .order('created_at', { ascending: false })
-            .limit(5);
-
-        if (projectsError) {
-            console.error('Error fetching projects:', projectsError);
-            await bot.sendMessage(message.chat.id, 'Error fetching projects. Please try again later.');
-            return;
-        }
-
-        if (!projects || projects.length === 0) {
-            await bot.sendMessage(message.chat.id, 'You have no active projects associated with your wallet.');
-            return;
-        }
-
-        // 3. Format Response
-        let response = '*Your Recent Projects:*\n\n';
-        projects.forEach(p => {
-            const statusText = p.status === 'completed' ? '[Done]' : p.status === 'active' ? '[Active]' : '[Pending]';
-            response += `${statusText} *${p.name}*\nFunds: $${p.total_funds.toLocaleString()}\nID: \`${p.id}\`\n\n`;
-        });
-
-        await bot.sendMessage(message.chat.id, response, {
-            parse_mode: 'Markdown',
-            reply_markup: {
-                inline_keyboard: [[{
-                    text: 'Open Full App',
-                    web_app: { url: process.env.TELEGRAM_MINI_APP_URL || '' }
-                }]]
-            }
-        });
-
-    } catch (err) {
-        console.error('Projects command error:', err);
-        await bot.sendMessage(message.chat.id, 'An unexpected error occurred processing your request.');
-    }
-}
+// Local handleProjectsCommand removed in favor of shared handler
