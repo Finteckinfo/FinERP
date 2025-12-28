@@ -31,14 +31,14 @@ export class AccountAbstractionSDK {
     private entryPointAddress: string;
     private paymasterAddress: string;
     private paymasterSigningKey: string;
-    private chainId: number;
 
     constructor(config: EntryPointConfig, paymasterConfig: PaymasterConfig) {
         this.provider = new ethers.JsonRpcProvider(config.rpcUrl);
         this.entryPointAddress = config.address;
         this.paymasterAddress = paymasterConfig.address;
         this.paymasterSigningKey = paymasterConfig.signingKey;
-        this.chainId = config.chainId;
+        // Note: chainId from config is reserved for future use in multi-chain support
+        void config.chainId;
     }
 
     async getUserOperationHash(userOp: Partial<UserOperation>): Promise<string> {
@@ -84,7 +84,7 @@ export class AccountAbstractionSDK {
 
     async signPaymasterData(
         userOp: Partial<UserOperation>,
-        maxCost: bigint
+        _maxCost: bigint
     ): Promise<string> {
         const hash = await this.getUserOperationHash(userOp);
         const paymasterWallet = new ethers.Wallet(this.paymasterSigningKey);

@@ -1,6 +1,6 @@
-import { useState, useCallback, useContext } from 'react';
+import { useState, useCallback } from 'react';
 import { ethers } from 'ethers';
-import { AccountAbstractionSDK } from '../lib/accountAbstraction';
+import { AccountAbstractionSDK } from '../../lib/accountAbstraction';
 
 interface GaslessTransactionState {
     loading: boolean;
@@ -67,11 +67,6 @@ export function useGaslessTransaction(options: UseGaslessTransactionOptions) {
 
                 const gasEstimate = await sdk.estimateUserOperationGas(userOp);
                 Object.assign(userOp, gasEstimate);
-
-                const paymasterSignature = await sdk.signPaymasterData(
-                    userOp,
-                    BigInt(gasEstimate.callGasLimit) + BigInt(gasEstimate.verificationGasLimit)
-                );
 
                 const signature = await sdk.signUserOperation(userOp, signingKey);
 

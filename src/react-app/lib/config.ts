@@ -1,191 +1,32 @@
 export const APP_CONFIG = {
     // The base URL for the application, used for redirects and social links
+    // In Vercel, this can be set to the production domain
+    appUrl: import.meta.env.VITE_APP_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'),
 
-import { SimpleAccount, TokenPaymaster } from '../typechain-types';    // In Vercel, this can be set to the production domain
-
-import { SignerWithAddress } from '@nomicfoundation/hardhat-ethers/signers';    appUrl: import.meta.env.VITE_APP_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'),
-
-
-
-describe('Account Abstraction Integration', function () {    // Supabase Configuration
-
-    let simpleAccount: SimpleAccount;    supabase: {
-
-    let tokenPaymaster: TokenPaymaster;        url: import.meta.env.VITE_SUPABASE_URL,
-
-    let owner: SignerWithAddress;        anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-
-    let addr1: SignerWithAddress;    },
-
-    let addr2: SignerWithAddress;
+    // Supabase Configuration
+    supabase: {
+        url: import.meta.env.VITE_SUPABASE_URL,
+        anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+    },
 
     // App Metadata
+    name: 'FinPro',
+    description: 'Decentralized Project Management with Blockchain Escrow',
 
-    beforeEach(async function () {    name: 'FinPro',
-
-        [owner, addr1, addr2] = await ethers.getSigners();    description: 'Decentralized Project Management with Blockchain Escrow',
-
-
-
-        const SimpleAccount = await ethers.getContractFactory('SimpleAccount');    // Contract Addresses (Local Anvil)
-
-        simpleAccount = await SimpleAccount.deploy() as SimpleAccount;    contracts: {
-
-        await simpleAccount.waitForDeployment();        finToken: '0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1',
-
+    // Contract Addresses (Local Anvil)
+    contracts: {
+        finToken: '0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1',
         projectEscrow: '0x68B1D87F95878fE05B998F19b66F4baba5De1aed',
+        finSwap: '0x59b670e9fA9D0A427751Af201D676719a970857b',
+        multiSigWallet: '0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1',
+    },
 
-        const TokenPaymaster = await ethers.getContractFactory('TokenPaymaster');        finSwap: '0x59b670e9fA9D0A427751Af201D676719a970857b',
-
-        tokenPaymaster = await TokenPaymaster.deploy(        multiSigWallet: '0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1',
-
-            addr1.address,    },
-
-            owner.address,
-
-            owner.address    // Account Abstraction Configuration
-
-        ) as TokenPaymaster;    accountAbstraction: {
-
-        await tokenPaymaster.waitForDeployment();        entryPointAddress: import.meta.env.VITE_ENTRY_POINT_ADDRESS || '0x0000000000000000000000000000000000000001',
-
+    // Account Abstraction Configuration
+    accountAbstraction: {
+        entryPointAddress: import.meta.env.VITE_ENTRY_POINT_ADDRESS || '0x0000000000000000000000000000000000000001',
         paymasterAddress: import.meta.env.VITE_PAYMASTER_ADDRESS || '0x0000000000000000000000000000000000000002',
-
-        await simpleAccount.initialize(owner.address, owner.address);        paymasterSigningKey: import.meta.env.VITE_PAYMASTER_SIGNING_KEY || '',
-
-    });        bundlerUrl: import.meta.env.VITE_BUNDLER_URL || '',
-
+        paymasterSigningKey: import.meta.env.VITE_PAYMASTER_SIGNING_KEY || '',
+        bundlerUrl: import.meta.env.VITE_BUNDLER_URL || '',
         rpcUrl: import.meta.env.VITE_RPC_URL || 'http://localhost:8545',
-
-    describe('SimpleAccount', function () {    },
-
-        it('Should initialize with correct owner and entryPoint', async function () {};
-
-            expect(await simpleAccount.owner()).to.equal(owner.address);
-            expect(await simpleAccount.entryPoint()).to.equal(owner.address);
-        });
-
-        it('Should increment nonce after execution', async function () {
-            const initialNonce = await simpleAccount.nonce();
-            expect(initialNonce).to.equal(0);
-
-            await simpleAccount.increaseNonce();
-            const newNonce = await simpleAccount.nonce();
-            expect(newNonce).to.equal(1);
-        });
-
-        it('Should execute calls from owner', async function () {
-            await owner.sendTransaction({
-                to: await simpleAccount.getAddress(),
-                value: ethers.parseEther('1.0'),
-            });
-
-            const recipientBalance = await ethers.provider.getBalance(addr1.address);
-            const transferAmount = ethers.parseEther('0.5');
-
-            const callData = new ethers.Interface(['function transfer(address,uint256)']).encodeFunctionData(
-                'transfer',
-                [addr1.address, transferAmount]
-            );
-
-            await expect(
-                simpleAccount.executeCall(addr1.address, transferAmount, '0x')
-            ).to.not.be.reverted;
-        });
-
-        it('Should execute batch calls', async function () {
-            await owner.sendTransaction({
-                to: await simpleAccount.getAddress(),
-                value: ethers.parseEther('2.0'),
-            });
-
-            const targets = [addr1.address, addr2.address];
-            const values = [ethers.parseEther('0.5'), ethers.parseEther('0.5')];
-            const datas = ['0x', '0x'];
-
-            await expect(simpleAccount.executeBatch(targets, values, datas)).to.not.be.reverted;
-        });
-
-        it('Should receive ETH', async function () {
-            const amount = ethers.parseEther('1.0');
-            const tx = await owner.sendTransaction({
-                to: await simpleAccount.getAddress(),
-                value: amount,
-            });
-
-            await expect(tx).to.changeEtherBalance(simpleAccount, amount);
-        });
-    });
-
-    describe('TokenPaymaster', function () {
-        it('Should initialize with correct parameters', async function () {
-            expect(await tokenPaymaster.acceptedToken()).to.equal(addr1.address);
-            expect(await tokenPaymaster.entryPoint()).to.equal(owner.address);
-            expect(await tokenPaymaster.verifiedSigners(owner.address)).to.be.true;
-        });
-
-        it('Should allow adding verifiers', async function () {
-            await expect(tokenPaymaster.addVerifier(addr2.address)).to.not.be.reverted;
-            expect(await tokenPaymaster.verifiedSigners(addr2.address)).to.be.true;
-        });
-
-        it('Should allow removing verifiers', async function () {
-            await tokenPaymaster.addVerifier(addr2.address);
-            expect(await tokenPaymaster.verifiedSigners(addr2.address)).to.be.true;
-
-            await tokenPaymaster.removeVerifier(addr2.address);
-            expect(await tokenPaymaster.verifiedSigners(addr2.address)).to.be.false;
-        });
-
-        it('Should update exchange rate', async function () {
-            const newRate = ethers.parseUnits('2', 18);
-            await tokenPaymaster.setExchangeRate(newRate);
-            expect(await tokenPaymaster.exchangeRate()).to.equal(newRate);
-        });
-
-        it('Should prevent unauthorized operations', async function () {
-            await expect(
-                tokenPaymaster.connect(addr1).addVerifier(addr2.address)
-            ).to.be.revertedWithCustomError(tokenPaymaster, 'OwnableUnauthorizedAccount');
-        });
-
-        it('Should return correct balance', async function () {
-            const balance = await tokenPaymaster.getBalance();
-            expect(balance).to.equal(0);
-        });
-    });
-
-    describe('Integration Tests', function () {
-        it('Should validate user operation signatures', async function () {
-            const messageHash = ethers.id('test');
-            const signature = await owner.signMessage(ethers.getBytes(messageHash));
-
-            expect(signature).to.be.a('string');
-            expect(signature.length).to.be.greaterThan(0);
-        });
-
-        it('Should handle batch operations with paymaster', async function () {
-            await tokenPaymaster.addVerifier(addr1.address);
-            expect(await tokenPaymaster.verifiedSigners(addr1.address)).to.be.true;
-
-            const rate1 = ethers.parseUnits('1', 18);
-            await tokenPaymaster.setExchangeRate(rate1);
-            expect(await tokenPaymaster.exchangeRate()).to.equal(rate1);
-
-            const rate2 = ethers.parseUnits('2', 18);
-            await tokenPaymaster.setExchangeRate(rate2);
-            expect(await tokenPaymaster.exchangeRate()).to.equal(rate2);
-        });
-
-        it('Should track nonce increments across operations', async function () {
-            let currentNonce = await simpleAccount.nonce();
-            expect(currentNonce).to.equal(0);
-
-            for (let i = 0; i < 5; i++) {
-                await simpleAccount.increaseNonce();
-                currentNonce = await simpleAccount.nonce();
-                expect(currentNonce).to.equal(i + 1);
-            }
-        });
-    });
-});
+    },
+};
