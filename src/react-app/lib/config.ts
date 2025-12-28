@@ -15,9 +15,9 @@ export const APP_CONFIG = {
 
     // Contract Addresses (Local Anvil)
     contracts: {
-        finToken: '0x610178dA211FEF7D417bC0e6FeD39F05609AD788',
-        projectEscrow: '0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e',
-        finSwap: '0x9A676e781A523b5d0C0e43731313A708CB607508',
-        multiSigWallet: '0x0B306BF915C4d645ff596e518fAf3F9669b97016',
+        finToken: '0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1',
+        projectEscrow: '0x68B1D87F95878fE05B998F19b66F4baba5De1aed',
+        finSwap: '0x59b670e9fA9D0A427751Af201D676719a970857b',
+        multiSigWallet: '0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1',
     },
 };
