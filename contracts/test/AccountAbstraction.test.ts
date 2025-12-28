@@ -1,66 +1,41 @@
-export const APP_CONFIG = {
-    // The base URL for the application, used for redirects and social links
+import { expect } from 'chai';
+import { ethers } from 'hardhat';
+import { SimpleAccount, TokenPaymaster } from '../typechain-types';
+import { SignerWithAddress } from '@nomicfoundation/hardhat-ethers/signers';
 
-import { SimpleAccount, TokenPaymaster } from '../typechain-types';    // In Vercel, this can be set to the production domain
-
-import { SignerWithAddress } from '@nomicfoundation/hardhat-ethers/signers';    appUrl: import.meta.env.VITE_APP_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'),
-
-
-
-describe('Account Abstraction Integration', function () {    // Supabase Configuration
-
-    let simpleAccount: SimpleAccount;    supabase: {
-
-    let tokenPaymaster: TokenPaymaster;        url: import.meta.env.VITE_SUPABASE_URL,
-
-    let owner: SignerWithAddress;        anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-
-    let addr1: SignerWithAddress;    },
-
+describe('Account Abstraction Integration', function () {
+    let simpleAccount: SimpleAccount;
+    let tokenPaymaster: TokenPaymaster;
+    let mockToken: any;
+    let owner: SignerWithAddress;
+    let addr1: SignerWithAddress;
     let addr2: SignerWithAddress;
 
-    // App Metadata
+    beforeEach(async function () {
+        [owner, addr1, addr2] = await ethers.getSigners();
 
-    beforeEach(async function () {    name: 'FinPro',
+        const SimpleAccount = await ethers.getContractFactory('SimpleAccount');
+        simpleAccount = await SimpleAccount.deploy() as SimpleAccount;
+        await simpleAccount.waitForDeployment();
 
-        [owner, addr1, addr2] = await ethers.getSigners();    description: 'Decentralized Project Management with Blockchain Escrow',
+        // Deploy a mock ERC20 for testing
+        const MockToken = await ethers.getContractFactory('FINToken');
+        mockToken = await MockToken.deploy() as any;
+        await mockToken.waitForDeployment();
 
-
-
-        const SimpleAccount = await ethers.getContractFactory('SimpleAccount');    // Contract Addresses (Local Anvil)
-
-        simpleAccount = await SimpleAccount.deploy() as SimpleAccount;    contracts: {
-
-        await simpleAccount.waitForDeployment();        finToken: '0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1',
-
-        projectEscrow: '0x68B1D87F95878fE05B998F19b66F4baba5De1aed',
-
-        const TokenPaymaster = await ethers.getContractFactory('TokenPaymaster');        finSwap: '0x59b670e9fA9D0A427751Af201D676719a970857b',
-
-        tokenPaymaster = await TokenPaymaster.deploy(        multiSigWallet: '0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1',
-
-            addr1.address,    },
-
+        const TokenPaymaster = await ethers.getContractFactory('TokenPaymaster');
+        tokenPaymaster = await TokenPaymaster.deploy(
+            await mockToken.getAddress(),
             owner.address,
+            owner.address
+        ) as TokenPaymaster;
+        await tokenPaymaster.waitForDeployment();
 
-            owner.address    // Account Abstraction Configuration
+        await simpleAccount.initialize(owner.address, owner.address);
+    });
 
-        ) as TokenPaymaster;    accountAbstraction: {
-
-        await tokenPaymaster.waitForDeployment();        entryPointAddress: import.meta.env.VITE_ENTRY_POINT_ADDRESS || '0x0000000000000000000000000000000000000001',
-
-        paymasterAddress: import.meta.env.VITE_PAYMASTER_ADDRESS || '0x0000000000000000000000000000000000000002',
-
-        await simpleAccount.initialize(owner.address, owner.address);        paymasterSigningKey: import.meta.env.VITE_PAYMASTER_SIGNING_KEY || '',
-
-    });        bundlerUrl: import.meta.env.VITE_BUNDLER_URL || '',
-
-        rpcUrl: import.meta.env.VITE_RPC_URL || 'http://localhost:8545',
-
-    describe('SimpleAccount', function () {    },
-
-        it('Should initialize with correct owner and entryPoint', async function () {};
-
+    describe('SimpleAccount', function () {
+        it('Should initialize with correct owner and entryPoint', async function () {
             expect(await simpleAccount.owner()).to.equal(owner.address);
             expect(await simpleAccount.entryPoint()).to.equal(owner.address);
         });
@@ -80,13 +55,7 @@ describe('Account Abstraction Integration', function () {    // Supabase Configu
                 value: ethers.parseEther('1.0'),
             });
 
-            const recipientBalance = await ethers.provider.getBalance(addr1.address);
             const transferAmount = ethers.parseEther('0.5');
-
-            const callData = new ethers.Interface(['function transfer(address,uint256)']).encodeFunctionData(
-                'transfer',
-                [addr1.address, transferAmount]
-            );
 
             await expect(
                 simpleAccount.executeCall(addr1.address, transferAmount, '0x')
@@ -119,7 +88,7 @@ describe('Account Abstraction Integration', function () {    // Supabase Configu
 
     describe('TokenPaymaster', function () {
         it('Should initialize with correct parameters', async function () {
-            expect(await tokenPaymaster.acceptedToken()).to.equal(addr1.address);
+            expect(await tokenPaymaster.acceptedToken()).to.equal(await mockToken.getAddress());
             expect(await tokenPaymaster.entryPoint()).to.equal(owner.address);
             expect(await tokenPaymaster.verifiedSigners(owner.address)).to.be.true;
         });
@@ -150,8 +119,9 @@ describe('Account Abstraction Integration', function () {    // Supabase Configu
         });
 
         it('Should return correct balance', async function () {
-            const balance = await tokenPaymaster.getBalance();
-            expect(balance).to.equal(0);
+            // Initially balance is 0 since no tokens have been transferred to paymaster
+            const initialBalance = await tokenPaymaster.getBalance();
+            expect(initialBalance).to.equal(0);
         });
     });
 
