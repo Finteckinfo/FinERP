@@ -83,7 +83,7 @@ Conclusion: Data isolation and security policies in place
 Configuration Status: VERIFIED
 
 Bot Details:
-- Token: 8490080324:AAEoIyvYCbv09GpLdoU3GfpH7-GKmnSMU54
+- Token: [REDACTED - See .env file for actual token]
 - Name: FinPro Bot
 - Webhook URL: https://fin1pro.vercel.app
 - Mini App URL: https://fin1pro.vercel.app
