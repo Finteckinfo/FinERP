@@ -20,18 +20,31 @@ async function checkStatus() {
         }
     }
 
-    // 2. Check Webhook Configuration
-    console.log('\n--- Webhook Status ---');
+    // 2. Check Webhook/Polling Status
+    console.log('\n--- Operation Mode Check ---');
     const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN || '');
     try {
         const webhookInfo = await bot.api.getWebhookInfo();
-        console.log('Current Webhook Info:', JSON.stringify(webhookInfo, null, 2));
+        console.log('Telegram API reports Webhook URL:', webhookInfo.url || '(None - Polling Mode)');
 
-        if (!webhookInfo.url) {
-            console.warn('⚠️ Webhook is NOT set. The bot might be expecting polling or is inactive.');
+        const configuredPolling = process.env.TELEGRAM_USE_POLLING === 'true';
+        console.log('Environment TELEGRAM_USE_POLLING:', configuredPolling);
+
+        if (configuredPolling) {
+            if (webhookInfo.url) {
+                console.warn('⚠️ MISMATCH: Polling is enabled in env, but Webhook is still set on Telegram!');
+                console.warn('   The bot should invoke deleteWebhook() on startup. Try restarting the bot.');
+            } else {
+                console.log('✅ Configuration MATCH: Polling verified (Webhook is unset).');
+            }
         } else {
-            console.log(`✅ Webhook is set to: ${webhookInfo.url}`);
+            if (!webhookInfo.url) {
+                console.warn('⚠️ MISMATCH: Webhook mode expected, but no Webhook URL set on Telegram!');
+            } else {
+                console.log('✅ Configuration MATCH: Webhook verified.');
+            }
         }
+
     } catch (e: any) {
         console.error(`❌ Failed to get Webhook Info: ${e.message}`);
     }
