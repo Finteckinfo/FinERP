@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import HomePage from "@/react-app/pages/Home";
 import ProjectDetailPage from "@/react-app/pages/ProjectDetail";
 import LoginPage from "@/react-app/pages/Login";
+import TaskRedirect from "@/react-app/pages/TaskRedirect";
 import { TokenSwap } from "@/react-app/pages/TokenSwap";
 import ProtectedRoute from "@/react-app/components/ProtectedRoute";
 import { MultiChainWalletProvider } from "@/react-app/context/MultiChainWalletContext";
@@ -49,6 +50,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <ProjectDetailPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tasks/:id"
+              element={
+                <ProtectedRoute>
+                  <TaskRedirect />
                 </ProtectedRoute>
               }
             />
