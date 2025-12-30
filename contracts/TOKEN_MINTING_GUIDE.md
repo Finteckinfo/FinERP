@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide explains how to mint FIN tokens for testing and production use. Think of it like getting tokens in a pool game - you need tokens to play and test the system.
+This guide states how to mint FIN tokens for testing and production use. Think of it like getting tokens in a pool game - you need tokens to play and test the system.
 
 ## Requirements
 
