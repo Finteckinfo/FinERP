@@ -1,0 +1,192 @@
+2025-12-30 17:37:12: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:37:12:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:37:12:                   ^
+2025-12-30 17:37:12: 
+2025-12-30 17:37:12: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:37:12:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:37:12:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:37:12:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:37:12: 
+2025-12-30 17:37:12: Node.js v20.19.5
+2025-12-30 17:37:19: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:37:19:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:37:19:                   ^
+2025-12-30 17:37:19: 
+2025-12-30 17:37:19: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:37:19:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:37:19:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:37:19:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:37:19: 
+2025-12-30 17:37:19: Node.js v20.19.5
+2025-12-30 17:37:26: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:37:26:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:37:26:                   ^
+2025-12-30 17:37:26: 
+2025-12-30 17:37:26: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:37:26:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:37:26:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:37:26:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:37:26: 
+2025-12-30 17:37:26: Node.js v20.19.5
+2025-12-30 17:37:33: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:37:33:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:37:33:                   ^
+2025-12-30 17:37:33: 
+2025-12-30 17:37:33: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:37:33:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:37:33:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:37:33:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:37:33: 
+2025-12-30 17:37:33: Node.js v20.19.5
+2025-12-30 17:37:40: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:37:40:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:37:40:                   ^
+2025-12-30 17:37:40: 
+2025-12-30 17:37:40: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:37:40:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:37:40:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:37:40:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:37:40: 
+2025-12-30 17:37:40: Node.js v20.19.5
+2025-12-30 17:37:49: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:37:49:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:37:49:                   ^
+2025-12-30 17:37:49: 
+2025-12-30 17:37:49: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:37:49:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:37:49:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:37:49:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:37:49: 
+2025-12-30 17:37:49: Node.js v20.19.5
+2025-12-30 17:38:01: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:38:01:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:38:01:                   ^
+2025-12-30 17:38:01: 
+2025-12-30 17:38:01: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:38:01:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:38:01:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:38:01:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:38:01: 
+2025-12-30 17:38:01: Node.js v20.19.5
+2025-12-30 17:38:08: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:38:08:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:38:08:                   ^
+2025-12-30 17:38:08: 
+2025-12-30 17:38:08: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:38:08:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:38:08:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:38:08:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:38:08: 
+2025-12-30 17:38:08: Node.js v20.19.5
+2025-12-30 17:38:16: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:38:16:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:38:16:                   ^
+2025-12-30 17:38:16: 
+2025-12-30 17:38:16: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:38:16:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:38:16:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:38:16:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:38:16: 
+2025-12-30 17:38:16: Node.js v20.19.5
+2025-12-30 17:38:22: Failed to register bot commands: HttpError: Network request for 'setMyCommands' failed!
+2025-12-30 17:38:22:     at /home/c0bw3b/FinPro/node_modules/grammy/out/core/error.js:85:15
+2025-12-30 17:38:22:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:38:22:     at async ApiClient.call (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:54:29)
+2025-12-30 17:38:22:     at async ApiClient.callApi (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:93:22)
+2025-12-30 17:38:22:     at async registerCommands (/home/c0bw3b/FinPro/telegram-bot/handlers/commands.ts:461:9)
+2025-12-30 17:38:22:     at async startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:78:5) {
+2025-12-30 17:38:22:   error: FetchError: request to https://api.telegram.org/bot8490080324:AAGE7gm32wueIDyHBh6qbBLH7L3LleQpGDo/setMyCommands failed, reason: 
+2025-12-30 17:38:22:       at ClientRequest.<anonymous> (/home/c0bw3b/FinPro/node_modules/grammy/node_modules/node-fetch/lib/index.js:1501:11)
+2025-12-30 17:38:22:       at ClientRequest.emit (node:events:524:28)
+2025-12-30 17:38:22:       at emitErrorEvent (node:_http_client:101:11)
+2025-12-30 17:38:22:       at TLSSocket.socketErrorListener (node:_http_client:504:5)
+2025-12-30 17:38:22:       at TLSSocket.emit (node:events:524:28)
+2025-12-30 17:38:22:       at emitErrorNT (node:internal/streams/destroy:169:8)
+2025-12-30 17:38:22:       at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+2025-12-30 17:38:22:       at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+2025-12-30 17:38:22:     type: 'system',
+2025-12-30 17:38:22:     errno: 'ETIMEDOUT',
+2025-12-30 17:38:22:     code: 'ETIMEDOUT'
+2025-12-30 17:38:22:   }
+2025-12-30 17:38:22: }
+2025-12-30 17:38:23: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:38:23:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:38:23:                   ^
+2025-12-30 17:38:23: 
+2025-12-30 17:38:23: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:38:23:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:38:23:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:38:23:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:38:23: 
+2025-12-30 17:38:23: Node.js v20.19.5
+2025-12-30 17:38:30: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:38:30:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:38:30:                   ^
+2025-12-30 17:38:30: 
+2025-12-30 17:38:30: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:38:30:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:38:30:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:38:30:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:38:30: 
+2025-12-30 17:38:30: Node.js v20.19.5
+2025-12-30 17:38:38: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:38:38:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:38:38:                   ^
+2025-12-30 17:38:38: 
+2025-12-30 17:38:38: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:38:38:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:38:38:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:38:38:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:38:38: 
+2025-12-30 17:38:38: Node.js v20.19.5
+2025-12-30 17:38:45: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:38:45:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:38:45:                   ^
+2025-12-30 17:38:45: 
+2025-12-30 17:38:45: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:38:45:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:38:45:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:38:45:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:38:45: 
+2025-12-30 17:38:45: Node.js v20.19.5
+2025-12-30 17:38:52: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:38:52:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:38:52:                   ^
+2025-12-30 17:38:52: 
+2025-12-30 17:38:52: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:38:52:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:38:52:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:38:52:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:38:52: 
+2025-12-30 17:38:52: Node.js v20.19.5
+2025-12-30 17:39:04: Failed to register bot commands: HttpError: Network request for 'setMyCommands' failed!
+2025-12-30 17:39:04:     at /home/c0bw3b/FinPro/node_modules/grammy/out/core/error.js:85:15
+2025-12-30 17:39:04:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:39:04:     at async ApiClient.call (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:54:29)
+2025-12-30 17:39:04:     at async ApiClient.callApi (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:93:22)
+2025-12-30 17:39:04:     at async registerCommands (/home/c0bw3b/FinPro/telegram-bot/handlers/commands.ts:461:9)
+2025-12-30 17:39:04:     at async startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:78:5) {
+2025-12-30 17:39:04:   error: FetchError: request to https://api.telegram.org/bot8490080324:AAGE7gm32wueIDyHBh6qbBLH7L3LleQpGDo/setMyCommands failed, reason: 
+2025-12-30 17:39:04:       at ClientRequest.<anonymous> (/home/c0bw3b/FinPro/node_modules/grammy/node_modules/node-fetch/lib/index.js:1501:11)
+2025-12-30 17:39:04:       at ClientRequest.emit (node:events:524:28)
+2025-12-30 17:39:04:       at emitErrorEvent (node:_http_client:101:11)
+2025-12-30 17:39:04:       at TLSSocket.socketErrorListener (node:_http_client:504:5)
+2025-12-30 17:39:04:       at TLSSocket.emit (node:events:524:28)
+2025-12-30 17:39:04:       at emitErrorNT (node:internal/streams/destroy:169:8)
+2025-12-30 17:39:04:       at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+2025-12-30 17:39:04:       at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+2025-12-30 17:39:04:     type: 'system',
+2025-12-30 17:39:04:     errno: 'ETIMEDOUT',
+2025-12-30 17:39:04:     code: 'ETIMEDOUT'
+2025-12-30 17:39:04:   }
+2025-12-30 17:39:04: }
+2025-12-30 17:39:04: /home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20
+2025-12-30 17:39:04:             throw new Error("You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!");
+2025-12-30 17:39:04:                   ^
+2025-12-30 17:39:04: 
+2025-12-30 17:39:04: Error: You already started the bot via webhooks, calling `bot.start()` starts the bot with long polling and this will prevent your webhook setup from receiving any updates!
+2025-12-30 17:39:04:     at bot.start (/home/c0bw3b/FinPro/node_modules/grammy/out/convenience/webhook.js:20:19)
+2025-12-30 17:39:04:     at startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:87:13)
+2025-12-30 17:39:04:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-30 17:39:04: 
+2025-12-30 17:39:04: Node.js v20.19.5

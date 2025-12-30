@@ -12,7 +12,7 @@
 
 ## Security Checklist
 
-###  Access Control
+###  Access Ctrl
 - [x] Role-based access control (RBAC) implemented
 - [x] Admin roles properly restricted
 - [x] Zero address checks for critical functions
