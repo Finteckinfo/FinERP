@@ -64,14 +64,6 @@ app.post('/webhook', async (req: express.Request, res: express.Response) => {
     }
 });
 
-// Telegram Bot Webhook endpoint
-app.post('/bot-webhook', webhookCallback(bot, 'express'));
-
-// Health check endpoint
-app.get('/health', (req: express.Request, res: express.Response) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
-
 // Start server
 const startServer = async () => {
     // 1. Register commands with Telegram
@@ -84,8 +76,21 @@ const startServer = async () => {
         console.log('Starting bot in POLLING mode...');
         // Delete any existing webhook before starting polling
         await bot.api.deleteWebhook({ drop_pending_updates: true });
+
+        // Start polling
         bot.start();
+
+        // Start Express server ONLY for Supabase webhooks and health checks
+        app.listen(config.port, () => {
+            console.log(`Express server running on port ${config.port} (Supabase Webhooks & Health - NO Bot Webhook)`);
+        });
+
     } else {
+        // WEBHOOK MODE
+
+        // Attach the webhook callback to Express ONLY in webhook mode
+        app.post('/bot-webhook', webhookCallback(bot, 'express'));
+
         // Set webhook
         try {
             const webhookUrl = `${config.webhookUrl}/bot-webhook`;
@@ -94,12 +99,12 @@ const startServer = async () => {
         } catch (error) {
             console.error('Failed to set webhook:', error);
         }
-    }
 
-    // 3. Start Express server for Supabase webhooks and health checks
-    app.listen(config.port, () => {
-        console.log(`Express server running on port ${config.port} (Supabase Webhooks & Health)`);
-    });
+        // Start Express server
+        app.listen(config.port, () => {
+            console.log(`Telegram bot server running on port ${config.port} (Webhook Mode)`);
+        });
+    }
 };
 
 startServer();
