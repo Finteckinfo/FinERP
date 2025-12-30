@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import TelegramBot from 'node-telegram-bot-api';
+import { Bot, webhookCallback } from 'grammy';
 import { createClient } from '@supabase/supabase-js';
 import {
     handleStart,
@@ -9,12 +9,13 @@ import {
     handleProfile,
     handleStats,
     handlePing,
-    registerCommands
+    handleBalance,
+    handleBroadcast
 } from '../telegram-bot/handlers/commands.js';
 import { handleSupabaseWebhook as sharedHandleSupabaseWebhook } from '../telegram-bot/handlers/webhooks.js';
 
-// Initialize bot (without polling for serverless)
-const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN || '', { polling: false });
+// Initialize bot
+const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN || '');
 
 // Initialize Supabase
 const supabase = createClient(
@@ -22,78 +23,40 @@ const supabase = createClient(
     process.env.SUPABASE_SERVICE_KEY || ''
 );
 
+// Setup bot handlers
+bot.command('start', (ctx) => handleStart(ctx, supabase));
+bot.command('projects', (ctx) => handleProjects(ctx, supabase));
+bot.command('tasks', (ctx) => handleTasks(ctx, supabase));
+bot.command('profile', (ctx) => handleProfile(ctx, supabase));
+bot.command('balance', (ctx) => handleBalance(ctx, supabase));
+bot.command('broadcast', (ctx) => handleBroadcast(ctx, supabase));
+bot.command('stats', (ctx) => handleStats(ctx, supabase));
+bot.command('ping', (ctx) => handlePing(ctx));
+bot.command('help', (ctx) => handleHelp(ctx));
+
+const botCallback = webhookCallback(bot, 'express');
+
 export default async function handler(req: Request, res: Response) {
-    console.log('Environment Check:', {
-        hasToken: !!process.env.TELEGRAM_BOT_TOKEN,
-        hasSupabaseUrl: !!process.env.VITE_SUPABASE_URL,
-        hasSupabaseKey: !!process.env.SUPABASE_SERVICE_KEY,
-        hasMiniAppUrl: !!process.env.TELEGRAM_MINI_APP_URL
-    });
-
-    console.log('Webhook triggered with method:', req.method);
-
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    if (!process.env.TELEGRAM_BOT_TOKEN) {
-        console.error('CRITICAL: TELEGRAM_BOT_TOKEN is missing in environment!');
-        return res.status(500).json({ error: 'Bot token not configured' });
-    }
-
     const payload = req.body;
-    console.log('Webhook payload:', JSON.stringify(payload, null, 2));
 
     try {
         // 1. Detect if this is a Supabase Webhook
         if (payload.record && payload.table && payload.type) {
             console.log('Supabase Webhook detected:', payload.table, payload.type);
-            await sharedHandleSupabaseWebhook(bot, supabase, payload);
+            await sharedHandleSupabaseWebhook(bot.api, supabase, payload);
             return res.status(200).json({ ok: true });
         }
 
-        // 2. Handle Telegram Bot Updates
-        if (payload.message) {
-            const message = payload.message;
-
-            // Handle commands
-            if (message.text && message.text.startsWith('/')) {
-                const text = message.text;
-                const command = text.split(' ')[0];
-                console.log('Command received:', command);
-
-                switch (command) {
-                    case '/start':
-                        await registerCommands(bot);
-                        await handleStart(bot, message, supabase);
-                        break;
-                    case '/projects':
-                        await handleProjects(bot, message, supabase);
-                        break;
-                    case '/tasks':
-                        await handleTasks(bot, message, supabase);
-                        break;
-                    case '/profile':
-                        await handleProfile(bot, message, supabase);
-                        break;
-                    case '/stats':
-                        await handleStats(bot, message, supabase);
-                        break;
-                    case '/ping':
-                        await handlePing(bot, message);
-                        break;
-                    case '/help':
-                        await handleHelp(bot, message);
-                        break;
-                    default:
-                        await bot.sendMessage(message.chat.id, 'Unknown command. Use /help to see available commands.');
-                }
-            }
-        }
-
-        res.status(200).json({ ok: true });
+        // 2. Handle Telegram Bot Updates using grammy's webhookCallback
+        return await botCallback(req, res);
     } catch (error) {
         console.error('Webhook error:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        if (!res.headersSent) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
