@@ -5,7 +5,8 @@ import ProjectDetailPage from "@/react-app/pages/ProjectDetail";
 import LoginPage from "@/react-app/pages/Login";
 import { TokenSwap } from "@/react-app/pages/TokenSwap";
 import ProtectedRoute from "@/react-app/components/ProtectedRoute";
-import { WalletProvider, useWallet } from "@/react-app/context/WalletContext";
+import { MultiChainWalletProvider } from "@/react-app/context/MultiChainWalletContext";
+import { useWallet } from "@/react-app/context/WalletContext";
 import { useTelegramAuth, useTelegramUserSync } from "@/react-app/hooks/useTelegramAuth";
 import { toast, Toaster } from "react-hot-toast";
 
@@ -30,7 +31,7 @@ function TelegramSyncWrapper({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <Router>
-      <WalletProvider>
+      <MultiChainWalletProvider>
         <TelegramSyncWrapper>
           <Toaster position="top-center" />
           <Routes>
@@ -61,7 +62,7 @@ export default function App() {
             />
           </Routes>
         </TelegramSyncWrapper>
-      </WalletProvider>
+      </MultiChainWalletProvider>
     </Router>
   );
 }

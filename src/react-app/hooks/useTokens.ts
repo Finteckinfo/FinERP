@@ -24,13 +24,13 @@ export function useTokenBalances(userId: string) {
       if (error) throw error;
 
       const balanceMap: TokenBalances = { FINe: 0, USDT: 0 };
-      data?.forEach((balance: { token_type: string; balance: number }) => {
+      (data as { token_type: string; balance: number }[] | null)?.forEach((balance) => {
         balanceMap[balance.token_type as TokenType] = balance.balance;
       });
 
       setBalances(balanceMap);
       setError(null);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to load balances');
     } finally {
       setLoading(false);
@@ -60,9 +60,9 @@ export function useSwapHistory(userId: string) {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setSwaps(data || []);
+      setSwaps((data as unknown as SwapTransaction[]) || []);
       setError(null);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to load swap history');
     } finally {
       setLoading(false);

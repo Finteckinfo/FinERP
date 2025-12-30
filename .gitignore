@@ -5,3 +5,4 @@ node_modules/
 .env
 .env.telegram
 .env.test
+.gitignore.local

@@ -1,18 +1,19 @@
-import TelegramBot from 'node-telegram-bot-api';
+import { Context, Api, InlineKeyboard } from 'grammy';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { config } from '../config.js';
+import { getChatLink } from './projectChat.js';
+import { Address, fromNano } from '@ton/core';
 
 /**
  * Handle /start command
  * Links Telegram user to the platform
  */
 export async function handleStart(
-    bot: TelegramBot,
-    message: TelegramBot.Message,
+    ctx: Context,
     supabase: SupabaseClient
 ) {
-    const chatId = message.chat.id;
-    const telegramId = message.from?.id;
+    const chatId = ctx.chat?.id;
+    const telegramId = ctx.from?.id;
 
     console.log('handleStart debugging:', {
         chatId,
@@ -20,12 +21,12 @@ export async function handleStart(
         miniAppUrl: config.miniAppUrl
     });
 
-    const username = message.from?.username || '';
-    const firstName = message.from?.first_name || '';
-    const lastName = message.from?.last_name || '';
+    const username = ctx.from?.username || '';
+    const firstName = ctx.from?.first_name || '';
+    const lastName = ctx.from?.last_name || '';
 
-    if (!telegramId) {
-        await bot.sendMessage(chatId, 'Unable to identify your Telegram account.');
+    if (!telegramId || !chatId) {
+        await ctx.reply('Unable to identify your Telegram account.');
         return;
     }
 
@@ -39,8 +40,7 @@ export async function handleStart(
 
         if (existingUser) {
             // User already registered
-            await bot.sendMessage(
-                chatId,
+            await ctx.reply(
                 `Welcome back, ${firstName}!\n\n` +
                 `Your account is already linked.\n` +
                 `Role: ${existingUser.role}\n\n` +
@@ -60,8 +60,7 @@ export async function handleStart(
             );
         } else {
             // New user - need to link wallet
-            await bot.sendMessage(
-                chatId,
+            await ctx.reply(
                 `Welcome to FinPro, ${firstName}!\n\n` +
                 `To get started, please open the app and connect your wallet.\n` +
                 `Your Telegram account will be automatically linked.\n\n` +
@@ -83,7 +82,7 @@ export async function handleStart(
         }
     } catch (error) {
         console.error('Error in /start handler:', error);
-        await bot.sendMessage(chatId, 'An error occurred. Please try again later.');
+        await ctx.reply('An error occurred. Please try again later.');
     }
 }
 
@@ -92,15 +91,14 @@ export async function handleStart(
  * Shows user's projects based on their role
  */
 export async function handleProjects(
-    bot: TelegramBot,
-    message: TelegramBot.Message,
+    ctx: Context,
     supabase: SupabaseClient
 ) {
-    const chatId = message.chat.id;
-    const telegramId = message.from?.id;
+    const chatId = ctx.chat?.id;
+    const telegramId = ctx.from?.id;
 
-    if (!telegramId) {
-        await bot.sendMessage(chatId, 'Unable to identify your Telegram account.');
+    if (!telegramId || !chatId) {
+        await ctx.reply('Unable to identify your Telegram account.');
         return;
     }
 
@@ -113,8 +111,7 @@ export async function handleProjects(
             .single();
 
         if (!telegramUser) {
-            await bot.sendMessage(
-                chatId,
+            await ctx.reply(
                 'Your account is not linked yet. Please use /start to get started.'
             );
             return;
@@ -150,40 +147,40 @@ export async function handleProjects(
         }
 
         if (!projects || projects.length === 0) {
-            await bot.sendMessage(chatId, 'You have no projects yet.');
+            await ctx.reply('You have no projects yet.');
             return;
         }
 
         let response = `Your Projects (${telegramUser.role}):\n\n`;
-        projects.forEach((project: any, index: number) => {
+        const keyboard = new InlineKeyboard();
+
+        for (const [index, project] of projects.entries()) {
             response += `${index + 1}. ${project.name}\n`;
             response += `   Status: ${project.status}\n`;
             response += `   Funds: $${project.total_funds.toLocaleString()}\n\n`;
-        });
 
-        await bot.sendMessage(chatId, response, {
-            reply_markup: {
-                inline_keyboard: [
-                    [
-                        {
-                            text: 'Open Full App',
-                            web_app: { url: config.miniAppUrl }
-                        }
-                    ]
-                ]
+            const chatLink = await getChatLink(project.id);
+            if (chatLink) {
+                keyboard.url(`💬 Chat: ${project.name}`, chatLink);
+                if ((index + 1) % 2 === 0) keyboard.row();
             }
+        }
+
+        keyboard.row().webApp('Open Full App', config.miniAppUrl);
+
+        await ctx.reply(response, {
+            reply_markup: keyboard
         });
     } catch (error) {
         console.error('Error in /projects handler:', error);
-        await bot.sendMessage(chatId, 'An error occurred while fetching projects.');
+        await ctx.reply('An error occurred while fetching projects.');
     }
 }
 
 /**
  * Handle /help command
  */
-export async function handleHelp(bot: TelegramBot, message: TelegramBot.Message) {
-    const chatId = message.chat.id;
+export async function handleHelp(ctx: Context) {
 
     const helpText = `
 *FinPro Bot Commands*
@@ -192,14 +189,16 @@ export async function handleHelp(bot: TelegramBot, message: TelegramBot.Message)
 /projects - View your projects
 /tasks - View your assigned tasks
 /profile - Your account information
+/balance - Check TON wallet balance
 /stats - Platform statistics
 /help - Show this help message
+/ping - Check bot status
 
 *Quick Actions*
 Tap the button below to open the full FinPro app within Telegram!
   `;
 
-    await bot.sendMessage(chatId, helpText, {
+    await ctx.reply(helpText, {
         parse_mode: 'Markdown',
         reply_markup: {
             inline_keyboard: [
@@ -219,12 +218,10 @@ Tap the button below to open the full FinPro app within Telegram!
  * Shows tasks assigned to the user
  */
 export async function handleTasks(
-    bot: TelegramBot,
-    message: TelegramBot.Message,
+    ctx: Context,
     supabase: SupabaseClient
 ) {
-    const chatId = message.chat.id;
-    const telegramId = message.from?.id;
+    const telegramId = ctx.from?.id;
 
     if (!telegramId) return;
 
@@ -236,7 +233,7 @@ export async function handleTasks(
             .single();
 
         if (!telegramUser) {
-            await bot.sendMessage(chatId, 'Account not linked. Use /start first.');
+            await ctx.reply('Account not linked. Use /start first.');
             return;
         }
 
@@ -248,7 +245,7 @@ export async function handleTasks(
             .limit(10);
 
         if (!tasks || tasks.length === 0) {
-            await bot.sendMessage(chatId, 'No tasks assigned to you.');
+            await ctx.reply('No tasks assigned to you.');
             return;
         }
 
@@ -261,10 +258,10 @@ export async function handleTasks(
             response += `Reward: $${task.allocated_amount}\n\n`;
         });
 
-        await bot.sendMessage(chatId, response, { parse_mode: 'Markdown' });
+        await ctx.reply(response, { parse_mode: 'Markdown' });
     } catch (error) {
         console.error('Error in /tasks:', error);
-        await bot.sendMessage(chatId, 'Error fetching tasks.');
+        await ctx.reply('Error fetching tasks.');
     }
 }
 
@@ -273,12 +270,10 @@ export async function handleTasks(
  * Shows user profile and wallet
  */
 export async function handleProfile(
-    bot: TelegramBot,
-    message: TelegramBot.Message,
+    ctx: Context,
     supabase: SupabaseClient
 ) {
-    const chatId = message.chat.id;
-    const telegramId = message.from?.id;
+    const telegramId = ctx.from?.id;
 
     if (!telegramId) return;
 
@@ -290,7 +285,7 @@ export async function handleProfile(
             .single();
 
         if (!user) {
-            await bot.sendMessage(chatId, 'Profile not found. Use /start.');
+            await ctx.reply('Profile not found. Use /start.');
             return;
         }
 
@@ -303,7 +298,7 @@ Role: ${user.role}
 Username: @${user.telegram_username || 'None'}
         `;
 
-        await bot.sendMessage(chatId, response, { parse_mode: 'Markdown' });
+        await ctx.reply(response, { parse_mode: 'Markdown' });
     } catch (error) {
         console.error('Error in /profile:', error);
     }
@@ -314,11 +309,9 @@ Username: @${user.telegram_username || 'None'}
  * Shows platform statistics
  */
 export async function handleStats(
-    bot: TelegramBot,
-    message: TelegramBot.Message,
+    ctx: Context,
     supabase: SupabaseClient
 ) {
-    const chatId = message.chat.id;
 
     try {
         const { count: projectCount } = await supabase
@@ -343,32 +336,121 @@ Total Tasks: ${taskCount || 0}
 Total Locked Value: $${totalValue.toLocaleString()}
         `;
 
-        await bot.sendMessage(chatId, response, { parse_mode: 'Markdown' });
+        await ctx.reply(response, { parse_mode: 'Markdown' });
     } catch (error) {
         console.error('Error in /stats:', error);
     }
 }
 /**
+ * Handle /balance command
+ */
+export async function handleBalance(
+    ctx: Context,
+    supabase: SupabaseClient
+) {
+    const telegramId = ctx.from?.id;
+    if (!telegramId) return;
+
+    try {
+        const { data: user } = await supabase
+            .from('telegram_users')
+            .select('user_id')
+            .eq('telegram_id', telegramId)
+            .single();
+
+        if (!user) {
+            await ctx.reply('Account not linked. Use /start first.');
+            return;
+        }
+
+        // For simplicity, we'll try to fetch balance from a public TON API or just show address for now
+        // if ton-core is available we can format it
+        await ctx.reply(
+            `*Wallet Balance*\n\n` +
+            `Address: \`${user.user_id}\`\n` +
+            `Balance: _Feature coming soon_ (Check in Mini App)`,
+            { parse_mode: 'Markdown' }
+        );
+    } catch (error) {
+        console.error('Error in /balance:', error);
+    }
+}
+
+/**
+ * Handle /broadcast command (Admin only)
+ */
+export async function handleBroadcast(
+    ctx: Context,
+    supabase: SupabaseClient
+) {
+    const telegramId = ctx.from?.id;
+    if (!telegramId) return;
+
+    try {
+        const { data: user } = await supabase
+            .from('telegram_users')
+            .select('role')
+            .eq('telegram_id', telegramId)
+            .single();
+
+        if (!user || user.role !== 'admin') {
+            await ctx.reply('Unauthorized. Admin only.');
+            return;
+        }
+
+        const message = ctx.message?.text?.split(' ').slice(1).join(' ');
+        if (!message) {
+            await ctx.reply('Usage: /broadcast <message>');
+            return;
+        }
+
+        const { data: users } = await supabase
+            .from('telegram_users')
+            .select('telegram_id');
+
+        if (!users) return;
+
+        let success = 0;
+        let fail = 0;
+
+        await ctx.reply(`Starting broadcast to ${users.length} users...`);
+
+        for (const u of users) {
+            try {
+                await ctx.api.sendMessage(u.telegram_id, `📢 *Broadcast Announcement*\n\n${message}`, { parse_mode: 'Markdown' });
+                success++;
+            } catch (e) {
+                fail++;
+            }
+        }
+
+        await ctx.reply(`Broadcast complete!\n✅ Success: ${success}\n❌ Failed: ${fail}`);
+    } catch (error) {
+        console.error('Error in /broadcast:', error);
+    }
+}
+
+/**
  * Handle /ping command
  */
-export async function handlePing(bot: TelegramBot, message: TelegramBot.Message) {
+export async function handlePing(ctx: Context) {
     try {
-        await registerCommands(bot);
-        await bot.sendMessage(message.chat.id, 'Pong! Bot is active and commands have been re-registered.');
+        await ctx.reply('Pong! Bot is active.');
     } catch (e) {
-        await bot.sendMessage(message.chat.id, 'Pong! Bot is active (Command registration failed).');
+        // Ignore
     }
 }
 
 /**
  * Register bot commands with Telegram
  */
-export async function registerCommands(bot: TelegramBot) {
+export async function registerCommands(api: Api) {
     const commands = [
         { command: 'start', description: 'Initialize and link account' },
         { command: 'projects', description: 'View your projects' },
         { command: 'tasks', description: 'View your assigned tasks' },
         { command: 'profile', description: 'View your profile' },
+        { command: 'balance', description: 'Check TON balance' },
         { command: 'stats', description: 'Platform statistics' },
         { command: 'help', description: 'Show help message' },
         { command: 'ping', description: 'Check bot status' }
@@ -376,7 +458,7 @@ export async function registerCommands(bot: TelegramBot) {
 
     try {
         // Set commands for private chats specifically to force update
-        await bot.setMyCommands(commands, { scope: { type: 'all_private_chats' } });
+        await api.setMyCommands(commands, { scope: { type: 'all_private_chats' } });
         console.log('Bot commands registered successfully for private chats');
     } catch (error) {
         console.error('Failed to register bot commands:', error);

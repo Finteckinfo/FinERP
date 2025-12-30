@@ -1,0 +1,8 @@
+{
+    "name": "DataRegistry",
+    "path": "./contracts/DataRegistry.tact",
+    "output": "./build",
+    "options": {
+        "debug": true
+    }
+}

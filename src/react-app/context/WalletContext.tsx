@@ -5,6 +5,7 @@ import { switchToLocalNetwork } from '@/react-app/lib/localNetworkConfig';
 
 interface WalletContextType {
     account: string | null;
+    address: string | null; // Alias for account
     provider: BrowserProvider | null;
     chainId: number | null;
     loading: boolean;
@@ -195,22 +196,34 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const value = React.useMemo(() => ({
+        account,
+        address: account,
+        provider,
+        chainId,
+        loading,
+        error,
+        isConnected: !!account,
+        isMobile,
+        connect,
+        disconnect,
+        switchNetwork,
+        connectToLocal,
+    }), [
+        account,
+        provider,
+        chainId,
+        loading,
+        error,
+        isMobile,
+        connect,
+        disconnect,
+        switchNetwork,
+        connectToLocal
+    ]);
+
     return (
-        <WalletContext.Provider
-            value={{
-                account,
-                provider,
-                chainId,
-                loading,
-                error,
-                isConnected: !!account,
-                isMobile,
-                connect,
-                disconnect,
-                switchNetwork,
-                connectToLocal,
-            }}
-        >
+        <WalletContext.Provider value={value}>
             {children}
         </WalletContext.Provider>
     );

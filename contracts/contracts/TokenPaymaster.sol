@@ -68,22 +68,24 @@ contract TokenPaymaster is Ownable {
         require(verifiedSigners[signer], "Invalid signature");
         require(!usedNonces[userOpHash], "Nonce already used");
 
-        return abi.encode(account, maxCost);
+        return abi.encode(account, maxCost, userOpHash);
     }
 
     function postOp(
         bytes calldata context,
         uint256 actualGasCost
     ) external onlyEntryPoint {
-        (address account, uint256 maxCost) = abi.decode(context, (address, uint256));
+        (address account, uint256 maxCost, bytes32 userOpHash) = abi.decode(context, (address, uint256, bytes32));
 
         uint256 chargedAmount = (actualGasCost * exchangeRate) / 1e18;
         require(chargedAmount <= maxCost, "Gas cost exceeded");
 
+        // CEI Pattern: Update state and emit event before internal/external calls
+        usedNonces[userOpHash] = true;
+        emit PaymasterCharged(account, chargedAmount, actualGasCost);
+        
         bool success = acceptedToken.transferFrom(account, address(this), chargedAmount);
         require(success, "Token transfer failed");
-
-        emit PaymasterCharged(account, chargedAmount, actualGasCost);
     }
 
     function withdrawTokens(uint256 amount) external onlyOwner {

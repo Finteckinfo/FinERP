@@ -19,7 +19,7 @@ export function useAllProjects() {
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-            setProjects(data || []);
+            setProjects((data as unknown as Project[]) || []);
             setError(null);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred');
@@ -63,9 +63,9 @@ export function useAssignedProjects(userId: string | null) {
 
             // Extract unique projects
             const projectsMap = new Map<number, Project>();
-            data?.forEach(item => {
+            (data as unknown as { project_id: number; projects: Project[] }[])?.forEach(item => {
                 if (item.projects && Array.isArray(item.projects) && item.projects.length > 0) {
-                    const project = item.projects[0] as Project;
+                    const project = item.projects[0];
                     projectsMap.set(project.id, project);
                 }
             });

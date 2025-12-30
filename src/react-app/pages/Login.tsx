@@ -127,10 +127,10 @@ export default function LoginPage() {
                   'Wallet address is your unique UID',
                   'Encrypted session management'
                 ].map((text, i) => (
-                  <p key={i} className="flex items-center gap-3 text-sm font-bold text-gray-500">
+                  <div key={i} className="flex items-center gap-3 text-sm font-bold text-gray-500">
                     <div className="w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(13,153,255,0.8)]" />
                     {text}
-                  </p>
+                  </div>
                 ))}
               </div>
             </div>

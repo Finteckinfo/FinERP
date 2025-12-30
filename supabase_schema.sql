@@ -31,6 +31,11 @@ BEGIN
     ALTER TABLE users ALTER COLUMN id DROP DEFAULT;
     ALTER TABLE users ALTER COLUMN id TYPE TEXT USING id::text;
     ALTER TABLE users ALTER COLUMN email DROP NOT NULL;
+    
+    -- Add TON blockchain support
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS ton_address TEXT;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS preferred_chain TEXT DEFAULT 'EVM';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS ton_wallet_version TEXT;
   END IF;
 END $$;
 
@@ -39,11 +44,24 @@ CREATE TABLE IF NOT EXISTS projects (
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name TEXT NOT NULL,
   description TEXT,
+  type TEXT DEFAULT 'PROGRESSIVE',
+  priority TEXT DEFAULT 'MEDIUM',
   owner_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   on_chain_id TEXT,
+  escrow_address TEXT,
+  escrow_funded BOOLEAN DEFAULT FALSE,
   total_funds DOUBLE PRECISION NOT NULL DEFAULT 0,
   allocated_funds DOUBLE PRECISION NOT NULL DEFAULT 0,
+  released_funds DOUBLE PRECISION NOT NULL DEFAULT 0,
   status TEXT NOT NULL DEFAULT 'active',
+  start_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  end_date TIMESTAMP WITH TIME ZONE DEFAULT (CURRENT_TIMESTAMP + INTERVAL '30 days'),
+  wallet_address TEXT,
+  user_id TEXT,
+  is_public BOOLEAN DEFAULT TRUE,
+  allow_guests BOOLEAN DEFAULT FALSE,
+  tags TEXT[] DEFAULT '{}',
+  notes TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -182,3 +200,79 @@ CREATE POLICY "Public Swap Transactions Access" ON swap_transactions FOR ALL TO 
 
 DROP POLICY IF EXISTS "Public Token Transactions Access" ON token_transactions;
 CREATE POLICY "Public Token Transactions Access" ON token_transactions FOR ALL TO anon USING (true) WITH CHECK (true);
+
+-- 13. Cross-Chain Transaction Tracking
+CREATE TABLE IF NOT EXISTS cross_chain_transactions (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id TEXT REFERENCES users(id),
+  source_chain TEXT NOT NULL, -- 'TON' or 'EVM'
+  dest_chain TEXT,
+  tx_hash TEXT NOT NULL,
+  operation_type TEXT NOT NULL, -- 'project_create', 'fund_transfer', 'reward', etc.
+  amount DOUBLE PRECISION,
+  metadata JSONB,
+  status TEXT DEFAULT 'pending',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_cross_chain_tx_hash ON cross_chain_transactions(tx_hash);
+CREATE INDEX IF NOT EXISTS idx_cross_chain_user ON cross_chain_transactions(user_id);
+
+-- 14. On-Chain Data Mirror for Transparency
+CREATE TABLE IF NOT EXISTS on_chain_data_mirror (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  chain TEXT NOT NULL, -- 'TON' or 'EVM'
+  contract_address TEXT NOT NULL,
+  data_type TEXT NOT NULL, -- 'project', 'subtask', 'payment', etc.
+  reference_id BIGINT, -- Links to projects.id, subtasks.id, etc.
+  on_chain_hash TEXT NOT NULL, -- Transaction or cell hash
+  data_snapshot JSONB NOT NULL, -- Full data stored on-chain
+  block_number BIGINT,
+  synced_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_mirror_reference ON on_chain_data_mirror(data_type, reference_id);
+CREATE INDEX IF NOT EXISTS idx_mirror_chain ON on_chain_data_mirror(chain, contract_address);
+
+-- 15. Project Chat Groups (Telegram Integration)
+CREATE TABLE IF NOT EXISTS project_chat_groups (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  project_id BIGINT REFERENCES projects(id) ON DELETE CASCADE,
+  telegram_group_id TEXT NOT NULL,
+  invite_link TEXT,
+  created_by TEXT REFERENCES users(id),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_chat_project ON project_chat_groups(project_id);
+
+-- 16. Chat Participants
+CREATE TABLE IF NOT EXISTS chat_participants (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  chat_group_id BIGINT REFERENCES project_chat_groups(id) ON DELETE CASCADE,
+  user_id TEXT REFERENCES users(id),
+  telegram_user_id TEXT NOT NULL,
+  role TEXT DEFAULT 'member', -- 'owner', 'worker', 'observer'
+  joined_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_chat_participants ON chat_participants(chat_group_id, user_id);
+
+-- 17. Enable RLS on new tables
+ALTER TABLE cross_chain_transactions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE on_chain_data_mirror ENABLE ROW LEVEL SECURITY;
+ALTER TABLE project_chat_groups ENABLE ROW LEVEL SECURITY;
+ALTER TABLE chat_participants ENABLE ROW LEVEL SECURITY;
+
+-- 18. RLS Policies for new tables
+DROP POLICY IF EXISTS "Public Cross Chain Access" ON cross_chain_transactions;
+CREATE POLICY "Public Cross Chain Access" ON cross_chain_transactions FOR ALL TO anon USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Data Mirror Access" ON on_chain_data_mirror;
+CREATE POLICY "Public Data Mirror Access" ON on_chain_data_mirror FOR ALL TO anon USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Chat Groups Access" ON project_chat_groups;
+CREATE POLICY "Public Chat Groups Access" ON project_chat_groups FOR ALL TO anon USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Chat Participants Access" ON chat_participants;
+CREATE POLICY "Public Chat Participants Access" ON chat_participants FOR ALL TO anon USING (true) WITH CHECK (true);

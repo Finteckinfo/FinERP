@@ -2,8 +2,8 @@ export interface Project {
   id: number;
   name: string;
   description: string | null;
-  type: 'PROGRESSIVE' | 'PARALLEL';
-  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  type?: 'PROGRESSIVE' | 'PARALLEL';
+  priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   on_chain_id: string | null;
   total_funds: number;
   allocated_funds: number;

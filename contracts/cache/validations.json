@@ -2,555 +2,6 @@
   "version": "3.4",
   "log": [
     {
-      "@openzeppelin/contracts/access/Ownable.sol:Ownable": {
-        "src": "@openzeppelin/contracts/access/Ownable.sol:20",
-        "inherit": [
-          "@openzeppelin/contracts/utils/Context.sol:Context"
-        ],
-        "libraries": [],
-        "methods": [
-          "owner()",
-          "renounceOwnership()",
-          "transferOwnership(address)"
-        ],
-        "linkReferences": [],
-        "errors": [
-          {
-            "kind": "constructor",
-            "contract": "Ownable",
-            "src": "@openzeppelin/contracts/access/Ownable.sol:38"
-          }
-        ],
-        "layout": {
-          "storage": [
-            {
-              "label": "_owner",
-              "offset": 0,
-              "slot": "0",
-              "type": "t_address",
-              "contract": "Ownable",
-              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
-            }
-          ],
-          "types": {
-            "t_address": {
-              "label": "address",
-              "numberOfBytes": "20"
-            }
-          },
-          "layoutVersion": "1.2",
-          "flat": true,
-          "namespaces": {}
-        },
-        "solcVersion": "0.8.24"
-      },
-      "@openzeppelin/contracts/proxy/utils/Initializable.sol:Initializable": {
-        "src": "@openzeppelin/contracts/proxy/utils/Initializable.sol:56",
-        "inherit": [],
-        "libraries": [],
-        "methods": [],
-        "linkReferences": [],
-        "errors": [],
-        "layout": {
-          "storage": [],
-          "types": {
-            "t_bool": {
-              "label": "bool",
-              "numberOfBytes": "1"
-            },
-            "t_struct(InitializableStorage)47_storage": {
-              "label": "struct Initializable.InitializableStorage",
-              "members": [
-                {
-                  "label": "_initialized",
-                  "type": "t_uint64",
-                  "offset": 0,
-                  "slot": "0"
-                },
-                {
-                  "label": "_initializing",
-                  "type": "t_bool",
-                  "offset": 8,
-                  "slot": "0"
-                }
-              ],
-              "numberOfBytes": "32"
-            },
-            "t_uint64": {
-              "label": "uint64",
-              "numberOfBytes": "8"
-            }
-          },
-          "layoutVersion": "1.2",
-          "flat": false,
-          "namespaces": {
-            "erc7201:openzeppelin.storage.Initializable": [
-              {
-                "contract": "Initializable",
-                "label": "_initialized",
-                "type": "t_uint64",
-                "src": "@openzeppelin/contracts/proxy/utils/Initializable.sol:69",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "contract": "Initializable",
-                "label": "_initializing",
-                "type": "t_bool",
-                "src": "@openzeppelin/contracts/proxy/utils/Initializable.sol:73",
-                "offset": 8,
-                "slot": "0"
-              }
-            ]
-          }
-        },
-        "solcVersion": "0.8.24"
-      },
-      "@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20": {
-        "src": "@openzeppelin/contracts/token/ERC20/IERC20.sol:9",
-        "inherit": [],
-        "libraries": [],
-        "methods": [
-          "totalSupply()",
-          "balanceOf(address)",
-          "transfer(address,uint256)",
-          "allowance(address,address)",
-          "approve(address,uint256)",
-          "transferFrom(address,address,uint256)"
-        ],
-        "linkReferences": [],
-        "errors": [],
-        "layout": {
-          "storage": [],
-          "types": {},
-          "layoutVersion": "1.2",
-          "flat": false,
-          "namespaces": {}
-        },
-        "solcVersion": "0.8.24"
-      },
-      "@openzeppelin/contracts/utils/Context.sol:Context": {
-        "src": "@openzeppelin/contracts/utils/Context.sol:16",
-        "inherit": [],
-        "libraries": [],
-        "methods": [],
-        "linkReferences": [],
-        "errors": [],
-        "layout": {
-          "storage": [],
-          "types": {},
-          "layoutVersion": "1.2",
-          "flat": false,
-          "namespaces": {}
-        },
-        "solcVersion": "0.8.24"
-      },
-      "@openzeppelin/contracts/utils/Panic.sol:Panic": {
-        "src": "@openzeppelin/contracts/utils/Panic.sol:26",
-        "version": {
-          "withMetadata": "ac2608c1fb0048b650999506962e45cdc79c28b0e55bb11d32e53125bff76d4f",
-          "withoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a",
-          "linkedWithoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a"
-        },
-        "inherit": [],
-        "libraries": [],
-        "methods": [],
-        "linkReferences": [],
-        "errors": [],
-        "layout": {
-          "storage": [],
-          "types": {},
-          "layoutVersion": "1.2",
-          "flat": false,
-          "namespaces": {}
-        },
-        "solcVersion": "0.8.24"
-      },
-      "@openzeppelin/contracts/utils/Strings.sol:Strings": {
-        "src": "@openzeppelin/contracts/utils/Strings.sol:13",
-        "version": {
-          "withMetadata": "83cca97a1e9e3b24cbffb040ea31cea3159a29da7485a5fc999df63db917ce76",
-          "withoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a",
-          "linkedWithoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a"
-        },
-        "inherit": [],
-        "libraries": [
-          "@openzeppelin/contracts/utils/math/SafeCast.sol:SafeCast",
-          "@openzeppelin/contracts/utils/math/Math.sol:Math",
-          "@openzeppelin/contracts/utils/math/SignedMath.sol:SignedMath"
-        ],
-        "methods": [],
-        "linkReferences": [],
-        "errors": [],
-        "layout": {
-          "storage": [],
-          "types": {},
-          "layoutVersion": "1.2",
-          "flat": false,
-          "namespaces": {}
-        },
-        "solcVersion": "0.8.24"
-      },
-      "@openzeppelin/contracts/utils/cryptography/ECDSA.sol:ECDSA": {
-        "src": "@openzeppelin/contracts/utils/cryptography/ECDSA.sol:12",
-        "version": {
-          "withMetadata": "67b4fd369d3d35a9fa0cc2ac3ec0eb09172175f4b6ab8a2e49a77f9b61054911",
-          "withoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a",
-          "linkedWithoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a"
-        },
-        "inherit": [],
-        "libraries": [],
-        "methods": [],
-        "linkReferences": [],
-        "errors": [],
-        "layout": {
-          "storage": [],
-          "types": {},
-          "layoutVersion": "1.2",
-          "flat": false,
-          "namespaces": {}
-        },
-        "solcVersion": "0.8.24"
-      },
-      "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol:MessageHashUtils": {
-        "src": "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol:15",
-        "version": {
-          "withMetadata": "20b153faeb9b58e9e148f22bdb5ac287d70868dfc462b72e83f87b8b347b3965",
-          "withoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a",
-          "linkedWithoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a"
-        },
-        "inherit": [],
-        "libraries": [
-          "@openzeppelin/contracts/utils/Strings.sol:Strings"
-        ],
-        "methods": [],
-        "linkReferences": [],
-        "errors": [],
-        "layout": {
-          "storage": [],
-          "types": {},
-          "layoutVersion": "1.2",
-          "flat": false,
-          "namespaces": {}
-        },
-        "solcVersion": "0.8.24"
-      },
-      "@openzeppelin/contracts/utils/math/Math.sol:Math": {
-        "src": "@openzeppelin/contracts/utils/math/Math.sol:12",
-        "version": {
-          "withMetadata": "bf31de812fa64e40469263b262dd2512a83a176980539d8efe73b20ad9836d1b",
-          "withoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a",
-          "linkedWithoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a"
-        },
-        "inherit": [],
-        "libraries": [
-          "@openzeppelin/contracts/utils/math/SafeCast.sol:SafeCast",
-          "@openzeppelin/contracts/utils/math/Math.sol:Math",
-          "@openzeppelin/contracts/utils/Panic.sol:Panic"
-        ],
-        "methods": [],
-        "linkReferences": [],
-        "errors": [],
-        "layout": {
-          "storage": [],
-          "types": {},
-          "layoutVersion": "1.2",
-          "flat": false,
-          "namespaces": {}
-        },
-        "solcVersion": "0.8.24"
-      },
-      "@openzeppelin/contracts/utils/math/SafeCast.sol:SafeCast": {
-        "src": "@openzeppelin/contracts/utils/math/SafeCast.sol:19",
-        "version": {
-          "withMetadata": "e5f81efb76772d9e7054294b4308ea2b7739ee1f37ac529d518eda678fa30c88",
-          "withoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a",
-          "linkedWithoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a"
-        },
-        "inherit": [],
-        "libraries": [],
-        "methods": [],
-        "linkReferences": [],
-        "errors": [],
-        "layout": {
-          "storage": [],
-          "types": {},
-          "layoutVersion": "1.2",
-          "flat": false,
-          "namespaces": {}
-        },
-        "solcVersion": "0.8.24"
-      },
-      "@openzeppelin/contracts/utils/math/SignedMath.sol:SignedMath": {
-        "src": "@openzeppelin/contracts/utils/math/SignedMath.sol:11",
-        "version": {
-          "withMetadata": "164ce65a7e1d779b5787f7c9a6fe00babd4d7949a1e236decae242204c5b6a3b",
-          "withoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a",
-          "linkedWithoutMetadata": "e2a89a66865458f0d9fedd4bc7faf0ee62e4c341d176ab79d29bd77a1bdfc32a"
-        },
-        "inherit": [],
-        "libraries": [
-          "@openzeppelin/contracts/utils/math/SafeCast.sol:SafeCast"
-        ],
-        "methods": [],
-        "linkReferences": [],
-        "errors": [],
-        "layout": {
-          "storage": [],
-          "types": {},
-          "layoutVersion": "1.2",
-          "flat": false,
-          "namespaces": {}
-        },
-        "solcVersion": "0.8.24"
-      },
-      "contracts/SimpleAccount.sol:IEntryPoint": {
-        "src": "contracts/SimpleAccount.sol:8",
-        "inherit": [],
-        "libraries": [],
-        "methods": [
-          "validateUserOp(address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)"
-        ],
-        "linkReferences": [],
-        "errors": [],
-        "layout": {
-          "storage": [],
-          "types": {},
-          "layoutVersion": "1.2",
-          "flat": false,
-          "namespaces": {}
-        },
-        "solcVersion": "0.8.24"
-      },
-      "contracts/SimpleAccount.sol:SimpleAccount": {
-        "src": "contracts/SimpleAccount.sol:24",
-        "version": {
-          "withMetadata": "500699b8c7ff253fd8ae489163a08dd6274a457af5a379b4259cb26be66d0534",
-          "withoutMetadata": "c1de908691460bc400c4efbe8f58aa61be3df39be5a234f0b661df9c33be6eef",
-          "linkedWithoutMetadata": "c1de908691460bc400c4efbe8f58aa61be3df39be5a234f0b661df9c33be6eef"
-        },
-        "inherit": [
-          "@openzeppelin/contracts/proxy/utils/Initializable.sol:Initializable"
-        ],
-        "libraries": [
-          "@openzeppelin/contracts/utils/cryptography/ECDSA.sol:ECDSA",
-          "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol:MessageHashUtils"
-        ],
-        "methods": [
-          "initialize(address,address)",
-          "validateUserOp(bytes)",
-          "executeCall(address,uint256,bytes)",
-          "executeBatch(address[],uint256[],bytes[])",
-          "increaseNonce()",
-          "()"
-        ],
-        "linkReferences": [],
-        "errors": [],
-        "layout": {
-          "storage": [
-            {
-              "label": "owner",
-              "offset": 0,
-              "slot": "0",
-              "type": "t_address",
-              "contract": "SimpleAccount",
-              "src": "contracts/SimpleAccount.sol:27"
-            },
-            {
-              "label": "entryPoint",
-              "offset": 0,
-              "slot": "1",
-              "type": "t_address",
-              "contract": "SimpleAccount",
-              "src": "contracts/SimpleAccount.sol:28"
-            },
-            {
-              "label": "nonce",
-              "offset": 0,
-              "slot": "2",
-              "type": "t_uint256",
-              "contract": "SimpleAccount",
-              "src": "contracts/SimpleAccount.sol:29"
-            }
-          ],
-          "types": {
-            "t_bool": {
-              "label": "bool",
-              "numberOfBytes": "1"
-            },
-            "t_struct(InitializableStorage)47_storage": {
-              "label": "struct Initializable.InitializableStorage",
-              "members": [
-                {
-                  "label": "_initialized",
-                  "type": "t_uint64",
-                  "offset": 0,
-                  "slot": "0"
-                },
-                {
-                  "label": "_initializing",
-                  "type": "t_bool",
-                  "offset": 8,
-                  "slot": "0"
-                }
-              ],
-              "numberOfBytes": "32"
-            },
-            "t_uint64": {
-              "label": "uint64",
-              "numberOfBytes": "8"
-            },
-            "t_address": {
-              "label": "address",
-              "numberOfBytes": "20"
-            },
-            "t_uint256": {
-              "label": "uint256",
-              "numberOfBytes": "32"
-            }
-          },
-          "layoutVersion": "1.2",
-          "flat": true,
-          "namespaces": {
-            "erc7201:openzeppelin.storage.Initializable": [
-              {
-                "contract": "Initializable",
-                "label": "_initialized",
-                "type": "t_uint64",
-                "src": "@openzeppelin/contracts/proxy/utils/Initializable.sol:69",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "contract": "Initializable",
-                "label": "_initializing",
-                "type": "t_bool",
-                "src": "@openzeppelin/contracts/proxy/utils/Initializable.sol:73",
-                "offset": 8,
-                "slot": "0"
-              }
-            ]
-          }
-        },
-        "solcVersion": "0.8.24"
-      },
-      "contracts/TokenPaymaster.sol:TokenPaymaster": {
-        "src": "contracts/TokenPaymaster.sol:9",
-        "version": {
-          "withMetadata": "57e572b74df1775fff415ae8b0330eda4603108945502128d9ce81ec14dd4522",
-          "withoutMetadata": "381b2aff511ae4823caf2b26b3959a6aaa94ea091bd5b8dbf50fb1a120d410b9",
-          "linkedWithoutMetadata": "381b2aff511ae4823caf2b26b3959a6aaa94ea091bd5b8dbf50fb1a120d410b9"
-        },
-        "inherit": [
-          "@openzeppelin/contracts/access/Ownable.sol:Ownable",
-          "@openzeppelin/contracts/utils/Context.sol:Context"
-        ],
-        "libraries": [
-          "@openzeppelin/contracts/utils/cryptography/ECDSA.sol:ECDSA",
-          "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol:MessageHashUtils"
-        ],
-        "methods": [
-          "(address,address,address)",
-          "addVerifier(address)",
-          "removeVerifier(address)",
-          "setExchangeRate(uint256)",
-          "validatePaymasterUserOp(address,bytes32,uint256,bytes)",
-          "postOp(bytes,uint256)",
-          "withdrawTokens(uint256)",
-          "getBalance()"
-        ],
-        "linkReferences": [],
-        "errors": [
-          {
-            "kind": "constructor",
-            "contract": "TokenPaymaster",
-            "src": "contracts/TokenPaymaster.sol:32"
-          },
-          {
-            "kind": "state-variable-immutable",
-            "name": "acceptedToken",
-            "src": "contracts/TokenPaymaster.sol:13"
-          },
-          {
-            "kind": "state-variable-immutable",
-            "name": "entryPoint",
-            "src": "contracts/TokenPaymaster.sol:14"
-          },
-          {
-            "kind": "state-variable-assignment",
-            "name": "exchangeRate",
-            "src": "contracts/TokenPaymaster.sol:16"
-          }
-        ],
-        "layout": {
-          "storage": [
-            {
-              "label": "_owner",
-              "offset": 0,
-              "slot": "0",
-              "type": "t_address",
-              "contract": "Ownable",
-              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
-            },
-            {
-              "label": "exchangeRate",
-              "offset": 0,
-              "slot": "1",
-              "type": "t_uint256",
-              "contract": "TokenPaymaster",
-              "src": "contracts/TokenPaymaster.sol:16"
-            },
-            {
-              "label": "verifiedSigners",
-              "offset": 0,
-              "slot": "2",
-              "type": "t_mapping(t_address,t_bool)",
-              "contract": "TokenPaymaster",
-              "src": "contracts/TokenPaymaster.sol:18"
-            },
-            {
-              "label": "usedNonces",
-              "offset": 0,
-              "slot": "3",
-              "type": "t_mapping(t_bytes32,t_bool)",
-              "contract": "TokenPaymaster",
-              "src": "contracts/TokenPaymaster.sol:19"
-            }
-          ],
-          "types": {
-            "t_address": {
-              "label": "address",
-              "numberOfBytes": "20"
-            },
-            "t_bool": {
-              "label": "bool",
-              "numberOfBytes": "1"
-            },
-            "t_bytes32": {
-              "label": "bytes32",
-              "numberOfBytes": "32"
-            },
-            "t_mapping(t_address,t_bool)": {
-              "label": "mapping(address => bool)",
-              "numberOfBytes": "32"
-            },
-            "t_mapping(t_bytes32,t_bool)": {
-              "label": "mapping(bytes32 => bool)",
-              "numberOfBytes": "32"
-            },
-            "t_uint256": {
-              "label": "uint256",
-              "numberOfBytes": "32"
-            }
-          },
-          "layoutVersion": "1.2",
-          "flat": true,
-          "namespaces": {}
-        },
-        "solcVersion": "0.8.24"
-      }
-    },
-    {
       "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol:AccessControlUpgradeable": {
         "src": "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol:51",
         "inherit": [
@@ -4245,9 +3696,9 @@
       "contracts/SimpleAccount.sol:SimpleAccount": {
         "src": "contracts/SimpleAccount.sol:24",
         "version": {
-          "withMetadata": "0b3e44350cea3f3299710818b2f215c3b6114814670006481b7ee84e27500137",
-          "withoutMetadata": "1e24dc914bbd7b1dbab8be77336c5ec08a0f4ed4e47fba1009d2263c3a257512",
-          "linkedWithoutMetadata": "1e24dc914bbd7b1dbab8be77336c5ec08a0f4ed4e47fba1009d2263c3a257512"
+          "withMetadata": "500699b8c7ff253fd8ae489163a08dd6274a457af5a379b4259cb26be66d0534",
+          "withoutMetadata": "c1de908691460bc400c4efbe8f58aa61be3df39be5a234f0b661df9c33be6eef",
+          "linkedWithoutMetadata": "c1de908691460bc400c4efbe8f58aa61be3df39be5a234f0b661df9c33be6eef"
         },
         "inherit": [
           "@openzeppelin/contracts/proxy/utils/Initializable.sol:Initializable"
@@ -4516,9 +3967,9 @@
       "contracts/TokenPaymaster.sol:TokenPaymaster": {
         "src": "contracts/TokenPaymaster.sol:9",
         "version": {
-          "withMetadata": "1d1f9581c2a9f6432eaac0f99fdffc74cb1c40eef96d858b707fcdfa8b959d6b",
-          "withoutMetadata": "b9686f8a66878923b1df3f61a990b273632b844fd6ce7fdd68201edc8bf3972c",
-          "linkedWithoutMetadata": "b9686f8a66878923b1df3f61a990b273632b844fd6ce7fdd68201edc8bf3972c"
+          "withMetadata": "43f918c3e8aa1782a7f0478ec37649ba9ce1852635f19396b4e8c098abf4a6b1",
+          "withoutMetadata": "3360c241692e7acd9d6686a7f734d516a9e9275692d950d09f6ae22b32d4b7ef",
+          "linkedWithoutMetadata": "3360c241692e7acd9d6686a7f734d516a9e9275692d950d09f6ae22b32d4b7ef"
         },
         "inherit": [
           "@openzeppelin/contracts/access/Ownable.sol:Ownable",
@@ -4546,6 +3997,16 @@
             "src": "contracts/TokenPaymaster.sol:32"
           },
           {
+            "kind": "state-variable-immutable",
+            "name": "acceptedToken",
+            "src": "contracts/TokenPaymaster.sol:13"
+          },
+          {
+            "kind": "state-variable-immutable",
+            "name": "entryPoint",
+            "src": "contracts/TokenPaymaster.sol:14"
+          },
+          {
             "kind": "state-variable-assignment",
             "name": "exchangeRate",
             "src": "contracts/TokenPaymaster.sol:16"
@@ -4562,25 +4023,9 @@
               "src": "@openzeppelin/contracts/access/Ownable.sol:21"
             },
             {
-              "label": "acceptedToken",
-              "offset": 0,
-              "slot": "1",
-              "type": "t_contract(IERC20)4003",
-              "contract": "TokenPaymaster",
-              "src": "contracts/TokenPaymaster.sol:13"
-            },
-            {
-              "label": "entryPoint",
-              "offset": 0,
-              "slot": "2",
-              "type": "t_address",
-              "contract": "TokenPaymaster",
-              "src": "contracts/TokenPaymaster.sol:14"
-            },
-            {
               "label": "exchangeRate",
               "offset": 0,
-              "slot": "3",
+              "slot": "1",
               "type": "t_uint256",
               "contract": "TokenPaymaster",
               "src": "contracts/TokenPaymaster.sol:16"
@@ -4588,7 +4033,7 @@
             {
               "label": "verifiedSigners",
               "offset": 0,
-              "slot": "4",
+              "slot": "2",
               "type": "t_mapping(t_address,t_bool)",
               "contract": "TokenPaymaster",
               "src": "contracts/TokenPaymaster.sol:18"
@@ -4596,7 +4041,7 @@
             {
               "label": "usedNonces",
               "offset": 0,
-              "slot": "5",
+              "slot": "3",
               "type": "t_mapping(t_bytes32,t_bool)",
               "contract": "TokenPaymaster",
               "src": "contracts/TokenPaymaster.sol:19"
@@ -4614,10 +4059,6 @@
             "t_bytes32": {
               "label": "bytes32",
               "numberOfBytes": "32"
-            },
-            "t_contract(IERC20)4003": {
-              "label": "contract IERC20",
-              "numberOfBytes": "20"
             },
             "t_mapping(t_address,t_bool)": {
               "label": "mapping(address => bool)",

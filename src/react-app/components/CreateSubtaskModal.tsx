@@ -35,49 +35,92 @@ export default function CreateSubtaskModal({
     setError(null);
 
     try {
-      // Create subtask
+      // Step 1: Validate project exists
+      const { data: project, error: projectError } = await supabase
+        .from('projects')
+        .select('id, allocated_funds')
+        .eq('id', projectId)
+        .single();
+
+      if (projectError) {
+        throw new Error(`Project not found: ${projectError.message}`);
+      }
+
+      // Step 2: Ensure assigned_to user exists in users table
+      const assignedToId = formData.assigned_to || 'anonymous';
+
+      if (assignedToId !== 'anonymous') {
+        const { data: existingUser } = await supabase
+          .from('users')
+          .select('id')
+          .eq('id', assignedToId)
+          .single();
+
+        if (!existingUser) {
+          // Create user if doesn't exist
+          const { error: userInsertError } = await supabase
+            .from('users')
+            .insert({ id: assignedToId });
+
+          if (userInsertError && userInsertError.code !== '23505') {
+            console.warn('User creation returned:', userInsertError.code);
+          }
+        }
+      }
+
+      // Step 3: Create subtask with full error logging
       const { error: subtaskError } = await supabase
         .from('subtasks')
         .insert({
-          ...formData,
           project_id: projectId,
+          title: formData.title,
+          description: formData.description || null,
+          assigned_to: assignedToId !== 'anonymous' ? assignedToId : null,
+          allocated_amount: formData.allocated_amount,
           status: 'pending'
+        })
+        .select();
+
+      if (subtaskError) {
+        console.error('Subtask creation failed:', {
+          code: subtaskError.code,
+          message: subtaskError.message,
+          details: subtaskError.details,
+          hint: subtaskError.hint
         });
+        throw new Error(`Failed to create stream: ${subtaskError.message}`);
+      }
 
-      if (subtaskError) throw subtaskError;
-
-      // Update project allocated funds via RPC
-      const { error: projectError } = await supabase.rpc('allocate_project_funds', {
+      // Step 4: Update project allocated funds via RPC
+      const { error: allocError } = await supabase.rpc('allocate_project_funds', {
         p_project_id: projectId,
         p_amount: formData.allocated_amount
       });
 
-      if (projectError) {
-        console.warn('RPC allocate_project_funds failed, attempting fallback update:', projectError);
-        const { data: project } = await supabase
+      if (allocError) {
+        console.warn('RPC allocate_project_funds failed, attempting fallback update:', allocError);
+        const { error: updateError } = await supabase
           .from('projects')
-          .select('allocated_funds')
-          .eq('id', projectId)
-          .single();
+          .update({
+            allocated_funds: (project.allocated_funds || 0) + formData.allocated_amount,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', projectId);
 
-        if (project) {
-          const { error: updateError } = await supabase
-            .from('projects')
-            .update({
-              allocated_funds: project.allocated_funds + formData.allocated_amount,
-              updated_at: new Date().toISOString()
-            })
-            .eq('id', projectId);
-
-          if (updateError) throw updateError;
+        if (updateError) {
+          console.error('Fallback update failed:', updateError);
+          throw new Error(`Failed to update project funds: ${updateError.message}`);
         }
       }
 
+      // Success - reset form and close
       setFormData({ title: '', description: '', assigned_to: '', allocated_amount: 0 });
       onSuccess();
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred creating the stream';
+      setError(errorMessage);
+      console.error('Full error details:', err);
     } finally {
       setLoading(false);
     }

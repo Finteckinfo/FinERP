@@ -3,6 +3,7 @@ import { X, Sparkles, ArrowRight, DollarSign } from 'lucide-react';
 import { supabase } from '@/react-app/lib/supabase';
 import { useWallet } from '@/react-app/hooks/useWallet';
 import { useContract, parseEther } from '@/react-app/hooks/useWallet';
+import { useTonWallet } from '@/react-app/hooks/useTonWallet';
 import { FIN_TOKEN_ABI, PROJECT_ESCROW_ABI, CONTRACT_ADDRESSES } from '@/react-app/lib/contracts';
 
 interface CreateProjectModalProps {
@@ -17,8 +18,6 @@ export default function CreateProjectModal({ isOpen, onClose, onSuccess }: Creat
     name: '',
     description: '',
     total_funds: 0,
-    type: 'PROGRESSIVE' as 'PROGRESSIVE' | 'PARALLEL',
-    priority: 'MEDIUM' as 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL',
     start_date: new Date().toISOString().split('T')[0],
     end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   });
@@ -28,6 +27,7 @@ export default function CreateProjectModal({ isOpen, onClose, onSuccess }: Creat
 
   const finToken = useContract(CONTRACT_ADDRESSES.finToken, FIN_TOKEN_ABI);
   const projectEscrow = useContract(CONTRACT_ADDRESSES.projectEscrow, PROJECT_ESCROW_ABI);
+  const { storeProjectOnTon, tonAddress } = useTonWallet();
 
   if (!isOpen) return null;
 
@@ -68,32 +68,57 @@ export default function CreateProjectModal({ isOpen, onClose, onSuccess }: Creat
 
       // 4. Create record in Supabase
       setLoadingStep('Finalizing Registry Backup...');
-      const { error: insertError } = await supabase
+      const { data: newProject, error: insertError } = await supabase
         .from('projects')
         .insert({
           name: formData.name,
           description: formData.description,
           total_funds: formData.total_funds,
           on_chain_id: onChainId,
-          type: formData.type,
-          priority: formData.priority,
           start_date: formData.start_date,
           end_date: formData.end_date,
           owner_id: account.toLowerCase(),
           wallet_address: account,
           is_public: true,
           allow_guests: false,
+          escrow_funded: true,
           status: 'active'
-        });
+        })
+        .select()
+        .single();
 
       if (insertError) throw insertError;
+
+      // 5. Replicate to TON for transparency (optional but recommended)
+      if (tonAddress && newProject) {
+        try {
+          setLoadingStep('Replicating to TON for Transparency...');
+          const tonTxHash = await storeProjectOnTon({
+            name: formData.name,
+            description: formData.description || '',
+            owner: tonAddress,
+            totalFunds: formData.total_funds
+          });
+
+          // Store TON reference in mirror table
+          await supabase.from('on_chain_data_mirror').insert({
+            chain: 'TON',
+            contract_address: import.meta.env.VITE_TON_DATA_REGISTRY_ADDRESS,
+            data_type: 'project',
+            reference_id: newProject.id,
+            on_chain_hash: tonTxHash,
+            data_snapshot: newProject
+          });
+        } catch (tonError) {
+          // TON replication is optional, don't fail the entire process
+          console.warn('TON replication failed:', tonError);
+        }
+      }
 
       setFormData({
         name: '',
         description: '',
         total_funds: 0,
-        type: 'PROGRESSIVE' as 'PROGRESSIVE' | 'PARALLEL',
-        priority: 'MEDIUM' as 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL',
         start_date: new Date().toISOString().split('T')[0],
         end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       });
@@ -182,38 +207,6 @@ export default function CreateProjectModal({ isOpen, onClose, onSuccess }: Creat
                 className="w-full pl-14 pr-6 py-4 bg-black/20 border border-white/5 rounded-[22px] focus:border-blue-500/30 outline-none transition-all text-white placeholder-gray-700 text-3xl font-black"
                 placeholder="0"
               />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-3">
-              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] ml-2">
-                Project Type
-              </label>
-              <select
-                value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value as 'PROGRESSIVE' | 'PARALLEL' })}
-                className="w-full px-6 py-4 bg-black/20 border border-white/5 rounded-[22px] focus:border-blue-500/30 outline-none transition-all text-white font-medium"
-              >
-                <option value="PROGRESSIVE">Progressive</option>
-                <option value="PARALLEL">Parallel</option>
-              </select>
-            </div>
-
-            <div className="space-y-3">
-              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] ml-2">
-                Priority
-              </label>
-              <select
-                value={formData.priority}
-                onChange={(e) => setFormData({ ...formData, priority: e.target.value as 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' })}
-                className="w-full px-6 py-4 bg-black/20 border border-white/5 rounded-[22px] focus:border-blue-500/30 outline-none transition-all text-white font-medium"
-              >
-                <option value="LOW">Low</option>
-                <option value="MEDIUM">Medium</option>
-                <option value="HIGH">High</option>
-                <option value="CRITICAL">Critical</option>
-              </select>
             </div>
           </div>
 

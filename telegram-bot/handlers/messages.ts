@@ -1,4 +1,4 @@
-import TelegramBot from 'node-telegram-bot-api';
+import { Context } from 'grammy';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 /**
@@ -6,13 +6,10 @@ import { SupabaseClient } from '@supabase/supabase-js';
  * Routes messages between admin and assignees
  */
 export async function handleMessage(
-    bot: TelegramBot,
-    message: TelegramBot.Message,
+    ctx: Context,
     supabase: SupabaseClient
 ) {
-    const chatId = message.chat.id;
-    const telegramId = message.from?.id;
-    const text = message.text || '';
+    const telegramId = ctx.from?.id;
 
     if (!telegramId) {
         return;
@@ -27,8 +24,7 @@ export async function handleMessage(
             .single();
 
         if (!telegramUser) {
-            await bot.sendMessage(
-                chatId,
+            await ctx.reply(
                 'Your account is not linked. Please use /start to get started.'
             );
             return;
@@ -36,8 +32,7 @@ export async function handleMessage(
 
         // For now, just acknowledge the message
         // In a full implementation, this would handle message routing
-        await bot.sendMessage(
-            chatId,
+        await ctx.reply(
             'Message received! For full messaging features, please use the app.',
             {
                 reply_markup: {

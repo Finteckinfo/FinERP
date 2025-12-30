@@ -1,8 +1,8 @@
-import TelegramBot from 'node-telegram-bot-api';
+import { Api } from 'grammy';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 export async function handleSupabaseWebhook(
-    bot: TelegramBot,
+    botApi: Api,
     supabase: SupabaseClient,
     payload: any
 ) {
@@ -21,7 +21,7 @@ export async function handleSupabaseWebhook(
 
             if (telegramUser) {
                 const message = `*Project Created!*\n\n*Name:* ${record.name}\n*Capital Reserve:* $${record.total_funds.toLocaleString()}\n\nManage your project in the Mini App!`;
-                await bot.sendMessage(telegramUser.telegram_id, message, {
+                await botApi.sendMessage(telegramUser.telegram_id, message, {
                     parse_mode: 'Markdown',
                     reply_markup: {
                         inline_keyboard: [[{
@@ -44,7 +44,7 @@ export async function handleSupabaseWebhook(
 
                     if (telegramUser) {
                         const message = `*New Task Assigned!*\n\n*Task:* ${record.title}\n*Allocation:* $${record.allocated_amount.toLocaleString()}\n\nCheck your tasks in the Mini App!`;
-                        await bot.sendMessage(telegramUser.telegram_id, message, {
+                        await botApi.sendMessage(telegramUser.telegram_id, message, {
                             parse_mode: 'Markdown',
                             reply_markup: {
                                 inline_keyboard: [[{
@@ -71,7 +71,7 @@ export async function handleSupabaseWebhook(
 
                     if (telegramUser) {
                         const message = `*Task Status Updated*\n\n*Project:* ${project.name}\n*Task:* ${record.title}\n*New Status:* ${record.status.toUpperCase()}\n\nView details in the Mini App.`;
-                        await bot.sendMessage(telegramUser.telegram_id, message, {
+                        await botApi.sendMessage(telegramUser.telegram_id, message, {
                             parse_mode: 'Markdown'
                         });
                     }

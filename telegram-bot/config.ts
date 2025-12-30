@@ -5,6 +5,9 @@ export const config = {
     // Webhook URL for receiving updates from Telegram
     webhookUrl: process.env.TELEGRAM_WEBHOOK_URL || '',
 
+    // Master Group Chat ID for Forum Topics
+    masterChatId: process.env.TELEGRAM_MASTER_CHAT_ID || '',
+
     // Mini App URL (deployed React app)
     miniAppUrl: (() => {
         let url = process.env.TELEGRAM_MINI_APP_URL || 'https://fin1pro.vercel.app';
@@ -26,7 +29,7 @@ export const config = {
 
 // Validate required configuration
 export function validateConfig() {
-    const required = ['botToken', 'webhookUrl', 'miniAppUrl'];
+    const required = ['botToken', 'webhookUrl', 'miniAppUrl', 'masterChatId'];
     const missing = required.filter(key => !config[key as keyof typeof config]);
 
     if (missing.length > 0) {

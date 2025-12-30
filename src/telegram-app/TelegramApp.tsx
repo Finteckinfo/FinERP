@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
-import { WalletProvider } from '@/react-app/context/WalletContext';
-import { useTelegramAuth, useTelegramUserSync, getTelegramUserRole } from '@/react-app/hooks/useTelegramAuth';
-import { useWallet } from '@/react-app/context/WalletContext';
+import { WalletProvider } from '/home/c0bw3b/FinPro/src/react-app/context/WalletContext.tsx';
+import { useTelegramAuth, useTelegramUserSync, getTelegramUserRole } from '../react-app/hooks/useTelegramAuth';
+import { useWallet } from '../react-app/context/WalletContext';
 import AdminView from './views/AdminView';
 import AssigneeView from './views/AssigneeView';
-import ProjectDetailPage from '@/react-app/pages/ProjectDetail';
+import ProjectDetail from '../react-app/pages/ProjectDetail.tsx';
 
 /**
  * Main Telegram Mini App component
@@ -90,7 +90,7 @@ function TelegramAppContent() {
                     )
                 }
             />
-            <Route path="/projects/:id" element={<ProjectDetailPage />} />
+            <Route path="/projects/:id" element={<ProjectDetail />} />
             <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
     );

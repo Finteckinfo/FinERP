@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { ethers } from 'ethers';
 import { AccountAbstractionSDK } from '../../lib/accountAbstraction';
 
@@ -27,7 +27,7 @@ export function useGaslessTransaction(options: UseGaslessTransactionOptions) {
         transactionHash: null,
     });
 
-    const sdk = new AccountAbstractionSDK(
+    const sdk = React.useMemo(() => new AccountAbstractionSDK(
         {
             address: options.entryPointAddress,
             rpcUrl: options.rpcUrl,
@@ -38,7 +38,12 @@ export function useGaslessTransaction(options: UseGaslessTransactionOptions) {
             signingKey: options.paymasterSigningKey,
             token: '',
         }
-    );
+    ), [
+        options.entryPointAddress,
+        options.rpcUrl,
+        options.paymasterAddress,
+        options.paymasterSigningKey
+    ]);
 
     const sendGaslessTransaction = useCallback(
         async (

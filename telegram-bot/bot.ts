@@ -1,16 +1,28 @@
 import 'dotenv/config';
-import TelegramBot from 'node-telegram-bot-api';
+import { Bot, webhookCallback } from 'grammy';
 import express from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { config, validateConfig } from './config.js';
-import { handleStart, handleProjects, handleHelp, handleTasks, handleProfile, handleStats, handlePing, registerCommands } from './handlers/commands.js';
+import {
+    handleStart,
+    handleProjects,
+    handleHelp,
+    handleTasks,
+    handleProfile,
+    handleStats,
+    handlePing,
+    handleBalance,
+    handleBroadcast,
+    registerCommands
+} from './handlers/commands.js';
 import { handleMessage } from './handlers/messages.js';
+import { handleSupabaseWebhook } from './handlers/webhooks.js';
 
 // Validate configuration on startup
 validateConfig();
 
 // Initialize Telegram Bot
-const bot = new TelegramBot(config.botToken);
+const bot = new Bot(config.botToken);
 
 // Initialize Supabase client with service key for admin operations
 const supabase = createClient(config.supabase.url, config.supabase.serviceKey);
@@ -19,57 +31,30 @@ const supabase = createClient(config.supabase.url, config.supabase.serviceKey);
 const app = express();
 app.use(express.json());
 
-import { handleSupabaseWebhook } from './handlers/webhooks.js';
+// Command Handlers
+bot.command('start', (ctx) => handleStart(ctx, supabase));
+bot.command('projects', (ctx) => handleProjects(ctx, supabase));
+bot.command('tasks', (ctx) => handleTasks(ctx, supabase));
+bot.command('profile', (ctx) => handleProfile(ctx, supabase));
+bot.command('balance', (ctx) => handleBalance(ctx, supabase));
+bot.command('broadcast', (ctx) => handleBroadcast(ctx, supabase));
+bot.command('stats', (ctx) => handleStats(ctx, supabase));
+bot.command('ping', (ctx) => handlePing(ctx));
+bot.command('help', (ctx) => handleHelp(ctx));
 
-// Webhook endpoint
+// Handle other messages
+bot.on('message:text', (ctx) => handleMessage(ctx, supabase));
+
+// Webhook endpoint for Supabase
 app.post('/webhook', async (req: express.Request, res: express.Response) => {
     try {
         const payload = req.body;
 
-        // 1. Detect if this is a Supabase Webhook
+        // Detect if this is a Supabase Webhook
         if (payload.record && payload.table && payload.type) {
             console.log('Supabase Webhook detected:', payload.table, payload.type);
-            await handleSupabaseWebhook(bot, supabase, payload);
+            await handleSupabaseWebhook(bot.api, supabase, payload);
             return res.sendStatus(200);
-        }
-
-        // 2. Handle Telegram Bot Updates
-        if (payload.message) {
-            const message = payload.message;
-            const chatId = message.chat.id;
-            const text = message.text || '';
-
-            // Handle commands
-            if (text.startsWith('/')) {
-                switch (text.split(' ')[0]) {
-                    case '/start':
-                        await handleStart(bot, message, supabase);
-                        break;
-                    case '/projects':
-                        await handleProjects(bot, message, supabase);
-                        break;
-                    case '/tasks':
-                        await handleTasks(bot, message, supabase);
-                        break;
-                    case '/profile':
-                        await handleProfile(bot, message, supabase);
-                        break;
-                    case '/stats':
-                        await handleStats(bot, message, supabase);
-                        break;
-                    case '/ping':
-                        await handlePing(bot, message);
-                        break;
-                    case '/help':
-                        await handleHelp(bot, message);
-                        break;
-                    default:
-                        await bot.sendMessage(chatId, 'Unknown command. Type /help for available commands.');
-                }
-            } else {
-                // Handle regular messages
-                await handleMessage(bot, message, supabase);
-            }
         }
 
         res.sendStatus(200);
@@ -78,6 +63,9 @@ app.post('/webhook', async (req: express.Request, res: express.Response) => {
         res.sendStatus(500);
     }
 });
+
+// Telegram Bot Webhook endpoint
+app.post('/bot-webhook', webhookCallback(bot, 'express'));
 
 // Health check endpoint
 app.get('/health', (req: express.Request, res: express.Response) => {
@@ -89,12 +77,13 @@ app.listen(config.port, async () => {
     console.log(`Telegram bot server running on port ${config.port}`);
 
     // Register commands with Telegram
-    await registerCommands(bot);
+    await registerCommands(bot.api);
 
     // Set webhook
     try {
-        await bot.setWebHook(`${config.webhookUrl}/webhook`);
-        console.log(`Webhook set to: ${config.webhookUrl}/webhook`);
+        const webhookUrl = `${config.webhookUrl}/bot-webhook`;
+        await bot.api.setWebhook(webhookUrl);
+        console.log(`Webhook set to: ${webhookUrl}`);
     } catch (error) {
         console.error('Failed to set webhook:', error);
     }
