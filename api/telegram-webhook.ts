@@ -1,17 +1,10 @@
 import type { Request, Response } from 'express';
 import { Bot, webhookCallback } from 'grammy';
-import { createClient } from '@supabase/supabase-js';
 
 // Initialize bot
 const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN || '');
 
-// Initialize Supabase
-const supabase = createClient(
-    process.env.VITE_SUPABASE_URL || '',
-    process.env.SUPABASE_SERVICE_KEY || ''
-);
-
-// Simple inline handlers first
+// Simple inline handlers only
 bot.command('ping', async (ctx) => {
     await ctx.reply('pong');
 });
@@ -21,14 +14,9 @@ bot.command('start', async (ctx) => {
     await ctx.reply(`Hello ${firstName}! Bot is working with inline handlers.`);
 });
 
-// Try adding one external handler
-try {
-    const { handleHelp } = require('../telegram-bot/handlers/commands.js');
-    bot.command('help', (ctx) => handleHelp(ctx, supabase));
-    console.log('Successfully imported handleHelp');
-} catch (error) {
-    console.error('Failed to import handleHelp:', error);
-}
+bot.command('help', async (ctx) => {
+    await ctx.reply('Available commands: /start, /ping, /help');
+});
 
 const botCallback = webhookCallback(bot, 'express');
 
