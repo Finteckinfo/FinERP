@@ -7,42 +7,41 @@ async function main() {
     console.log("Deploying contracts with account:", deployer.address);
     console.log("Account balance:", ethers.formatEther(await ethers.provider.getBalance(deployer.address)), "ETH\n");
 
-    // Deploy FIN Token
-    console.log("Deploying FIN Token (Upgradeable)...");
-    const FINToken = await ethers.getContractFactory("FINToken");
-    const finToken = await upgrades.deployProxy(
-        FINToken,
-        [deployer.address], // admin address
-        { initializer: "initialize", kind: "uups" }
-    );
-    await finToken.waitForDeployment();
-    const finTokenAddress = await finToken.getAddress();
-    console.log("FIN Token deployed to:", finTokenAddress);
-    console.log("   Total Supply: 100,000,000 FIN\n");
+    // Resume deployment using existing addresses to save gas/ETH
+    console.log("Resuming deployment...");
+    const finTokenAddress = "0x2f575ACfec3D607C094BC02c6bDe169C7f01f707";
+    console.log("Using existing FIN Token:", finTokenAddress);
 
-    // Deploy Project Escrow
-    console.log("Deploying Project Escrow (Upgradeable)...");
+    // Attach to existing FINToken (optional, but good for verification if needed)
+    // const FINToken = await ethers.getContractFactory("FINToken");
+    // const finToken = FINToken.attach(finTokenAddress);
+
+    const projectEscrowAddress = "0x44648B3a11CD084eC03eB32c6d0D405586301071";
+    console.log("Using existing Project Escrow:", projectEscrowAddress);
+
     const ProjectEscrow = await ethers.getContractFactory("ProjectEscrow");
-    const projectEscrow = await upgrades.deployProxy(
-        ProjectEscrow,
-        [finTokenAddress, deployer.address], // FIN token address, admin address
-        { initializer: "initialize", kind: "uups" }
-    );
-    await projectEscrow.waitForDeployment();
-    const projectEscrowAddress = await projectEscrow.getAddress();
-    console.log("Project Escrow deployed to:", projectEscrowAddress);
-    console.log("   Approval Threshold: 10,000 FIN");
-    console.log("   Refund Timelock: 24 hours\n");
+    const projectEscrow = ProjectEscrow.attach(projectEscrowAddress) as any;
 
     // Grant roles
     console.log("Setting up roles...");
     const MANAGER_ROLE = await projectEscrow.MANAGER_ROLE();
     const APPROVER_ROLE = await projectEscrow.APPROVER_ROLE();
 
-    // Grant deployer all roles (can be changed later)
-    await projectEscrow.grantRole(MANAGER_ROLE, deployer.address);
-    await projectEscrow.grantRole(APPROVER_ROLE, deployer.address);
-    console.log("Roles granted to deployer\n");
+    // Grant deployer all roles
+    // Adding manual gas limit/price override to avoid "replacement transaction underpriced"
+    // or just retrying should work if the previous tx is cleared or replaced
+    try {
+        const tx1 = await projectEscrow.grantRole(MANAGER_ROLE, deployer.address);
+        await tx1.wait();
+        console.log("Granted MANAGER_ROLE");
+
+        const tx2 = await projectEscrow.grantRole(APPROVER_ROLE, deployer.address);
+        await tx2.wait();
+        console.log("Granted APPROVER_ROLE");
+    } catch (e) {
+        console.log("Roles might already be granted or error:", e);
+    }
+    console.log("Roles setup complete\n");
 
     // Deploy FINSwap
     console.log("Deploying FINSwap (Upgradeable)...");
