@@ -37,8 +37,8 @@ export default async function handler(req: Request, res: Response) {
             body: req.body
         });
 
-        // Handle Telegram Bot Updates using grammy's webhookCallback
-        return await botCallback(req, res);
+        // Test basic response without Grammy
+        return res.status(200).json({ status: 'ok', message: 'Webhook received' });
     } catch (error) {
         console.error('Webhook error:', error);
         console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
