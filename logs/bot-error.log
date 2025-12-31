@@ -1278,3 +1278,24 @@
 2025-12-31 14:05:39: }
 2025-12-31 14:05:39: 
 2025-12-31 14:05:39: Node.js v20.19.5
+2025-12-31 15:30:47: Failed to register bot commands: HttpError: Network request for 'setMyCommands' failed!
+2025-12-31 15:30:47:     at /home/c0bw3b/FinPro/node_modules/grammy/out/core/error.js:85:15
+2025-12-31 15:30:47:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-31 15:30:47:     at async ApiClient.call (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:54:29)
+2025-12-31 15:30:47:     at async ApiClient.callApi (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:93:22)
+2025-12-31 15:30:47:     at async registerCommands (/home/c0bw3b/FinPro/telegram-bot/handlers/commands.ts:461:9)
+2025-12-31 15:30:47:     at async startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:70:5) {
+2025-12-31 15:30:47:   error: FetchError: request to https://api.telegram.org/bot8490080324:AAGE7gm32wueIDyHBh6qbBLH7L3LleQpGDo/setMyCommands failed, reason: 
+2025-12-31 15:30:47:       at ClientRequest.<anonymous> (/home/c0bw3b/FinPro/node_modules/grammy/node_modules/node-fetch/lib/index.js:1501:11)
+2025-12-31 15:30:47:       at ClientRequest.emit (node:events:524:28)
+2025-12-31 15:30:47:       at emitErrorEvent (node:_http_client:101:11)
+2025-12-31 15:30:47:       at TLSSocket.socketErrorListener (node:_http_client:504:5)
+2025-12-31 15:30:47:       at TLSSocket.emit (node:events:524:28)
+2025-12-31 15:30:47:       at emitErrorNT (node:internal/streams/destroy:169:8)
+2025-12-31 15:30:47:       at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+2025-12-31 15:30:47:       at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+2025-12-31 15:30:47:     type: 'system',
+2025-12-31 15:30:47:     errno: 'ETIMEDOUT',
+2025-12-31 15:30:47:     code: 'ETIMEDOUT'
+2025-12-31 15:30:47:   }
+2025-12-31 15:30:47: }

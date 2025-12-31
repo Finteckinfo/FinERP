@@ -43,6 +43,13 @@ export default function CreateProjectModal({ isOpen, onClose, onSuccess }: Creat
 
       const amount = parseEther(formData.total_funds.toString());
 
+      // 0. Check FIN Token Balance
+      setLoadingStep('Verifying Treasury Balance...');
+      const balance = await finToken.balanceOf(account);
+      if (balance < amount) {
+        throw new Error('Insufficient FIN Balance: You do not have enough FIN tokens to fund this project. Please mint some tokens first.');
+      }
+
       // 1. Approve FIN Token
       setLoadingStep('Authorizing Treasury Transfer...');
       const approveTx = await finToken.approve(CONTRACT_ADDRESSES.projectEscrow, amount);
@@ -125,7 +132,14 @@ export default function CreateProjectModal({ isOpen, onClose, onSuccess }: Creat
       onSuccess();
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      let errorMessage = err instanceof Error ? err.message : 'An error occurred';
+
+      // Handle Common RPC Errors
+      if (errorMessage.includes('returned too many errors') || errorMessage.includes('-32002')) {
+        errorMessage = 'Wallet Network Congested: Please switch your MetaMask RPC URL to a public node (e.g., via Chainlist) or try again later.';
+      }
+
+      setError(errorMessage);
     } finally {
       setLoading(false);
       setLoadingStep(null);

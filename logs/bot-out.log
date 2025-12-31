@@ -187,3 +187,25 @@
 2025-12-31 14:05:49: Bot commands registered successfully for private chats
 2025-12-31 14:05:49: Starting bot in POLLING mode...
 2025-12-31 14:05:49: Express server running on port 3001 (Supabase Webhooks & Health - NO Bot Webhook)
+2025-12-31 14:40:02: handleStart debugging: {
+2025-12-31 14:40:02:   chatId: 6077795580,
+2025-12-31 14:40:02:   telegramId: 6077795580,
+2025-12-31 14:40:02:   miniAppUrl: 'https://fin1pro.vercel.app'
+2025-12-31 14:40:02: }
+2025-12-31 14:40:04: handleStart debugging: {
+2025-12-31 14:40:04:   chatId: 6077795580,
+2025-12-31 14:40:04:   telegramId: 6077795580,
+2025-12-31 14:40:04:   miniAppUrl: 'https://fin1pro.vercel.app'
+2025-12-31 14:40:04: }
+2025-12-31 14:47:32: handleStart debugging: {
+2025-12-31 14:47:32:   chatId: 6077795580,
+2025-12-31 14:47:32:   telegramId: 6077795580,
+2025-12-31 14:47:32:   miniAppUrl: 'https://fin1pro.vercel.app'
+2025-12-31 14:47:32: }
+2025-12-31 14:48:01: handleStart debugging: {
+2025-12-31 14:48:01:   chatId: 6077795580,
+2025-12-31 14:48:01:   telegramId: 6077795580,
+2025-12-31 14:48:01:   miniAppUrl: 'https://fin1pro.vercel.app'
+2025-12-31 14:48:01: }
+2025-12-31 15:30:47: Starting bot in POLLING mode...
+2025-12-31 15:30:48: Express server running on port 3001 (Supabase Webhooks & Health - NO Bot Webhook)
