@@ -1,6 +1,17 @@
 import type { Request, Response } from 'express';
 import { Bot, webhookCallback } from 'grammy';
 import { createClient } from '@supabase/supabase-js';
+import {
+    handleStart,
+    handleProjects,
+    handleHelp,
+    handleTasks,
+    handleProfile,
+    handleStats,
+    handlePing,
+    handleBalance,
+    handleBroadcast
+} from '../telegram-bot/handlers/commands.js';
 
 // Initialize bot
 const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN || '');
@@ -11,15 +22,16 @@ const supabase = createClient(
     process.env.SUPABASE_SERVICE_KEY || ''
 );
 
-// Simple health check handler
-bot.command('ping', async (ctx) => {
-    await ctx.reply('pong');
-});
-
-bot.command('start', async (ctx) => {
-    const firstName = ctx.from?.first_name || 'User';
-    await ctx.reply(`Hello ${firstName}! Bot is working.`);
-});
+// Setup bot handlers
+bot.command('start', (ctx) => handleStart(ctx, supabase));
+bot.command('projects', (ctx) => handleProjects(ctx, supabase));
+bot.command('tasks', (ctx) => handleTasks(ctx, supabase));
+bot.command('profile', (ctx) => handleProfile(ctx, supabase));
+bot.command('balance', (ctx) => handleBalance(ctx, supabase));
+bot.command('broadcast', (ctx) => handleBroadcast(ctx, supabase));
+bot.command('stats', (ctx) => handleStats(ctx, supabase));
+bot.command('ping', (ctx) => handlePing(ctx));
+bot.command('help', (ctx) => handleHelp(ctx));
 
 const botCallback = webhookCallback(bot, 'express');
 
