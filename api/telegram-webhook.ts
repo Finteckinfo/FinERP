@@ -21,6 +21,8 @@ bot.command('help', async (ctx) => {
 const botCallback = webhookCallback(bot, 'express');
 
 export default async function handler(req: Request, res: Response) {
+    console.log('Function started successfully');
+    
     try {
         // Simple health check
         if (req.method === 'GET') {
@@ -37,7 +39,7 @@ export default async function handler(req: Request, res: Response) {
             body: req.body
         });
 
-        // Test basic response without Grammy
+        // Test basic response
         return res.status(200).json({ status: 'ok', message: 'Webhook received' });
     } catch (error) {
         console.error('Webhook error:', error);
