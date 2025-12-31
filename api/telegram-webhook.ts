@@ -37,6 +37,13 @@ bot.command('help', (ctx) => handleHelp(ctx));
 const botCallback = webhookCallback(bot, 'express');
 
 export default async function handler(req: Request, res: Response) {
+    console.log('Webhook called:', {
+        method: req.method,
+        url: req.url,
+        headers: req.headers,
+        body: req.body
+    });
+
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -55,6 +62,7 @@ export default async function handler(req: Request, res: Response) {
         return await botCallback(req, res);
     } catch (error) {
         console.error('Webhook error:', error);
+        console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
         if (!res.headersSent) {
             res.status(500).json({ error: 'Internal server error' });
         }
