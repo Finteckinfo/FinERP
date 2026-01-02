@@ -1299,3 +1299,165 @@
 2025-12-31 15:30:47:     code: 'ETIMEDOUT'
 2025-12-31 15:30:47:   }
 2025-12-31 15:30:47: }
+2026-01-01 19:22:33: Failed to register bot commands: HttpError: Network request for 'setMyCommands' failed!
+2026-01-01 19:22:33:     at /home/c0bw3b/FinPro/node_modules/grammy/out/core/error.js:85:15
+2026-01-01 19:22:33:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2026-01-01 19:22:33:     at async ApiClient.call (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:54:29)
+2026-01-01 19:22:33:     at async ApiClient.callApi (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:93:22)
+2026-01-01 19:22:33:     at async registerCommands (/home/c0bw3b/FinPro/telegram-bot/handlers/commands.ts:461:9)
+2026-01-01 19:22:33:     at async startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:70:5) {
+2026-01-01 19:22:33:   error: FetchError: request to https://api.telegram.org/bot8490080324:AAGE7gm32wueIDyHBh6qbBLH7L3LleQpGDo/setMyCommands failed, reason: getaddrinfo EAI_AGAIN api.telegram.org
+2026-01-01 19:22:33:       at ClientRequest.<anonymous> (/home/c0bw3b/FinPro/node_modules/grammy/node_modules/node-fetch/lib/index.js:1501:11)
+2026-01-01 19:22:33:       at ClientRequest.emit (node:events:524:28)
+2026-01-01 19:22:33:       at emitErrorEvent (node:_http_client:101:11)
+2026-01-01 19:22:33:       at TLSSocket.socketErrorListener (node:_http_client:504:5)
+2026-01-01 19:22:33:       at TLSSocket.emit (node:events:524:28)
+2026-01-01 19:22:33:       at emitErrorNT (node:internal/streams/destroy:169:8)
+2026-01-01 19:22:33:       at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+2026-01-01 19:22:33:       at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+2026-01-01 19:22:33:     type: 'system',
+2026-01-01 19:22:33:     errno: 'EAI_AGAIN',
+2026-01-01 19:22:33:     code: 'EAI_AGAIN'
+2026-01-01 19:22:33:   }
+2026-01-01 19:22:33: }
+2026-01-01 19:22:33: /home/c0bw3b/FinPro/node_modules/grammy/out/core/error.js:85
+2026-01-01 19:22:33:         throw new HttpError(msg, err);
+2026-01-01 19:22:33:               ^
+2026-01-01 19:22:33: 
+2026-01-01 19:22:33: HttpError: Network request for 'deleteWebhook' failed!
+2026-01-01 19:22:33:     at /home/c0bw3b/FinPro/node_modules/grammy/out/core/error.js:85:15
+2026-01-01 19:22:33:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2026-01-01 19:22:33:     at async ApiClient.call (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:54:29)
+2026-01-01 19:22:33:     at async ApiClient.callApi (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:93:22)
+2026-01-01 19:22:33:     at async startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:78:9) {
+2026-01-01 19:22:33:   error: FetchError: request to https://api.telegram.org/bot8490080324:AAGE7gm32wueIDyHBh6qbBLH7L3LleQpGDo/deleteWebhook failed, reason: getaddrinfo EAI_AGAIN api.telegram.org
+2026-01-01 19:22:33:       at ClientRequest.<anonymous> (/home/c0bw3b/FinPro/node_modules/grammy/node_modules/node-fetch/lib/index.js:1501:11)
+2026-01-01 19:22:33:       at ClientRequest.emit (node:events:524:28)
+2026-01-01 19:22:33:       at emitErrorEvent (node:_http_client:101:11)
+2026-01-01 19:22:33:       at TLSSocket.socketErrorListener (node:_http_client:504:5)
+2026-01-01 19:22:33:       at TLSSocket.emit (node:events:524:28)
+2026-01-01 19:22:33:       at emitErrorNT (node:internal/streams/destroy:169:8)
+2026-01-01 19:22:33:       at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+2026-01-01 19:22:33:       at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+2026-01-01 19:22:33:     type: 'system',
+2026-01-01 19:22:33:     errno: 'EAI_AGAIN',
+2026-01-01 19:22:33:     code: 'EAI_AGAIN'
+2026-01-01 19:22:33:   }
+2026-01-01 19:22:33: }
+2026-01-01 19:22:33: 
+2026-01-01 19:22:33: Node.js v20.19.5
+2026-01-01 19:43:14: Failed to register bot commands: HttpError: Network request for 'setMyCommands' failed!
+2026-01-01 19:43:14:     at /home/c0bw3b/FinPro/node_modules/grammy/out/core/error.js:85:15
+2026-01-01 19:43:14:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2026-01-01 19:43:14:     at async ApiClient.call (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:54:29)
+2026-01-01 19:43:14:     at async ApiClient.callApi (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:93:22)
+2026-01-01 19:43:14:     at async registerCommands (/home/c0bw3b/FinPro/telegram-bot/handlers/commands.ts:461:9)
+2026-01-01 19:43:14:     at async startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:70:5) {
+2026-01-01 19:43:14:   error: FetchError: request to https://api.telegram.org/bot8490080324:AAGE7gm32wueIDyHBh6qbBLH7L3LleQpGDo/setMyCommands failed, reason: getaddrinfo EAI_AGAIN api.telegram.org
+2026-01-01 19:43:14:       at ClientRequest.<anonymous> (/home/c0bw3b/FinPro/node_modules/grammy/node_modules/node-fetch/lib/index.js:1501:11)
+2026-01-01 19:43:14:       at ClientRequest.emit (node:events:524:28)
+2026-01-01 19:43:14:       at emitErrorEvent (node:_http_client:101:11)
+2026-01-01 19:43:14:       at TLSSocket.socketErrorListener (node:_http_client:504:5)
+2026-01-01 19:43:14:       at TLSSocket.emit (node:events:524:28)
+2026-01-01 19:43:14:       at emitErrorNT (node:internal/streams/destroy:169:8)
+2026-01-01 19:43:14:       at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+2026-01-01 19:43:14:       at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+2026-01-01 19:43:14:     type: 'system',
+2026-01-01 19:43:14:     errno: 'EAI_AGAIN',
+2026-01-01 19:43:14:     code: 'EAI_AGAIN'
+2026-01-01 19:43:14:   }
+2026-01-01 19:43:14: }
+2026-01-01 19:43:14: /home/c0bw3b/FinPro/node_modules/grammy/out/core/error.js:85
+2026-01-01 19:43:14:         throw new HttpError(msg, err);
+2026-01-01 19:43:14:               ^
+2026-01-01 19:43:14: 
+2026-01-01 19:43:14: HttpError: Network request for 'deleteWebhook' failed!
+2026-01-01 19:43:14:     at /home/c0bw3b/FinPro/node_modules/grammy/out/core/error.js:85:15
+2026-01-01 19:43:14:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2026-01-01 19:43:14:     at async ApiClient.call (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:54:29)
+2026-01-01 19:43:14:     at async ApiClient.callApi (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:93:22)
+2026-01-01 19:43:14:     at async startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:78:9) {
+2026-01-01 19:43:14:   error: FetchError: request to https://api.telegram.org/bot8490080324:AAGE7gm32wueIDyHBh6qbBLH7L3LleQpGDo/deleteWebhook failed, reason: getaddrinfo EAI_AGAIN api.telegram.org
+2026-01-01 19:43:14:       at ClientRequest.<anonymous> (/home/c0bw3b/FinPro/node_modules/grammy/node_modules/node-fetch/lib/index.js:1501:11)
+2026-01-01 19:43:14:       at ClientRequest.emit (node:events:524:28)
+2026-01-01 19:43:14:       at emitErrorEvent (node:_http_client:101:11)
+2026-01-01 19:43:14:       at TLSSocket.socketErrorListener (node:_http_client:504:5)
+2026-01-01 19:43:14:       at TLSSocket.emit (node:events:524:28)
+2026-01-01 19:43:14:       at emitErrorNT (node:internal/streams/destroy:169:8)
+2026-01-01 19:43:14:       at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+2026-01-01 19:43:14:       at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+2026-01-01 19:43:14:     type: 'system',
+2026-01-01 19:43:14:     errno: 'EAI_AGAIN',
+2026-01-01 19:43:14:     code: 'EAI_AGAIN'
+2026-01-01 19:43:14:   }
+2026-01-01 19:43:14: }
+2026-01-01 19:43:14: 
+2026-01-01 19:43:14: Node.js v20.19.5
+2026-01-02 09:55:19: Failed to register bot commands: HttpError: Network request for 'setMyCommands' failed!
+2026-01-02 09:55:19:     at /home/c0bw3b/FinPro/node_modules/grammy/out/core/error.js:85:15
+2026-01-02 09:55:19:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2026-01-02 09:55:19:     at async ApiClient.call (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:54:29)
+2026-01-02 09:55:19:     at async ApiClient.callApi (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:93:22)
+2026-01-02 09:55:19:     at async registerCommands (/home/c0bw3b/FinPro/telegram-bot/handlers/commands.ts:461:9)
+2026-01-02 09:55:19:     at async startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:70:5) {
+2026-01-02 09:55:19:   error: FetchError: request to https://api.telegram.org/bot8490080324:AAGE7gm32wueIDyHBh6qbBLH7L3LleQpGDo/setMyCommands failed, reason: getaddrinfo EAI_AGAIN api.telegram.org
+2026-01-02 09:55:19:       at ClientRequest.<anonymous> (/home/c0bw3b/FinPro/node_modules/grammy/node_modules/node-fetch/lib/index.js:1501:11)
+2026-01-02 09:55:19:       at ClientRequest.emit (node:events:524:28)
+2026-01-02 09:55:19:       at emitErrorEvent (node:_http_client:101:11)
+2026-01-02 09:55:19:       at TLSSocket.socketErrorListener (node:_http_client:504:5)
+2026-01-02 09:55:19:       at TLSSocket.emit (node:events:524:28)
+2026-01-02 09:55:19:       at emitErrorNT (node:internal/streams/destroy:169:8)
+2026-01-02 09:55:19:       at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+2026-01-02 09:55:19:       at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+2026-01-02 09:55:19:     type: 'system',
+2026-01-02 09:55:19:     errno: 'EAI_AGAIN',
+2026-01-02 09:55:19:     code: 'EAI_AGAIN'
+2026-01-02 09:55:19:   }
+2026-01-02 09:55:19: }
+2026-01-02 16:30:10: Failed to register bot commands: HttpError: Network request for 'setMyCommands' failed!
+2026-01-02 16:30:10:     at /home/c0bw3b/FinPro/node_modules/grammy/out/core/error.js:85:15
+2026-01-02 16:30:10:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2026-01-02 16:30:10:     at async ApiClient.call (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:54:29)
+2026-01-02 16:30:10:     at async ApiClient.callApi (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:93:22)
+2026-01-02 16:30:10:     at async registerCommands (/home/c0bw3b/FinPro/telegram-bot/handlers/commands.ts:461:9)
+2026-01-02 16:30:10:     at async startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:70:5) {
+2026-01-02 16:30:10:   error: FetchError: request to https://api.telegram.org/bot8490080324:AAGE7gm32wueIDyHBh6qbBLH7L3LleQpGDo/setMyCommands failed, reason: getaddrinfo EAI_AGAIN api.telegram.org
+2026-01-02 16:30:10:       at ClientRequest.<anonymous> (/home/c0bw3b/FinPro/node_modules/grammy/node_modules/node-fetch/lib/index.js:1501:11)
+2026-01-02 16:30:10:       at ClientRequest.emit (node:events:524:28)
+2026-01-02 16:30:10:       at emitErrorEvent (node:_http_client:101:11)
+2026-01-02 16:30:10:       at TLSSocket.socketErrorListener (node:_http_client:504:5)
+2026-01-02 16:30:10:       at TLSSocket.emit (node:events:524:28)
+2026-01-02 16:30:10:       at emitErrorNT (node:internal/streams/destroy:169:8)
+2026-01-02 16:30:10:       at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+2026-01-02 16:30:10:       at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+2026-01-02 16:30:10:     type: 'system',
+2026-01-02 16:30:10:     errno: 'EAI_AGAIN',
+2026-01-02 16:30:10:     code: 'EAI_AGAIN'
+2026-01-02 16:30:10:   }
+2026-01-02 16:30:10: }
+2026-01-02 16:30:10: /home/c0bw3b/FinPro/node_modules/grammy/out/core/error.js:85
+2026-01-02 16:30:10:         throw new HttpError(msg, err);
+2026-01-02 16:30:10:               ^
+2026-01-02 16:30:10: 
+2026-01-02 16:30:10: HttpError: Network request for 'deleteWebhook' failed!
+2026-01-02 16:30:10:     at /home/c0bw3b/FinPro/node_modules/grammy/out/core/error.js:85:15
+2026-01-02 16:30:10:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2026-01-02 16:30:10:     at async ApiClient.call (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:54:29)
+2026-01-02 16:30:10:     at async ApiClient.callApi (/home/c0bw3b/FinPro/node_modules/grammy/out/core/client.js:93:22)
+2026-01-02 16:30:10:     at async startServer (/home/c0bw3b/FinPro/telegram-bot/bot.ts:78:9) {
+2026-01-02 16:30:10:   error: FetchError: request to https://api.telegram.org/bot8490080324:AAGE7gm32wueIDyHBh6qbBLH7L3LleQpGDo/deleteWebhook failed, reason: getaddrinfo EAI_AGAIN api.telegram.org
+2026-01-02 16:30:10:       at ClientRequest.<anonymous> (/home/c0bw3b/FinPro/node_modules/grammy/node_modules/node-fetch/lib/index.js:1501:11)
+2026-01-02 16:30:10:       at ClientRequest.emit (node:events:524:28)
+2026-01-02 16:30:10:       at emitErrorEvent (node:_http_client:101:11)
+2026-01-02 16:30:10:       at TLSSocket.socketErrorListener (node:_http_client:504:5)
+2026-01-02 16:30:10:       at TLSSocket.emit (node:events:524:28)
+2026-01-02 16:30:10:       at emitErrorNT (node:internal/streams/destroy:169:8)
+2026-01-02 16:30:10:       at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+2026-01-02 16:30:10:       at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+2026-01-02 16:30:10:     type: 'system',
+2026-01-02 16:30:10:     errno: 'EAI_AGAIN',
+2026-01-02 16:30:10:     code: 'EAI_AGAIN'
+2026-01-02 16:30:10:   }
+2026-01-02 16:30:10: }
+2026-01-02 16:30:10: 
+2026-01-02 16:30:10: Node.js v20.19.5

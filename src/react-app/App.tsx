@@ -6,6 +6,7 @@ import LoginPage from "@/react-app/pages/Login";
 import TaskRedirect from "@/react-app/pages/TaskRedirect";
 import { TokenSwap } from "@/react-app/pages/TokenSwap";
 import ProtectedRoute from "@/react-app/components/ProtectedRoute";
+import { NetworkBanner } from "@/react-app/components/NetworkBanner";
 import { MultiChainWalletProvider, useMultiChainWallet } from "@/react-app/context/MultiChainWalletContext";
 import { useWallet } from "@/react-app/context/WalletContext";
 import { useTelegramAuth, useTelegramUserSync } from "@/react-app/hooks/useTelegramAuth";
@@ -42,6 +43,7 @@ export default function App() {
       <MultiChainWalletProvider>
         <TelegramSyncWrapper>
           <Toaster position="top-center" />
+          <NetworkBanner />
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route
