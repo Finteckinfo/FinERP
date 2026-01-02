@@ -13,7 +13,7 @@ interface CreateProjectModalProps {
 }
 
 export default function CreateProjectModal({ isOpen, onClose, onSuccess }: CreateProjectModalProps) {
-  const { account, provider } = useWallet();
+  const { account, provider, chainId } = useWallet();
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -43,9 +43,24 @@ export default function CreateProjectModal({ isOpen, onClose, onSuccess }: Creat
 
       const amount = parseEther(formData.total_funds.toString());
 
+      console.log('DEBUG: Funding Project');
+      console.log('DEBUG: FIN Token Address:', await finToken.getAddress());
+      console.log('DEBUG: Escrow Address:', await projectEscrow.getAddress());
+      console.log('DEBUG: Wallet Account:', account);
+
       // 0. Check FIN Token Balance
       setLoadingStep('Verifying Treasury Balance...');
-      const balance = await finToken.balanceOf(account);
+      let balance;
+      try {
+        balance = await finToken.balanceOf(account);
+      } catch (err: any) {
+        if (err.message?.includes('could not decode result data') || err.message?.includes('BAD_DATA')) {
+          // In context, assume we can access chainId from parent scope if I add it to destructured vars
+          throw new Error(`Network Mismatch: Could not verify FIN token balance. Please ensure you are connected to the correct network (Sepolia Testnet). Current Chain ID: ${chainId}`);
+        }
+        throw err;
+      }
+
       if (balance < amount) {
         throw new Error('Insufficient FIN Balance: You do not have enough FIN tokens to fund this project. Please mint some tokens first.');
       }
