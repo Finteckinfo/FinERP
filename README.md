@@ -1,3 +1,11 @@
+# 🛑 PRIVATE PROPRIETARY SOURCE CODE - DO NOT SHARE
+> [!CAUTION]
+> **STRICT SECURITY WARNING**
+> This repository contains **CONFIDENTIAL TRADE SECRETS**.
+> 1. **DO NOT MAKE PUBLIC**: This repository must remain **PRIVATE** at all times.
+> 2. **DO NOT CLONE FOR OTHER USE**: Unauthorized duplication or extraction of code for other projects is strictly prohibited by the LICENSE.
+> 3. **UNPAID LICENSE**: Usage is currently conditional on payment. See `LICENSE` for details.
+
 # FinPro - Decentralized Project Management and Finance Platform
 
 A comprehensive blockchain-based platform for decentralized project management, task execution, and decentralized finance operations. FinPro enables teams to collaborate on projects using smart contracts for fund management, gasless transactions via EIP-4337 Account Abstraction, and real-time Telegram integration.
@@ -563,5 +571,6 @@ Usage is strictly under a **CONDITIONAL SOURCE AVAILABLE LICENSE**. Rights are g
 - **Royalty:** 30% of Gross Revenue (Perpetual).
 - **Buyout Option:** Available at 7x Development Fees.
 - **Enforcement:** Enforced via Smart Contract Protocol Fees.
+- **Confidentiality:** Strict Non-Duplication & Private Repo clauses apply.
 
 See the [LICENSE](file:///home/c0bw3b/FinPro/LICENSE) file for details.
