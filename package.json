@@ -11,13 +11,11 @@
     "@ton/crypto": "^3.3.0",
     "@ton/ton": "^16.1.0",
     "@tonconnect/ui-react": "^2.3.1",
-    "@twa-dev/sdk": "^8.0.2",
     "buffer": "^6.0.3",
     "dotenv": "^17.2.3",
     "ethers": "6",
     "events": "^3.3.0",
     "express": "^4.21.2",
-    "grammy": "^1.38.4",
     "hono": "^4.11.3",
     "lucide-react": "^0.510.0",
     "process": "^0.11.10",
@@ -62,9 +60,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "bot:dev": "node --import tsx --no-warnings telegram-bot/bot.ts",
-    "bot:start": "node --import tsx --no-warnings telegram-bot/bot.ts"
+    "preview": "vite preview"
   },
   "overrides": {
     "esbuild": "^0.25.0",
